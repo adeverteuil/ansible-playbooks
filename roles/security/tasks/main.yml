@@ -1,0 +1,41 @@
+---
+- name: install iptables
+  pacman: name=iptables state=present
+
+- name: install sshguard
+  pacman: name=sshguard state=present
+
+- name: create iptables directories
+  file:
+    path: /etc/iptables/rules.d
+    state: directory
+
+- name: install base iptables template
+  template:
+    src: "{{ item }}-base.j2"
+    dest: /etc/iptables/rules.d/{{ item }}-base
+  with_items: ["00", 99]
+  notify: reload iptables
+
+- name: install vars iptables template
+  template:
+    src: 10-ansible_vars.j2
+    dest: /etc/iptables/rules.d/10-ansible_vars
+  when: iptables_allow_ports != []
+  notify: reload iptables
+
+- name: modify iptables.service
+  copy:
+    src: iptables.service
+    dest: /etc/systemd/system/iptables.service
+  notify: reload systemd manager configuration
+
+- name: start and enable iptables
+  service: name=iptables state=started enabled=yes
+
+- name: start and enable sshguard
+  service: name=sshguard state=started enabled=yes
+
+- name: install sudo
+  pacman: name=sudo state=present
+  when: ansible_os_family == "Archlinux"

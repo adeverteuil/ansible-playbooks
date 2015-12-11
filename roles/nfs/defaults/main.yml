@@ -1,0 +1,11 @@
+---
+nfs_exports: []
+# Format of nfs_exports items:
+# - path: /path/name/to/share
+#   dirname: exported_dirname
+#   hosts: [192.168.13.0/24, ro]
+
+nfs_mounts: []
+# Format of nfs_mounts items:
+# - what: "host:/path"
+#   where: /path/to/mountpoint

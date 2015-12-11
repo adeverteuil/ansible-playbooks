@@ -1,0 +1,29 @@
+---
+- name: install dovecot
+  pacman: name=dovecot state=present
+
+- name: configure dovecot
+  template:
+    src: 10-mail.conf.j2
+    dest: /etc/dovecot/conf.d/10-mail.conf
+  notify: restart dovecot
+
+- name: configure pam
+  copy:
+    src: dovecot.pam
+    dest: /etc/pam.d/dovecot
+
+- name: configure SSL certificate
+  template:
+    src: dovecot-openssl.cnf.j2
+    dest: /etc/ssl/dovecot-openssl.cnf
+  notify: make dovecot SSL certificate
+
+- name: allow TCP ports for IMAP and POP3
+  copy:
+    src: 20-dovecot
+    dest: /etc/iptables/rules.d/20-dovecot
+  notify: reload iptables
+
+- name: start and enable dovecot
+  service: name=dovecot state=started enabled=yes

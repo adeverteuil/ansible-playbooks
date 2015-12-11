@@ -1,0 +1,25 @@
+---
+dotfiles_repo_host: ""
+
+exim_router: smarthost
+exim_smarthost: mail.aei.ca
+exim_local_domains: [deverteuil.net, alexdev.chickenkiller.com, electron]
+exim_relay_from_hosts: ["192.168.0.0/16"]
+exim_postmaster: alex
+exim_local_aliases: ["alexandre: alex"]
+
+dovecot_postmaster: alexandre@deverteuil.net
+dovecot_common_name: higgs.deverteuil.net
+
+iptables_allow_ports:
+- [tcp, 80, HTTP]
+
+nfs_exports:
+- path: /home/alex
+  dirname: alex
+  hosts:
+  - [electron, rw]
+
+letsencrypt_authenticator: standalone
+letsencrypt_domains:
+- homeserver.deverteuil.net

@@ -1,0 +1,7 @@
+#!/usr/bin/bash
+
+cd /etc/pacman.d
+mv mirrorlist{,.old}
+sed -i "s/^#//" mirrorlist.pacnew
+rankmirrors -n 10 mirrorlist.pacnew > mirrorlist
+chmod 644 mirrorlist

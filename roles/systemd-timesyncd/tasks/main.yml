@@ -1,0 +1,9 @@
+---
+- name: stop and disable ntpd
+  service: name=ntpd state=stopped enabled=false
+
+- name: uninstall ntpd
+  pacman: name=ntp state=absent
+
+- name: start and enable systemd-timesyncd
+  service: name=systemd-timesyncd state=started enabled=true

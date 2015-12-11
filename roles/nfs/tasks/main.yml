@@ -1,0 +1,50 @@
+---
+- name: install nfs-utils
+  pacman: name=nfs-utils state=present
+
+- name: bind mount directories to be exported
+  template:
+    src: bind.mount.j2
+    dest: /etc/systemd/system/srv-nfs-{{ item.dirname }}.mount
+  with_items: "{{ nfs_exports }}"
+  notify: reload systemd configuration
+
+- name: enable and start bind mounts
+  service: name=srv-nfs-{{ item.dirname }}.mount state=started enabled=true
+  with_items: "{{ nfs_exports }}"
+
+- name: configure exports
+  template:
+    src: exports.j2
+    dest: /etc/exports
+  when: nfs_exports != []
+  notify: reload exports
+
+- name: open NFS ports in iptables
+  copy:
+    src: 20-nfs
+    dest: /etc/iptables/rules.d/20-nfs
+  when: nfs_exports != []
+  notify: reload iptables
+
+- name: start and enable nfs-server
+  service: name=nfs-server state=started enabled=true
+  when: nfs_exports != []
+
+- name: create mount unit files
+  template:
+    src: nfs.mount.j2
+    dest: /etc/systemd/system/{{ item.where[1:]|replace("/", "-") }}.mount
+  with_items: "{{ nfs_mounts }}"
+  notify: reload systemd configuration
+
+- name: create automount unit files
+  template:
+    src: nfs.automount.j2
+    dest: /etc/systemd/system/{{ item.where[1:]|replace("/", "-") }}.automount
+  with_items: "{{ nfs_mounts }}"
+  notify: reload systemd configuration
+
+- name: start and enable automount units
+  service: name={{ item.where[1:]|replace("/", "-") }}.automount state=started enabled=yes
+  with_items: "{{ nfs_mounts }}"

@@ -1,0 +1,7 @@
+---
+iptables_allow_ports:
+- [tcp, 80, HTTP]
+- [tcp, 443, HTTPS]
+letsencrypt_domains:
+- baryon.deverteuil.net
+- alexandre.deverteuil.net

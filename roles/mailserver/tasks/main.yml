@@ -1,0 +1,27 @@
+---
+- name: install exim
+  pacman: name=exim state=present
+
+- name: configure exim
+  template:
+    src: exim.conf.j2
+    dest: /etc/mail/exim.conf
+  notify: reload exim
+
+- include: spamassassin.yml
+  when: exim_install_spamassassin
+
+- name: update aliases
+  template:
+    src: aliases.j2
+    dest: /etc/mail/aliases
+  notify: run newaliases
+
+- name: allow TCP ports for SMTP
+  copy:
+    src: 20-mailserver
+    dest: /etc/iptables/rules.d/20-mailserver
+  notify: reload iptables
+
+- name: start and enable exim
+  service: name=exim state=started enabled=yes

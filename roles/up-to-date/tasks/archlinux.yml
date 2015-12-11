@@ -1,0 +1,10 @@
+---
+- name: clean pacman's cache
+  shell: yes | pacman -Sc
+
+- name: update
+  shell: yes | pacman -Syu
+  notify: optimize database
+
+- name: update mirrorlist
+  script: updatemirrors removes=/etc/pacman.d/mirrorlist.pacnew

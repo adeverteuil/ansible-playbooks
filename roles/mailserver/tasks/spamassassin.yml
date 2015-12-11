@@ -1,0 +1,9 @@
+---
+- name: install spamassassin
+  pacman: name=spamassassin state=present
+
+- name: update spamassassin rules
+  command: sa-update
+
+- name: start and enable spamassassin
+  service: name=spamassassin state=started enabled=true

@@ -1,0 +1,8 @@
+[Unit]
+Description=Automount for {{ item.where }}
+
+[Automount]
+Where={{ item.where }}
+
+[Install]
+WantedBy=multi-user.target

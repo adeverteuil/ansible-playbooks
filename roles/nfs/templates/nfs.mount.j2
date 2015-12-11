@@ -1,0 +1,9 @@
+[Unit]
+Description=NFS mount for {{ item.where }}
+
+[Mount]
+What={{ item.what }}
+Where={{ item.where }}
+Type=nfs4
+Options=rsize=8192,wsize=8192,_netdev
+TimeoutSec=15

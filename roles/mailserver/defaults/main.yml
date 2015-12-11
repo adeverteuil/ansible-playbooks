@@ -1,0 +1,8 @@
+---
+exim_router: dnslookup
+exim_smarthost: ""
+exim_local_domains: []
+exim_postmaster: root
+exim_local_aliases: []
+exim_relay_from_hosts: []
+exim_install_spamassassin: no

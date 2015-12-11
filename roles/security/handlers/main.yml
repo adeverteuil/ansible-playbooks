@@ -1,0 +1,6 @@
+---
+- name: reload systemd manager configuration
+  command: systemctl --system daemon-reload
+
+- name: reload iptables
+  service: name=iptables state=reloaded

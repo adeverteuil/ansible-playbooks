@@ -1,0 +1,8 @@
+# POP3
+-A TCP -p tcp -m tcp --dport 110 -j ACCEPT
+# POP3S
+-A TCP -p tcp -m tcp --dport 995 -j ACCEPT
+# IMAP
+-A TCP -p tcp -m tcp --dport 143 -j ACCEPT
+# IMAPS
+-A TCP -p tcp -m tcp --dport 993 -j ACCEPT

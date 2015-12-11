@@ -1,0 +1,15 @@
+---
+- name: install networking tools with pacman
+  pacman: name={{ item }}
+  with_items: [mtr, bind-tools, ethtool, gnu-netcat, nmap, iperf]
+  when: ansible_distribution == "Archlinux"
+
+- name: install networking tools with yum
+  yum: name={{ item }}
+  with_items: [mtr, bind-utils, ethtool, nc, nmap, iperf]
+  when: ansible_distribution == "CentOS"
+
+- name: install networking tools with apt
+  apt: name={{ item }}
+  with_items: [mtr, dnsutils, ethtool, netcat, nmap, iperf]
+  when: ansible_distribution == "Ubuntu"

@@ -1,0 +1,31 @@
+---
+ansible_connection: local
+ansible_become: yes
+ansible_become_user: root
+
+exim_install_spamassassin: yes
+exim_router: smarthost
+exim_smarthost: higgs
+exim_local_domains: [deverteuil.net, alexdev.chickenkiller.com]
+exim_postmaster: alex
+exim_local_aliases: ["alexandre: alex"]
+
+iptables_allow_ports:
+- [tcp, 80, HTTP]
+- [udp, 1194, OpenVPN]
+iptables_forward_policy: ACCEPT
+
+nfs_exports:
+- path: /home/alex/pub
+  dirname: pub
+  hosts:
+  - [192.168.13.0/24, ro]
+- path: /var/backups/fermion
+  dirname: fermion
+  hosts:
+  - [quark, "ro,insecure"]
+  - [fermion, "ro,insecure"]
+
+nfs_mounts:
+- what: "higgs:/alex"
+  where: /home/alex/mnt/higgs

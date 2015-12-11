@@ -1,0 +1,23 @@
+---
+- name: copy default virtualhost document
+  copy:
+    src: index.html
+    dest: /srv/http/index.html
+
+- name: create vhosts config files directory
+  file:
+    path: /etc/httpd/vhosts
+    state: directory
+
+- name: create default virtualhost
+  copy:
+    src: 0-default.conf
+    dest: /etc/httpd/vhosts/0-default.conf
+  notify: restart apache
+
+- name: include vhosts files
+  lineinfile:
+    dest: /etc/httpd/conf/httpd.conf
+    insertafter: \# Virtual hosts
+    line: Include vhosts/*
+  notify: restart apache

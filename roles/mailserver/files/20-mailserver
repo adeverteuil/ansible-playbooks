@@ -1,0 +1,2 @@
+# SMTP
+-A TCP -p tcp -m tcp --dport 25 -j ACCEPT

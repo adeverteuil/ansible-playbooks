@@ -1,0 +1,32 @@
+---
+- name: install packages
+  pacman: name={{ item }} state=present
+  with_items:
+  - apache
+  - mod_wsgi
+  - python-virtualenv
+
+- name: create /home/http
+  file:
+    path: /home/http
+    state: directory
+    group: http
+    owner: http
+    mode: 0770
+
+- name: set ServerAdmin directive
+  lineinfile:
+    dest: /etc/httpd/conf/httpd.conf
+    line: ServerAdmin {{ webserver_serveradmin }}
+    regexp: ^#?ServerAdmin.*$
+  notify: restart apache
+
+- include: ssl.yml
+- include: vhosts.yml
+- include: wsgi.yml
+
+- name: open http and https ports
+  copy:
+    src: 20-webserver
+    dest: /etc/iptables/rules.d/20-webserver
+  notify: reload iptables

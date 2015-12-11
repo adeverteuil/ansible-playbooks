@@ -1,0 +1,10 @@
+[Unit]
+Description=Bind mount {{ item.path }} for NFS sharing
+
+[Mount]
+What={{ item.path }}
+Where=/srv/nfs/{{ item.dirname }}
+Options=bind
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,23 @@
+---
+- name: install tor
+  pacman: name=tor state=present
+
+- name: install arm (Anonymizing Relay Monitor)
+  pacman: name=arm state=present
+
+- name: configure tor
+  template:
+    dest: /etc/tor/torrc
+    backup: yes
+    src: torrc.j2
+  notify:
+  - reload tor
+
+- name: allow tor through iptables
+  copy:
+    src: 20-tor
+    dest: /etc/iptables/rules.d/20-tor
+  notify: reload iptables
+
+- name: enable and start tor
+  service: name=tor state=started enabled=yes

@@ -1,0 +1,3 @@
+---
+iptables_forward_policy: DROP
+iptables_allow_ports: []  # list of [protocol, port, comment] lists.

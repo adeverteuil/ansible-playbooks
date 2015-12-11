@@ -1,0 +1,3 @@
+---
+- hosts: tor_nodes
+  roles: [tor_node]

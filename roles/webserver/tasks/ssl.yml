@@ -1,0 +1,58 @@
+---
+- name: create directory to hold ssl related files
+  file:
+    path: /etc/httpd/ssl
+    state: directory
+    owner: root
+    group: http
+    mode: 0750
+
+- name: copy openssl config for self-signed certificate
+  template:
+    src: self-signed.cnf.j2
+    dest: /etc/httpd/ssl/self-signed.cnf
+
+- name: create self-signed certificate
+  command: openssl req -config self-signed.cnf -new -x509 -nodes -newkey rsa:4096 -keyout server.key -out self-signed.crt -days 1095
+  args:
+    chdir: /etc/httpd/ssl
+    creates: /etc/httpd/ssl/self-signed.crt
+
+- name: secure the private key
+  file:
+    path: /etc/httpd/ssl/server.key
+    mode: 0400
+
+- name: make the certificate world-readable
+  file:
+    path: /etc/httpd/ssl/self-signed.crt
+    mode: 0444
+
+- name: configure Apache for SSL
+  copy:
+    src: httpd-ssl.conf
+    dest: /etc/httpd/conf/extra/httpd-ssl.conf
+    backup: yes
+  notify: restart apache
+
+- name: uncomment mod_ssl module
+  lineinfile:
+    dest: /etc/httpd/conf/httpd.conf
+    line: LoadModule ssl_module modules/mod_ssl.so
+    regexp: ^#?LoadModule ssl_module modules/mod_ssl.so$
+  notify: restart apache
+
+- name: uncomment mod_socache_shmcb module
+  lineinfile:
+    dest: /etc/httpd/conf/httpd.conf
+    line: LoadModule socache_shmcb_module modules/mod_socache_shmcb.so
+    regexp: ^#?LoadModule socache_shmcb_module modules/mod_socache_shmcb.so$
+  notify: restart apache
+
+- name: uncomment mod_ssl config
+  lineinfile:
+    dest: /etc/httpd/conf/httpd.conf
+    line: Include conf/extra/httpd-ssl.conf
+    regexp: ^#?Include conf/extra/httpd-ssl.conf$
+  notify: restart apache
+

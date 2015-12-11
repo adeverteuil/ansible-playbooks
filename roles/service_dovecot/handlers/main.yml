@@ -1,0 +1,9 @@
+---
+- name: make dovecot SSL certificate
+  script: make_ssl_cert.sh
+
+- name: restart dovecot
+  service: name=dovecot state=restarted
+
+- name: reload iptables
+  service: name=iptables state=reloaded
