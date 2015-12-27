@@ -5,3 +5,6 @@ iptables_allow_ports:
 letsencrypt_domains:
 - baryon.deverteuil.net
 - alexandre.deverteuil.net
+exim_local_domains: [deverteuil.net]
+exim_postmaster: alex
+exim_local_aliases: ["alexandre: alex"]
