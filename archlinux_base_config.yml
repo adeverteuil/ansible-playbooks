@@ -1,0 +1,9 @@
+---
+# Prerequisites to be done manually:
+# - Set the hostname
+#   hostnamectl set-hostname <hostname>
+# - Write the hostname in the hosts file
+# - Install the python2 package
+
+- hosts: [archlinux]
+  roles: [archlinux_system]

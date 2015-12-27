@@ -1,0 +1,40 @@
+---
+- name: set the localtime
+  file:
+    path: /etc/localtime
+    state: link
+    force: yes
+    src: /usr/share/zoneinfo/America/Montreal
+
+- name: enable en_CA.UTF-8 locale
+  lineinfile:
+    dest: /etc/locale.gen
+    line: en_CA.UTF-8 UTF-8
+    regexp: "^#?en_CA.UTF-8 UTF-8"
+  notify: generate locales
+
+- name: enable en_DK.UTF-8 locale
+  lineinfile:
+    dest: /etc/locale.gen
+    line: en_DK.UTF-8 UTF-8
+    regexp: "^#?en_DK.UTF-8 UTF-8"
+  notify: generate locales
+
+- name: setup locale
+  copy:
+    src: locale.conf
+    dest: /etc/locale.conf
+
+- name: configure vconsole
+  copy:
+    src: vconsole.conf
+    dest: /etc/vconsole.conf
+
+- name: install packages
+  pacman: name={{ item }} state=present
+  with_items:
+  - vim
+  - sudo
+  - tmux
+  - base-devel
+  - git

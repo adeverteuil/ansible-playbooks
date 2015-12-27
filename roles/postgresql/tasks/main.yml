@@ -5,21 +5,12 @@
 - name: install psycopg2
   pacman: name=python2-psycopg2 state=present
 
-- name: enable en_US.UTF-8 locale
-  lineinfile:
-    dest: /etc/locale.gen
-    line: en_US.UTF-8 UTF-8
-    regexp: "^#?en_US.UTF-8 UTF-8"
-  notify: generate locales
-
 - name: create the /var/lib/postgres directory
   file:
     path: /var/lib/postgres
     state: directory
     owner: postgres
     group: postgres
-
-- meta: flush_handlers
 
 - name: initialize the database
   command: initdb --locale en_US.UTF-8 -E UTF8 -D '/var/lib/postgres/data'
