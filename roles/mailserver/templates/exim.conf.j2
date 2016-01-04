@@ -57,6 +57,7 @@ untrusted_set_sender = *
 
 domainlist local_domains = @:{% for d in exim_local_domains %}{{ d }}:{% endfor %}localhost:localhost.localdomain
 domainlist relay_to_domains =
+domainlist no_sender_verify_domains = {{ exim_no_sender_verify_domains|join(":") }}
 hostlist   relay_from_hosts = localhost{% for h in exim_relay_from_hosts %}:{{ h }}{% endfor %}
 
 # (We rely upon hostname resolution working for localhost, because the default
@@ -347,7 +348,7 @@ acl_check_rcpt:
   # Accept if the source is local SMTP (i.e. not over TCP/IP). We do this by
   # testing for an empty sending host field.
 
-  accept  hosts = :
+  accept  hosts = :localhost
           control = dkim_disable_verify
 
   #############################################################################
@@ -405,6 +406,7 @@ acl_check_rcpt:
   # Deny unless the sender address can be verified.
 
   require verify        = sender
+          domains       = !+no_sender_verify_domains
 
   # Accept if the message comes from one of the hosts for which we are an
   # outgoing relay. It is assumed that such hosts are most likely to be MUAs,

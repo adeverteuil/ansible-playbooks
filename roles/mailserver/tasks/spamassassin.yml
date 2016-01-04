@@ -4,6 +4,15 @@
 
 - name: update spamassassin rules
   command: sa-update
+  register: result
+  failed_when: result.rc not in [0, 1]
+  changed_when: result.rc in [0, 3]
+  # From the source code of /usr/bin/vendor_perl/sa-update:
+  #   0: updates found and successfully applied
+  #   1: no updates were needed (success with nothing to do)
+  #   2: lint of site pre files failed, cannot continue
+  #   3: some failures, but at least one channel suceeded
+  #   4 or higher means all channels failed
 
 - name: start and enable spamassassin
   service: name=spamassassin state=started enabled=true
