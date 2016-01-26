@@ -7,8 +7,6 @@ exim_install_spamassassin: yes
 exim_router: smarthost
 exim_smarthost: higgs
 exim_local_domains: [deverteuil.net, alexdev.chickenkiller.com]
-exim_postmaster: alex
-exim_local_aliases: ["alexandre: alex"]
 
 iptables_allow_ports:
 - [tcp, 80, HTTP]
