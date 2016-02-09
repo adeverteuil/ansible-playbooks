@@ -1,0 +1,24 @@
+---
+- name: install munin-node
+  pacman: name=munin-node state=present
+
+- name: configure munin-node
+  template:
+    src: munin-node.conf.j2
+    dest: /etc/munin/munin-node.conf
+  notify: restart munin-node
+
+- name: auto-enable plugins
+  shell: munin-node-configure --shell | sh
+  notify: restart munin-node
+  args:
+    creates: /etc/munin/plugins/df
+
+- name: allow TCP port for munin-node
+  copy:
+    src: 20-munin-node
+    dest: /etc/iptables/rules.d/20-munin-node
+  notify: reload iptables
+
+- name: start and enable munin-node
+  service: name=munin-node state=started enabled=yes

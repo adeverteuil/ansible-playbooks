@@ -1,0 +1,102 @@
+---
+- name: install munin
+  pacman: name=munin state=present
+
+- name: configure munin
+  template:
+    src: munin.conf.j2
+    dest: /etc/munin/munin.conf
+
+- name: create html output directory
+  file:
+    dest: /srv/http/munin
+    state: directory
+    owner: munin
+    group: munin
+
+- name: add http to the munin group
+  user:
+    name: http
+    groups: munin
+    append: yes
+
+- name: make the munin log directory group-writeable
+  file:
+    path: /var/log/munin
+    mode: 0775
+
+- name: make the cgi-tmp directory group-writeable
+  file:
+    path: /var/lib/munin/cgi-tmp
+    mode: 0775
+    owner: munin
+    group: munin
+    state: directory
+
+- name: copy the munin-cron.service file
+  copy:
+    src: munin-cron.service
+    dest: /etc/systemd/system/munin-cron.service
+  notify: reload systemd
+
+- name: copy the munin.timer file
+  copy:
+    src: munin-cron.timer
+    dest: /etc/systemd/system/munin-cron.timer
+  notify:
+  - reload systemd
+  - restart munin.timer
+
+- name: install the snmp_communities configuration file
+  template:
+    src: snmp_communities.j2
+    dest: /etc/munin/plugin-conf.d/snmp_communities
+    mode: 0640
+    owner: root
+    group: munin
+
+- name: install the snmp_hostnames configuration file
+  template:
+    src: snmp_hostnames.j2
+    dest: /etc/munin/plugin-conf.d/snmp_hostnames
+
+- name: auto-enable snmp plugins for the switch
+  shell: munin-node-configure --shell --snmp {{ munin_managed_switch_ip }} --snmpcommunity {{ munin_managed_switch_community }} | sh
+  notify: restart munin-node
+  args:
+    creates: /etc/munin/plugins/snmp_{{ munin_managed_switch_ip }}_uptime
+
+#- name: auto-enable snmp plugins for the router
+#  shell: munin-node-configure --shell --snmp {{ munin_router_ip }} --snmpcommunity {{ munin_router_community }} | sh
+#  notify: restart munin-node
+#  args:
+#    creates: /etc/munin/plugins/snmp_{{ munin_router_ip }}_uptime
+
+- meta: flush_handlers
+
+- name: start and enable munin-cron timer
+  service: name=munin-cron.timer state=started enabled=yes
+
+- name: install perl-cgi-fast
+  pacman: name=perl-cgi-fast state=present
+
+#- name: install mod_fcgid
+#  pacman: name=mod_fcgid state=present
+
+#- name: load the mod_fcgid plugin in Apache
+#  copy:
+#    src: mod_fcgid.conf
+#    dest: /etc/httpd/conf.d/mod_fcgid.conf
+
+- name: load the cgid_module in Apache
+  lineinfile:
+    dest: /etc/httpd/conf/httpd.conf
+    line: "        LoadModule cgid_module modules/mod_cgid.so"
+    regexp: ^ *#?LoadModule cgid_module.*$
+  notify: restart apache
+
+- name: create the Apache VirtualHost
+  template:
+    src: virtualhost.conf.j2
+    dest: /etc/httpd/vhosts/munin.conf
+  notify: restart httpd

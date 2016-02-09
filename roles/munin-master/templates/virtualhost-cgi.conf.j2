@@ -1,0 +1,42 @@
+<VirtualHost *:80>
+    #http://munin-monitoring.org/wiki/MuninConfigurationMasterCGI
+    ServerName localhost
+
+    DocumentRoot /srv/http/munin
+
+    ErrorLog /var/log/httpd/munin-error.log
+    CustomLog /var/log/httpd/munin-access.log combined
+
+
+    # Rewrites
+    RewriteEngine On
+
+    # Static content in /static
+    RewriteRule ^/favicon.ico /etc/munin/static/favicon.ico [L]
+    RewriteRule ^/static/(.*) /etc/munin/static/$1          [L]
+
+    # HTML
+    RewriteCond %{REQUEST_URI} .html$ [or]
+    RewriteCond %{REQUEST_URI} =/
+    RewriteRule ^/(.*)          /usr/share/munin/cgi/munin-cgi-html/$1 [L]
+
+    # Images
+    RewriteRule ^/munin-cgi(.*) /usr/share/munin/cgi/$1 [L]
+
+    <Directory "/etc/munin/static">
+        Require all granted
+    </Directory>
+
+    # Ensure we can run (fast)cgi scripts
+    <Directory "/usr/share/munin/cgi">
+        Require all granted
+        Options +ExecCGI
+        <IfModule mod_fcgid.c>
+            SetHandler fcgid-script
+        </IfModule>
+        <IfModule !mod_fcgid.c>
+            SetHandler cgi-script
+        </IfModule>
+    </Directory>
+
+</VirtualHost>
