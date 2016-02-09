@@ -54,11 +54,13 @@
     mode: 0640
     owner: root
     group: munin
+  notify: restart munin-node
 
 - name: install the snmp_hostnames configuration file
   template:
     src: snmp_hostnames.j2
     dest: /etc/munin/plugin-conf.d/snmp_hostnames
+  notify: restart munin-node
 
 - name: auto-enable snmp plugins for the switch
   shell: munin-node-configure --shell --snmp {{ munin_managed_switch_ip }} --snmpcommunity {{ munin_managed_switch_community }} | sh
