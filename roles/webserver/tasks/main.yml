@@ -6,20 +6,17 @@
   - mod_wsgi
   - python-virtualenv
 
-- name: create /home/http
-  file:
-    path: /home/http
-    state: directory
-    group: http
-    owner: http
-    mode: 0770
-
 - name: set ServerAdmin directive
   lineinfile:
     dest: /etc/httpd/conf/httpd.conf
     line: ServerAdmin {{ webserver_serveradmin }}
     regexp: ^#?ServerAdmin.*$
   notify: restart apache
+
+- name: create the conf.d directory
+  file:
+    dest: /etc/httpd/conf.d
+    state: directory
 
 - include: ssl.yml
 - include: vhosts.yml

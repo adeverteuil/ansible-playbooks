@@ -1,8 +1,15 @@
 ---
+- name: create the default virtualhost directory
+  file:
+    dest: /srv/http/default
+    state: directory
+    owner: http
+    group: http
+
 - name: copy default virtualhost document
   copy:
     src: index.html
-    dest: /srv/http/index.html
+    dest: /srv/http/default/index.html
 
 - name: create vhosts config files directory
   file:
