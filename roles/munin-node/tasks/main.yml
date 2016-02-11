@@ -8,6 +8,16 @@
     dest: /etc/munin/munin-node.conf
   notify: restart munin-node
 
+- name: configure the smart plugins
+  copy:
+    src: smart
+    dest: /etc/munin/plugin-conf.d/smart
+
+- name: configure the exim plugins
+  copy:
+    src: exim
+    dest: /etc/munin/plugin-conf.d/exim
+
 - name: auto-enable plugins
   shell: munin-node-configure --shell | sh
   notify: restart munin-node

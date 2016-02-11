@@ -1,0 +1,3 @@
+[exim_mailstats]
+user exim
+group exim
