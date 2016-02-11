@@ -1,7 +1,18 @@
 ---
 - name: install networking tools with pacman
   pacman: name={{ item }}
-  with_items: [mtr, bind-tools, ethtool, gnu-netcat, nmap, iperf]
+  with_items:
+    - mtr
+    - bind-tools
+    - ethtool
+    - gnu-netcat
+    - nmap
+    - iperf
+    - dnstracer
+    - tcpdump
+    - ipcalc
+    - iptraf-ng
+    - traceroute
   when: ansible_distribution == "Archlinux"
 
 - name: install networking tools with yum
