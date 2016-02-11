@@ -2,6 +2,6 @@
 
 cd /etc/pacman.d
 mv mirrorlist{,.old}
-sed -i "s/^#//" mirrorlist.pacnew
+sed -i -r "/Canada|United States/,/^$/s/^#//p;d" mirrorlist.pacnew
 rankmirrors -n 10 mirrorlist.pacnew > mirrorlist
 chmod 644 mirrorlist
