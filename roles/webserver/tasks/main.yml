@@ -5,6 +5,8 @@
   - apache
   - mod_wsgi
   - python-virtualenv
+  - perl-libwww  # For the Munin apache plugins
+  - lynx  # For apachectl status
 
 - name: set ServerAdmin directive
   lineinfile:
@@ -21,6 +23,7 @@
 - include: ssl.yml
 - include: vhosts.yml
 - include: wsgi.yml
+- include: status.yml
 
 - name: open http and https ports
   copy:

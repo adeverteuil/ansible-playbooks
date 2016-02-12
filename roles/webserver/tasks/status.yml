@@ -1,0 +1,19 @@
+---
+- name: include httpd-info.conf
+  lineinfile:
+    dest: /etc/httpd/conf/httpd.conf
+    line: Include conf/extra/httpd-info.conf
+    regexp: ^#?Include conf/extra/httpd-info.conf
+  notify: restart apache
+
+- name: uncomment mod_info
+  lineinfile:
+    dest: /etc/httpd/conf/httpd.conf
+    line: LoadModule info_module modules/mod_info.so
+    regexp: ^#?LoadModule info_module modules/mod_info.so
+  notify: restart apache
+
+- name: configure mod_status and mod_info
+  template:
+    src: httpd-info.conf
+    dest: /etc/httpd/conf/extra/httpd-info.conf
