@@ -2,6 +2,11 @@
 - name: install munin-node
   pacman: name=munin-node state=present
 
+- name: copy ssh key
+  authorized_key:
+    user: munin
+    key: "{{ munin_ssh_public_key }}"
+
 - name: configure munin-node
   template:
     src: munin-node.conf.j2

@@ -7,6 +7,37 @@
     src: munin.conf.j2
     dest: /etc/munin/munin.conf
 
+- name: ensure /var/lib/munin/.ssh exists
+  file:
+    path: /var/lib/munin/.ssh
+    state: directory
+    owner: munin
+    group: munin
+    mode: 0700
+
+- name: copy ssh private key
+  template:
+    src: id_rsa.j2
+    dest: /var/lib/munin/.ssh/id_rsa
+    owner: munin
+    group: munin
+    mode: 0600
+
+- name: copy ssh public key
+  template:
+    src: id_rsa.pub.j2
+    dest: /var/lib/munin/.ssh/id_rsa.pub
+    owner: munin
+    group: munin
+    mode: 0640
+
+- name: configure the ssh client
+  copy:
+    src: ssh_config
+    dest: /var/lib/munin/.ssh/config
+    owner: munin
+    group: munin
+
 - name: create html output directory
   file:
     dest: /srv/http/munin

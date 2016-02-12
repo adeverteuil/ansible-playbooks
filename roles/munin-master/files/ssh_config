@@ -1,0 +1,10 @@
+Host *
+    BatchMode=yes
+    ConnectTimeout=10
+    EscapeChar=none
+    ExitOnForwardFailure=yes
+    ForwardAgent=no
+    ForwardX11=no
+    IdentitiesOnly=yes
+    PasswordAuthentication=no
+    RequestTTY=no
