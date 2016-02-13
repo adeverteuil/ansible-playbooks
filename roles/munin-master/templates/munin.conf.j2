@@ -93,8 +93,8 @@ includedir /etc/munin/munin-conf.d
 #}
 {#
 
-html_strategy cgi
-graph_strategy cgi
+#html_strategy cgi
+#graph_strategy cgi
 #}
 
 [deverteuil.net;higgs]
@@ -117,6 +117,9 @@ graph_strategy cgi
 
 [deverteuil.net;proton]
     address 192.168.42.20
+
+[deverteuil.net;neutrino.deverteuil.net]
+    address ssh://neutrino.deverteuil.net -W localhost:4949
 
 {#
 #
