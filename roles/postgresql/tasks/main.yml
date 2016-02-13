@@ -21,3 +21,12 @@
 
 - name: start and enable postgresql
   service: name=postgresql state=started enabled=yes
+
+- name: create a munin user
+  postgresql_user:
+    name: munin
+    role_attr_flags: NOSUPERUSER,NOCREATEDB,NOCREATEROLE
+    state: present
+
+# Not sure if needs to add line in pg_hba.conf
+# local all munin trust
