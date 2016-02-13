@@ -5,7 +5,7 @@
     munin_ssh_public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCs+vK1Iy2R4qPBLIzii14+DupJrBEuI9hKlcPYJKhbfaJFYXYa6J7NjQGBgpnoUWzGUcT1VfYGmhvW0a27D+9GOoWU3jihpGsm+A4/r6wqRwOCn+8yARGXAAjQ+7zOJhn81Jgp9RKg3ISybYPhumHcKXqa2xNYKLQGmY6F7QhvAC2LjyZ+gHa7xdGVquh05tGnIfB2jM8SVX1kHaTucA5YpPm6iJydgAQ1YB9zfNhCLkujgdYfyG4nt1HJXZ7GL7NgskvRB6MFu9GyrCR98hHhfdVfhLknmq9bAia8v8NMl4B3gMUkaJ98V4b+3M7nxhQ7aMKYfORfBnHScx6k1rRJ munin@electron
 
 
-- hosts: [electron]
+- hosts: [electron, higgs]
   roles: [munin-master]
   vars_files:
     - vault_munin.yml

@@ -93,6 +93,9 @@
     dest: /etc/munin/plugin-conf.d/snmp_hostnames
   notify: restart munin-node
 
+- name: install the SNMP Perl module
+  pacman: name=perl-net-snmp state=present
+
 - name: auto-enable snmp plugins for the switch
   shell: munin-node-configure --shell --snmp {{ munin_managed_switch_ip }} --snmpcommunity {{ munin_managed_switch_community }} | sh
   notify: restart munin-node
@@ -126,6 +129,13 @@
     dest: /etc/httpd/conf/httpd.conf
     line: "        LoadModule cgid_module modules/mod_cgid.so"
     regexp: ^ *#?LoadModule cgid_module.*$
+  notify: restart apache
+
+- name: load mod_rewrite in Apache
+  lineinfile:
+    dest: /etc/httpd/conf/httpd.conf
+    line: LoadModule rewrite_module modules/mod_rewrite.so
+    regexp: ^#?LoadModule rewrite_module.*$
   notify: restart apache
 
 - name: create the Apache VirtualHost

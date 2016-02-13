@@ -1,12 +1,15 @@
 <VirtualHost *:80>
     #http://munin-monitoring.org/wiki/MuninConfigurationMasterCGI
     ServerName localhost
+    ServerName munin.deverteuil.net
 
     DocumentRoot /srv/http/munin
+    <Directory /srv/http/munin>
+	Require all granted
+    </Directory>
 
     ErrorLog /var/log/httpd/munin-error.log
     CustomLog /var/log/httpd/munin-access.log combined
-
 
     # Rewrites
     RewriteEngine On
@@ -25,5 +28,4 @@
             SetHandler cgi-script
         </IfModule>
     </Directory>
-
 </VirtualHost>
