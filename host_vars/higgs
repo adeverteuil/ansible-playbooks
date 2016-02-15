@@ -21,3 +21,6 @@ nfs_exports:
 letsencrypt_authenticator: standalone
 letsencrypt_domains:
 - homeserver.deverteuil.net
+
+munin_html_strategy: cgi
+munin_graph_strategy: cgi

@@ -91,11 +91,9 @@ includedir /etc/munin/munin-conf.d
 #contact.nagios.command /usr/bin/send_nsca nagios.host.comm -c /etc/nsca.conf
 
 #}
-{#
 
-#html_strategy cgi
-#graph_strategy cgi
-#}
+html_strategy {{ munin_html_strategy }}
+graph_strategy {{ munin_graph_strategy }}
 
 [deverteuil.net;higgs]
     address 192.168.13.24

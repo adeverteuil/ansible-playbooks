@@ -14,6 +14,21 @@
     # Rewrites
     RewriteEngine On
 
+    {% if munin_html_strategy == "cgi" %}
+        # Static content in /static
+        RewriteRule ^/favicon.ico /etc/munin/static/favicon.ico [L]
+        RewriteRule ^/static/(.*) /etc/munin/static/$1          [L]
+
+        # HTML
+        RewriteCond %{REQUEST_URI} .html$ [or]
+        RewriteCond %{REQUEST_URI} =/
+        RewriteRule ^/(.*)          /usr/share/munin/cgi/munin-cgi-html/$1 [L]
+
+        <Directory "/etc/munin/static">
+            Require all granted
+        </Directory>
+    {% endif %}
+
     # Images
     RewriteRule ^/munin-cgi(.*) /usr/share/munin/cgi/$1 [L]
 
