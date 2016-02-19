@@ -405,7 +405,7 @@ acl_check_rcpt:
 
   # Deny unless the sender address can be verified.
 
-  require verify        = sender
+  require verify        = sender/defer_ok
           domains       = !+no_sender_verify_domains
 
   # Accept if the message comes from one of the hosts for which we are an
