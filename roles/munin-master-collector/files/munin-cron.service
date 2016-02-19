@@ -1,0 +1,7 @@
+[Unit]
+Description=Survey monitored computers
+After=network.target
+
+[Service]
+User=munin
+ExecStart=/usr/bin/flock /var/lib/munin/munin-cron.lock /usr/bin/munin-cron

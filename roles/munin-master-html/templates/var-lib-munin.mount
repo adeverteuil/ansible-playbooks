@@ -1,0 +1,9 @@
+[Unit]
+Description=NFS mount for /var/lib/munin
+
+[Mount]
+What={{ munin_nfs_server }}:/munin
+Where=/var/lib/munin
+Type=nfs4
+Options=rsize=8192,wsize=8192,_netdev
+TimeoutSec=15

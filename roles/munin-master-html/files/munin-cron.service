@@ -1,0 +1,10 @@
+[Unit]
+Description=Survey monitored computers
+After=network.target
+Requires=var-lib-munin.mount
+
+[Service]
+Nice=10
+User=munin
+ExecStartPre=/usr/bin/flock /var/lib/munin/munin-cron.lock /usr/lib/munin/munin-html
+ExecStart=/usr/bin/flock /var/lib/munin/munin-cron.lock /usr/lib/munin/munin-graph --cron

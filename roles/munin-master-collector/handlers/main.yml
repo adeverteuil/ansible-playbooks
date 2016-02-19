@@ -1,0 +1,12 @@
+---
+- name: reload systemd
+  command: systemctl daemon-reload
+
+- name: restart munin-cron.timer
+  service: name=munin-cron.timer state=restarted
+
+- name: restart httpd
+  service: name=httpd state=restarted
+
+- name: reload NFS exports
+  command: exportfs -ra
