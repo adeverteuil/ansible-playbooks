@@ -1,4 +1,5 @@
 <VirtualHost *:80>
+    ServerName {{ ansible_default_ipv4.address }}
     DocumentRoot /srv/http/default
     <Directory /srv/http/default>
         <Files index.html>
@@ -8,6 +9,7 @@
 </VirtualHost>
 
 <VirtualHost *:443>
+    ServerName {{ ansible_default_ipv4.address }}
     DocumentRoot /srv/http/default
     SSLEngine on
     SSLOptions +StrictRequire

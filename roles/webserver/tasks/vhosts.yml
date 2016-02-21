@@ -17,8 +17,8 @@
     state: directory
 
 - name: create default virtualhost
-  copy:
-    src: 0-default.conf
+  template:
+    src: 0-default.conf.j2
     dest: /etc/httpd/vhosts/0-default.conf
   notify: restart apache
 
