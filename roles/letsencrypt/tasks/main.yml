@@ -18,5 +18,11 @@
 - name: get the certificate
   command: letsencrypt certonly
 
+- name: renew certificates weekly
+  copy:
+    src: letsencrypt-renew
+    dest: /etc/cron.weekly/letsencrypt-renew
+    mode: 0755
+
 - name: restart Apache
   servce: name=httpd state=restarted
