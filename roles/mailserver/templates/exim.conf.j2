@@ -403,10 +403,11 @@ acl_check_rcpt:
   accept  local_parts   = postmaster
           domains       = +local_domains
 
-  # Deny unless the sender address can be verified.
+  # Deny unless the sender address can be verified or is in the
+  # no_sender_verify_domains list.
 
-  require verify        = sender/defer_ok
-          domains       = !+no_sender_verify_domains
+  deny    !sender_domains = +no_sender_verify_domains
+          !verify         = sender
 
   # Accept if the message comes from one of the hosts for which we are an
   # outgoing relay. It is assumed that such hosts are most likely to be MUAs,
