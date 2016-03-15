@@ -15,7 +15,7 @@
 - name: initialize the database
   command: initdb --locale en_US.UTF-8 -E UTF8 -D '/var/lib/postgres/data'
   args:
-      creates: /var/lib/postgres/data
+      creates: /var/lib/postgres/data/PG_VERSION
   become: yes
   become_user: postgres
 
