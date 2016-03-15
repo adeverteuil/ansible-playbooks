@@ -1,0 +1,18 @@
+---
+- hosts: dnsmasq
+  roles: [archlinux_system, security, networking_tools, dnsmasq]
+  vars:
+    dnsmasq_hosts:
+    - 192.168.13.1    neutron
+    - 192.168.13.3    dnsmasq
+    - 192.168.13.20   electron
+    - 192.168.13.21   quark
+    - 192.168.13.22   fermion
+    - 192.168.13.24   higgs
+    - 192.168.13.26   iPad
+    - 192.168.13.28   muon
+    - 192.168.13.31   hadron
+    - 198.58.102.179  baryon
+    - 198.72.123.133  neutrino
+    - 192.168.13.32   meson
+    - 192.168.42.20   proton

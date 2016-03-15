@@ -1,0 +1,29 @@
+---
+- name: install dnsmasq
+  pacman: name=dnsmasq state=present
+
+- name: configure dnsmasq
+  template:
+    src: dnsmasq.conf.j2
+    dest: /etc/dnsmasq.conf
+  notify: reload dnsmasq
+
+- name: start and enable dnsmasq
+  service: name=dnsmasq state=restarted
+
+- name: open udp port 53
+  copy:
+    src: 20-dnsmasq
+    dest: /etc/iptables/rules.d/20-dnsmasq
+
+- name: assemble iptables.rules
+  assemble:
+    src: /etc/iptables/rules.d/
+    dest: /etc/iptables.rules
+  notify: reload iptables
+
+- name: update hosts file
+  template:
+    src: hosts.j2
+    dest: /etc/hosts
+  notify: reload dnsmasq
