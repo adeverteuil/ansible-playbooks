@@ -24,11 +24,11 @@
   when: iptables_allow_ports != []
   notify: reload iptables
 
-- name: modify iptables.service
-  copy:
-    src: iptables.service
-    dest: /etc/systemd/system/iptables.service
-  notify: reload systemd manager configuration
+- name: assemble iptables.rules
+  assemble:
+    dest: /etc/iptables/iptables.rules
+    src: /etc/iptables/rules.d
+  notify: reload iptables
 
 - name: start and enable iptables
   service: name=iptables state=started enabled=yes
@@ -38,4 +38,3 @@
 
 - name: install sudo
   pacman: name=sudo state=present
-  when: ansible_os_family == "Archlinux"
