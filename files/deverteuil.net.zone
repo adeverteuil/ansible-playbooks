@@ -1,0 +1,20 @@
+$TTL 1
+; domain.tld
+@       IN      SOA     ns01.domain.tld. postmaster.domain.tld. (
+                                        2007011601 ; Serial
+                                        28800      ; Refresh
+                                        1800       ; Retry
+                                        604800     ; Expire - 1 week
+                                        86400 )    ; Minimum
+                IN      NS      ns01
+                IN      NS      ns02
+ns01            IN      A       0.0.0.0
+ns02            IN      A       0.0.0.0
+localhost       IN      A       127.0.0.1
+@               IN      MX 10   mail
+imap            IN      CNAME   mail
+smtp            IN      CNAME   mail
+@               IN      A       0.0.0.0
+www             IN      A       0.0.0.0
+mail            IN      A       0.0.0.0
+@               IN      TXT     "v=spf1 mx"
