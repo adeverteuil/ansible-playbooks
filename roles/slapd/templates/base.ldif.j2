@@ -1,0 +1,25 @@
+dn: {{ ldap_suffix }}
+objectclass: dcObject
+objectclass: organization
+o: {{ ldap_organization }}
+dc: {{ ldap_organization_dc }}
+
+dn: cn=Manager,{{ ldap_suffix }}
+description: LDAP administrator
+objectclass: organizationalRole
+cn: Manager
+
+dn: ou=users,{{ ldap_suffix }}
+ou: users
+objectClass: top
+objectClass: organizationalUnit
+
+dn: ou=groups,{{ ldap_suffix }}
+ou: groups
+objectClass: top
+objectClass: organizationalUnit
+
+dn: ou=addressbook,{{ ldap_suffix }}
+ou: addressbook
+objectClass: top
+objectClass: organizationalUnit

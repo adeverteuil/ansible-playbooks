@@ -1,0 +1,6 @@
+---
+ldap_suffix: dc=my-domain,dc=com
+ldap_organization_dc: my-domain
+ldap_organization: Home LDAP Server
+ldap_rootpw: secret
+ldap_hostname: "{{ ansible_fqdn }}"

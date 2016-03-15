@@ -1,0 +1,55 @@
+---
+- name: install openldap
+  pacman: name=openldap state=present
+
+- name: ensure slapd is not running
+  service: name=slapd state=stopped
+
+- name: create directory for slapd.service override
+  file:
+    path: /etc/systemd/system/slapd.service.d
+    state: directory
+
+- name: override slapd.service unit to start on ldaps port
+  copy:
+    src: ldaps.conf
+    dest: /etc/systemd/system/slapd.service.d/ldaps.conf
+  notify: reload systemd
+
+- name: copy letsencrypt ca-certificates
+  copy:
+    src: ca-certificates.pem
+    dest: /etc/openldap/ca-certificates.pem
+
+- name: copy DB_CONFIG
+  copy:
+    src: DB_CONFIG
+    dest: /var/lib/openldap/openldap-data/DB_CONFIG
+    owner: ldap
+    group: ldap
+
+- name: configure slapd
+  template:
+    src: slapd.ldif.j2
+    dest: /etc/openldap/slapd.ldif
+
+- name: initialize the configuration
+  become: yes
+  become_user: ldap
+  command: slapadd -F /etc/openldap/slapd.d -n 0 -l /etc/openldap/slapd.ldif
+  args:
+    creates: /etc/openldap/slapd.d/cn=config
+
+- name: copy base.ldif
+  template:
+    src: base.ldif.j2
+    dest: /etc/openldap/base.ldif
+
+- name: allow port 636 for ldaps
+  copy:
+    src: 20-ldaps
+    dest: /etc/iptables/rules.d/20-ldaps
+  notify: reload iptables
+
+- name: start and enable slapd
+  service: name=slapd state=started enabled=yes

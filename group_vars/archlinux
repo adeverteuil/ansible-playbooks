@@ -1,2 +1,3 @@
 ---
 ansible_python_interpreter: /usr/bin/python2
+ldap_suffix: dc=deverteuil,dc=net
