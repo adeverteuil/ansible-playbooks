@@ -5,6 +5,7 @@
     - mtr
     - bind-tools
     - ethtool
+    - net-tools
     - gnu-netcat
     - nmap
     - iperf

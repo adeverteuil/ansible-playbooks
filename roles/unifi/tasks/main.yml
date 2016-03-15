@@ -1,0 +1,24 @@
+---
+- name: install unifi
+  pacman: name=unifi state=present
+
+## Runs as user unifi, can't bind priviledged port.
+#- name: serve UI on port 443
+#  lineinfile:
+#    line: unifi.https.port=443
+#    dest: /usr/lib/unifi/data/system.properties
+#  notify: restart unifi
+
+- name: open management port
+  copy:
+    src: 20-unifi
+    dest: /etc/iptables/rules.d/20-unifi
+
+- name: assemble iptables.rules
+  assemble:
+    dest: /etc/iptables/iptables.rules
+    src: /etc/iptables/rules.d
+  notify: reload iptables
+
+- name: start and enable unifi
+  service: name=unifi state=started enabled=yes
