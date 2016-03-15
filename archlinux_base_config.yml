@@ -6,4 +6,4 @@
 # - Install the python2 package
 
 - hosts: [archlinux]
-  roles: [archlinux_system]
+  roles: [archlinux_system, security, networking_tools]
