@@ -149,3 +149,9 @@
     src: var-lib-munin.mount
     dest: /etc/systemd/system/var-lib-munin.mount
   notify: reload systemd
+
+- name: give munin a shell
+  become: no
+  user:
+    name: munin
+    shell: /usr/bin/bash
