@@ -1,0 +1,8 @@
+[Unit]
+Description=Renew Let's Encrypt certificates weekly
+
+[Timer]
+OnCalendar=weekly
+
+[Install]
+WantedBy=multi-user.target

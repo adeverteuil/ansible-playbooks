@@ -10,19 +10,30 @@
     group: http
     mode: 0750
 
-- name: configure letsencrypt
-  template:
-    src: cli.ini.j2
-    dest: /etc/letsencrypt/cli.ini
+#- name: configure letsencrypt
+#  template:
+#    src: cli.ini.j2
+#    dest: /etc/letsencrypt/cli.ini
 
-- name: get the certificate
-  command: letsencrypt certonly
-
-- name: renew certificates weekly
+- name: open ports 80 and 443 through the firewall
   copy:
-    src: letsencrypt-renew
-    dest: /etc/cron.weekly/letsencrypt-renew
-    mode: 0755
+    src: 20-webserver
+    dest: /etc/iptables/rules.d/20-webserver
+  notify: reload iptables
 
-- name: restart Apache
-  servce: name=httpd state=restarted
+- name: create service unit file for certificate renewal
+  copy:
+    src: letsencrypt-renew.service
+    dest: /etc/systemd/system/letsencrypt-renew.service
+  notify: reload systemd
+
+- name: create timer unit file for certificate renewal
+  copy:
+    src: letsencrypt-renew.timer
+    dest: /etc/systemd/system/letsencrypt-renew.timer
+  notify:
+  - reload systemd
+  - restart letsencrypt-renew.timer
+
+- name: start and enable letsencrypt-renew.timer
+  service: name=letsencrypt-renew.timer state=started enabled=true

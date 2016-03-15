@@ -1,6 +1,6 @@
 ---
 letsencrypt_email: webmaster@{{ ansible_fqdn }}
-letsencrypt_domains: "{{ ansible_fqdn }}"
+letsencrypt_domains: ["{{ ansible_fqdn }}"]
 letsencrypt_webroot: /home/http/letsencrypt
 letsencrypt_authenticator: webroot
 
