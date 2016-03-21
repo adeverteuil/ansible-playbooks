@@ -1,0 +1,13 @@
+dev tun
+client
+remote alexdev.chickenkiller.com
+ca /openvpn/easy-rsa/keys/ca.crt
+cert /openvpn/easy-rsa/keys/client.crt
+key /openvpn/easy-rsa/keys/client.key
+user nobody
+group nobody
+nobind
+resolv-retry infinite
+remote-cert-tls server
+verb 3
+comp-lzo

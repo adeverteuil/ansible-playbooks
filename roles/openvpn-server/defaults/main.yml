@@ -1,0 +1,9 @@
+---
+openvpn_key_params:
+  country: US
+  province: CA
+  city: SanFransisco
+  org: Fort-Funston
+  email: me@myhost.mydomain
+  ou: MyOrganizationalUnit
+  size: 2048

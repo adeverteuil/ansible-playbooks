@@ -1,0 +1,41 @@
+---
+- name: install openvpn
+  pacman: name=openvpn state=present
+
+- name: install easy-rsa
+  pacman: name=easy-rsa state=present
+
+- name: copy easy-rsa to /root
+  command: cp -r /usr/share/easy-rsa /root
+  args:
+    creates: /root/easy-rsa
+
+- name: configure easy-rsa vars
+  lineinfile:
+    line: export KEY_{{ item.key|upper }}="{{ item.value }}"
+    dest: /root/easy-rsa/vars
+  with_dict: "{{ openvpn_key_params }}"
+
+- name: open UDP port 1194
+  copy:
+    src: 20-openvpn
+    dest: /etc/iptables/rules.d/20-openvpn
+
+- name: assemble iptables.rules
+  assemble:
+    src: /etc/iptables/rules.d/
+    dest: /etc/iptables.rules
+  notify: reload iptables
+
+- name: configure openvpn
+  template:
+    src: server.conf.j2
+    dest: /etc/openvpn/server.conf
+
+- name: copy sample client configuration file
+  copy:
+    src: client.conf.sample
+    dest: /etc/openvpn/client.conf.sample
+
+- name: enable openvpn@server
+  service: name=openvpn@server enabled=yes

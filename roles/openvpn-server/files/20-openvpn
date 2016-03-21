@@ -1,0 +1,2 @@
+# OpenVPN
+-A UDP -p udp -m udp --dport 1194 -j ACCEPT
