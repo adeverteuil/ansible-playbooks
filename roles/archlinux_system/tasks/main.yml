@@ -49,3 +49,7 @@
   - git
   - findutils
   - mlocate
+  - sysstat
+
+- name: start and enable sysstat
+  service: name=sysstat state=started enabled=yes
