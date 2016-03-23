@@ -9,7 +9,14 @@
     mode: 0640
     owner: root
     group: named
-  notify: restart bind
+  notify: reload bind
+
+- name: install minimal localdomain zone file
+  template:
+    src: localdomain.zone.j2
+    dest: /var/named/{{ bind_localdomain }}.zone
+    force: no
+  notify: reload bind
 
 - name: start and enable bind
   service: name=named state=started enabled=yes

@@ -1,0 +1,25 @@
+---
+- hosts: resolvers
+
+  tasks:
+  - name: update localdomain zone file
+    lineinfile:
+      line: "{{ item.name }}  IN  A  {{ item.ip }}"
+      dest: /var/named/{{ bind_localdomain }}.zone
+    with_items: "{{ dhcp_static_hosts }}"
+    notify: update localdomain zone serial
+
+  vars:
+    bind_localdomain: private.deverteuil.net
+    dhcp_static_hosts:
+    - {mac: "6c:f0:49:09:c6:59", ip: "192.168.13.20", name: "electron"}
+
+  handlers:
+  - name: update localdomain zone serial
+    lineinfile:
+      regexp: "^ *\\d+ *; *Serial *$"
+      line: "                                        {{ ansible_date_time.epoch }} ; Serial"
+      dest: /var/named/{{ bind_localdomain }}.zone
+    notify: reload named
+  - name: reload named
+    service: name=named state=reloaded

@@ -51,10 +51,13 @@ zone "." IN {
     type hint;
     file "root.hint";
 };
-{% if named_zones %}
 
-{{ named_zones }}
-{% endif %}
+zone "{{ bind_localdomain }}" IN {
+    type master;
+    file "{{ bind_localdomain }}.zone";
+    allow-update { none; };
+    notify no;
+};
 {#
 //zone "example.org" IN {
 //    type slave;

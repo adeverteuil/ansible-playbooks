@@ -13,16 +13,16 @@ higgs
 electron
 muon
 baryon.deverteuil.net
-192.168.13.150
 192.168.13.162
 192.168.13.3
 192.168.13.163
+192.168.13.150
+
+[resolvers]
+192.168.13.150
 
 [openvpn-server]
 192.168.13.163
-
-[named]
-192.168.13.150
 
 [dnsmasq]
 192.168.13.3

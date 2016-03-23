@@ -1,5 +1,4 @@
 ---
 named_forwarders: []
 named_allowed_recursion_ips: [127.0.0.1]
-named_zones: ""
 named_logging: no

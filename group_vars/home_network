@@ -1,2 +1,6 @@
 ---
 dotfiles_repo_host: ssh://alex@higgs
+bind_domainadmin: postmaster.deverteuil.net
+bind_localdomain: private.deverteuil.net
+dhcp_static_hosts:
+  - ["6c:f0:49:09:c6:59", 192.168.13.20, electron]
