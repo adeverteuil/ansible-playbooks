@@ -1,0 +1,6 @@
+---
+- name: restart dhcpd
+  service: name=dhcpd4 state=restarted
+
+- name: reload iptables
+  service: name=iptables state=reloaded

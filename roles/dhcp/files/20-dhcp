@@ -1,0 +1,2 @@
+# DHCP
+-A UDP -p udp -m udp --dport 67 -j ACCEPT

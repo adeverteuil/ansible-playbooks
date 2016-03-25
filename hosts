@@ -1,7 +1,12 @@
 [home_network]
 higgs
-muon
-electron
+fixion
+baryon.deverteuil.net
+unifi
+openvpn
+192.168.13.157
+pacman-cache
+dhcp
 
 [remote_network]
 neutrino.deverteuil.net
@@ -10,25 +15,31 @@ baryon.deverteuil.net
 
 [archlinux]
 higgs
-electron
-muon
+fixion
 baryon.deverteuil.net
-192.168.13.162
-192.168.13.3
-192.168.13.163
-192.168.13.150
+unifi
+openvpn
+ns1
+pacman-cache
+dhcp
+
+[dhcp-server]
+dhcp
+
+[hypervisor]
+fixion
+
+[pacman-cache]
+pacman-cache
 
 [resolvers]
-192.168.13.150
+ns1
 
 [openvpn-server]
-192.168.13.163
-
-[dnsmasq]
-192.168.13.3
+openvpn
 
 [unifi]
-192.168.13.162
+unifi
 
 [tor_nodes]
 higgs

@@ -1,4 +1,7 @@
 ---
+- hosts: dhcp-server
+  roles: [archlinux_system, security, dhcp]
+
 - hosts: resolvers
 
   tasks:
@@ -6,19 +9,15 @@
     lineinfile:
       line: "{{ item.name }}  IN  A  {{ item.ip }}"
       dest: /var/named/{{ bind_localdomain }}.zone
+      regexp: "^{{ item.name }} +IN +A "
     with_items: "{{ dhcp_static_hosts }}"
     notify: update localdomain zone serial
-
-  vars:
-    bind_localdomain: private.deverteuil.net
-    dhcp_static_hosts:
-    - {mac: "6c:f0:49:09:c6:59", ip: "192.168.13.20", name: "electron"}
 
   handlers:
   - name: update localdomain zone serial
     lineinfile:
-      regexp: "^ *\\d+ *; *Serial *$"
-      line: "                                        {{ ansible_date_time.epoch }} ; Serial"
+      regexp: "^ *\\d+ *; *Serial"
+      line: "                                        {{ ansible_date_time.epoch }} ; Serial ({{ ansible_date_time.iso8601 }})"
       dest: /var/named/{{ bind_localdomain }}.zone
     notify: reload named
   - name: reload named

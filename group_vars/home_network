@@ -3,4 +3,15 @@ dotfiles_repo_host: ssh://alex@higgs
 bind_domainadmin: postmaster.deverteuil.net
 bind_localdomain: private.deverteuil.net
 dhcp_static_hosts:
-  - ["6c:f0:49:09:c6:59", 192.168.13.20, electron]
+- {mac: "1a:64:df:7d:30:96", ip: "192.168.13.3", name: "dhcp"}
+- {mac: "5e:a6:fe:6c:36:9f", ip: "192.168.13.4", name: "fixion"}
+- {mac: "52:3a:a7:71:0f:1c", ip: "192.168.13.5", name: "unifi"}
+- {mac: "96:11:c6:ff:f5:76", ip: "192.168.13.6", name: "openvpn"}
+- {mac: "1e:ab:03:65:d5:a3", ip: "192.168.13.7", name: "pacman-cache"}
+- {mac: "a2:05:aa:8e:aa:85", ip: "192.168.13.8", name: "ns1"}
+- {mac: "6c:f0:49:09:c6:59", ip: "192.168.13.20", name: "electron"}
+- {mac: "40:6c:8f:54:28:44", ip: "192.168.13.21", name: "quark"}
+- {mac: "34:15:9e:13:a4:5e", ip: "192.168.13.22", name: "fermion"}
+- {mac: "b8:27:eb:dc:f4:c2", ip: "192.168.13.24", name: "higgs"}
+- {mac: "                 ", ip: "192.168.13.28", name: "muon"}
+- {mac: "50:67:ae:f0:2d:01", ip: "192.168.13.31", name: "voip"}

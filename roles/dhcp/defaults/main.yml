@@ -1,0 +1,3 @@
+---
+bind_localdomain: "localdomain"
+dhcp_static_hosts: []
