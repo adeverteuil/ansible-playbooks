@@ -46,6 +46,27 @@
   - findutils
   - mlocate
   - sysstat
+  - strace
+  - lsof
+
+- name: ensure gnu-netcat is not present
+  pacman: name=gnu-netcat state=absent
+
+- name: install networking
+  pacman: name={{ item }}
+  with_items:
+    - mtr
+    - bind-tools
+    - ethtool
+    - net-tools
+    - openbsd-netcat
+    - nmap
+    - iperf
+    - dnstracer
+    - tcpdump
+    - ipcalc
+    - iptraf-ng
+    - traceroute
 
 - name: start and enable sysstat
   service: name=sysstat state=started enabled=yes
