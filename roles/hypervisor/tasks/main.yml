@@ -1,0 +1,36 @@
+---
+- name: create the /var/lib/libvirt directory
+  file:
+    path: /var/lib/libvirt
+    state: directory
+
+- name: mount the data partition
+  mount:
+    name: /var/lib/libvirt
+    src: "{{ hypervisor_data_partition }}"
+    fstype: "{{ hypervisor_data_fstype }}"
+    state: mounted
+  when: hypervisor_data_partition != ""
+
+- name: install packages
+  pacman: name={{ item }} state=present
+  with_items:
+  - qemu
+  - dmidecode
+  - ebtables
+  - dnsmasq
+  - bridge-utils
+  - openbsd-netcat
+  - libvirt
+
+- name: start virtlogd
+  service: name=virtlogd state=started
+
+- name: start and enable hypervisor
+  service: name=libvirtd state=started enabled=yes
+
+- name: add root to the libvirt group
+  user:
+    name: root
+    groups: libvirt
+    append: yes
