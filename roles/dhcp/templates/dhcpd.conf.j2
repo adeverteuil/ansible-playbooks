@@ -6,7 +6,7 @@
 
 # option definitions common to all supported networks...
 option domain-name "{{ bind_localdomain }}";
-option domain-name-servers 192.168.13.8;
+option domain-name-servers 192.168.13.8, 192.168.13.88;
 use-host-decl-names on;
 
 default-lease-time 604800;  # A week
