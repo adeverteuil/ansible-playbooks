@@ -1,5 +1,5 @@
 ---
-- hosts: resolvers
+- hosts: nameservers
   roles: [archlinux_system, security, named]
   vars:
     named_allowed_recursion_ips: [127.0.0.1, 192.168.0.0/16]

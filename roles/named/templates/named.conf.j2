@@ -11,7 +11,13 @@ options {
     //  listen-on { none; };
 
     allow-recursion { {% for f in named_allowed_recursion_ips %}{{f}}; {% endfor %}};
-    allow-transfer { none; };
+{% if named_master %}
+    allow-transfer { 192.168.13.88; };
+    allow-notify { 192.168.13.88; };
+{% else %}
+    allow-transfer { 192.168.13.8; };
+    allow-notify { 192.168.13.8; };
+{% endif %}
     allow-update { none; };
 {% if named_forwarders %}
     forwarders { {% for f in named_forwarders %}{{f}}; {% endfor %}};
@@ -53,10 +59,14 @@ zone "." IN {
 };
 
 zone "{{ bind_localdomain }}" IN {
+{% if named_master %}
     type master;
     file "{{ bind_localdomain }}.zone";
-    allow-update { none; };
-    notify no;
+    allow-update { 192.168.13.3; };
+{% else %}
+    type slave;
+    masters { 192.168.13.8 };
+{% endif %}
 };
 {#
 //zone "example.org" IN {
@@ -69,17 +79,11 @@ zone "{{ bind_localdomain }}" IN {
 //    allow-transfer { any; };
 //};
 #}
-{% if named_logging %}
 
 logging {
-    channel xfer-log {
-        file "/var/log/named.log";
-            print-category yes;
-            print-severity yes;
+    channel journald {
+            syslog daemon;
             severity info;
         };
-        category xfer-in { xfer-log; };
-        category xfer-out { xfer-log; };
-        category notify { xfer-log; };
+    category default { journald; };
 };
-{% endif %}

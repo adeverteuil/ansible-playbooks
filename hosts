@@ -1,7 +1,6 @@
 [home_network]
 higgs
 fixion
-baryon.deverteuil.net
 unifi
 openvpn
 ns1
@@ -20,6 +19,7 @@ baryon.deverteuil.net
 unifi
 openvpn
 ns1
+ns2
 pacman-cache
 dhcp
 
@@ -32,8 +32,9 @@ fixion
 [pacman-cache]
 pacman-cache
 
-[resolvers]
+[nameservers]
 ns1
+ns2
 
 [openvpn-server]
 openvpn

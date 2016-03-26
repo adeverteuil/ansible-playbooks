@@ -1,14 +1,15 @@
-@       IN      SOA     ns01.{{ bind_localdomain }}. postmaster.{{ bind_domainadmin }}. (
+@       IN      SOA     {{ ansible_hostname }}.{{ bind_localdomain }}. postmaster.{{ bind_domainadmin }}. (
                                         {{ ansible_date_time.epoch }} ; Serial
                                         28800      ; Refresh
                                         1800       ; Retry
                                         604800     ; Expire - 1 week
                                         86400 )    ; Minimum
-                IN      NS      ns01
-                IN      NS      ns02
-ns01            IN      A       0.0.0.0
-ns02            IN      A       0.0.0.0
+                IN      NS      ns1
+                IN      NS      ns2
+ns1             IN      A       192.168.13.8
+ns2             IN      A       192.168.13.88
 localhost       IN      A       127.0.0.1
+{#
 @               IN      MX 10   mail
 imap            IN      CNAME   mail
 smtp            IN      CNAME   mail
@@ -16,3 +17,4 @@ smtp            IN      CNAME   mail
 www             IN      A       0.0.0.0
 mail            IN      A       0.0.0.0
 @               IN      TXT     "v=spf1 mx"
+#}
