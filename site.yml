@@ -1,0 +1,5 @@
+---
+- include: hypervisor.yml
+- include: named.yml
+- include: dhcp.yml
+- include: pacman-cache.yml
