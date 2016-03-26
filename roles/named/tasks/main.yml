@@ -18,6 +18,13 @@
     force: no
   notify: reload bind
 
+- name: install minimal localdomain rDNS zone file
+  template:
+    src: rdns.zone.j2
+    dest: /var/named/13.168.192.in-addr.arpa.zone
+    force: no
+  notify: reload bind
+
 - name: start and enable bind
   service: name=named state=started enabled=yes
 
