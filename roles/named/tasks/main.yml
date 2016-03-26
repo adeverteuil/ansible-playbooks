@@ -16,6 +16,7 @@
     src: localdomain.zone.j2
     dest: /var/named/{{ bind_localdomain }}.zone
     force: no
+  when: named_master
   notify: reload bind
 
 - name: install minimal localdomain rDNS zone file
@@ -23,6 +24,7 @@
     src: rdns.zone.j2
     dest: /var/named/13.168.192.in-addr.arpa.zone
     force: no
+  when: named_master
   notify: reload bind
 
 - name: start and enable bind
