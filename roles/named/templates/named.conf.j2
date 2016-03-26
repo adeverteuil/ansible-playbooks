@@ -13,9 +13,7 @@ options {
     allow-recursion { {% for f in named_allowed_recursion_ips %}{{f}}; {% endfor %}};
 {% if named_master %}
     allow-transfer { 192.168.13.88; };
-    allow-notify { 192.168.13.88; };
 {% else %}
-    allow-transfer { 192.168.13.8; };
     allow-notify { 192.168.13.8; };
 {% endif %}
     allow-update { none; };
@@ -27,6 +25,12 @@ options {
     hostname none;
     server-id none;
 };
+
+key DHCP_UPDATER {
+  algorithm HMAC-SHA256;
+  secret L7RdeyMksNGSsCf6aodRzA==;
+};
+
 
 zone "localhost" IN {
     type master;
@@ -62,9 +66,10 @@ zone "{{ bind_localdomain }}" IN {
 {% if named_master %}
     type master;
     file "{{ bind_localdomain }}.zone";
-    allow-update { 192.168.13.3; };
+    allow-update { key DHCP_UPDATER; };
 {% else %}
     type slave;
+    file "{{ bind_localdomain }}.zone";
     masters { 192.168.13.8; };
 {% endif %}
 };
@@ -72,9 +77,10 @@ zone "13.168.192.in-addr.arpa" IN {
 {% if named_master %}
     type master;
     file "13.168.192.in-addr.arpa.zone";
-    allow-update { 192.168.13.3; };
+    allow-update { key DHCP_UPDATER; };
 {% else %}
     type slave;
+    file "13.168.192.in-addr.arpa.zone";
     masters { 192.168.13.8; };
 {% endif %}
 };
