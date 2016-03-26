@@ -33,7 +33,7 @@ decode:		root
 
 {% if exim_postmaster != "root" %}
 # Person who should get root's mail
-root: alex
+root: {{ exim_postmaster }}
 
 {% endif %}
 # Locally added aliases
