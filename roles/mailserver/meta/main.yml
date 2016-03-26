@@ -1,2 +1,2 @@
 ---
-dependencies: [security]
+dependencies: [archlinux_system, networking_tools, security]
