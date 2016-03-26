@@ -62,21 +62,21 @@ zone "{{ bind_localdomain }}" IN {
 {% if named_master %}
     type master;
     file "{{ bind_localdomain }}.zone";
+    allow-update { 192.168.13.3; };
 {% else %}
     type slave;
-    masters { 192.168.13.8 };
+    masters { 192.168.13.8; };
 {% endif %}
-    allow-update { 192.168.13.3; };
 };
 zone "13.168.192.in-addr.arpa" IN {
 {% if named_master %}
     type master;
     file "13.168.192.in-addr.arpa.zone";
+    allow-update { 192.168.13.3; };
 {% else %}
     type slave;
-    masters { 192.168.13.8 };
+    masters { 192.168.13.8; };
 {% endif %}
-    allow-update { 192.168.13.3; };
 };
 {#
 //zone "example.org" IN {
