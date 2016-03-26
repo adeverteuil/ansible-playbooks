@@ -5,7 +5,7 @@
     nfs_exports:
     - path: /var/cache/pacman
       dirname: pacman
-      hosts: [[192.168.13.0/24, rw]]
+      hosts: [[192.168.13.0/24, "rw,no_root_squash"]]
   # Format of nfs_exports items:
   # - path: /path/name/to/share
   #   dirname: exported_dirname
@@ -15,7 +15,7 @@
   roles: [pacman-cache-client, nfs]
   vars:
     nfs_mounts:
-    - what: "pacman-cache.private.deverteuil.net:/srv/nfs/pacman"
+    - what: "pacman-cache.private.deverteuil.net:/pacman"
       where: /var/cache/pacman
   # Format of nfs_mounts items:
   # - what: "host:/path"
