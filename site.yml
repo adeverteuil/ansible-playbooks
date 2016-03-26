@@ -3,3 +3,4 @@
 - include: named.yml
 - include: dhcp.yml
 - include: pacman-cache.yml
+- include: mailserver.yml
