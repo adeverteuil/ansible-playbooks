@@ -22,6 +22,7 @@ ns1
 ns2
 pacman-cache
 dhcp
+smtp
 
 [dhcp-server]
 dhcp
@@ -49,6 +50,7 @@ higgs
 higgs
 baryon.deverteuil.net
 electron
+smtp
 
 [dovecot]
 higgs
