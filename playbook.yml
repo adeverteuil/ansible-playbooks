@@ -1,9 +1,0 @@
----
-- hosts: all
-  roles: [networking_tools, alex_user]
-  remote_user: root
-
-# Roles :
-# X server
-#   fonts including unifont
-# web server

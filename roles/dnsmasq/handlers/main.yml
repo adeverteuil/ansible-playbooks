@@ -1,6 +1,0 @@
----
-- name: restart dnsmasq
-  service: name=dnsmasq state=reloaded
-
-- name: reload iptables
-  service: name=iptables state=reloaded

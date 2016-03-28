@@ -1,4 +1,0 @@
----
-- name: update Archlinux boxes
-  include: archlinux.yml
-  when: ansible_os_family == "Archlinux"

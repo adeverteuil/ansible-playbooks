@@ -1,3 +1,0 @@
----
-- name: optimize database
-  command: pacman-optimize
