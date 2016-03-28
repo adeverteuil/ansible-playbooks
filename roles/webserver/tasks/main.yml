@@ -29,4 +29,9 @@
   copy:
     src: 20-webserver
     dest: /etc/iptables/rules.d/20-webserver
+
+- name: assemble iptables.rules
+  assemble:
+    dest: /etc/iptables/iptables.rules
+    src: /etc/iptables/rules.d
   notify: reload iptables
