@@ -33,6 +33,11 @@
   copy:
     src: 20-munin-node
     dest: /etc/iptables/rules.d/20-munin-node
+
+- name: assemble iptables.rules
+  assemble:
+    dest: /etc/iptables/iptables.rules
+    src: /etc/iptables/rules.d
   notify: reload iptables
 
 - name: start and enable munin-node

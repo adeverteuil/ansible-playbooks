@@ -95,29 +95,38 @@ includedir /etc/munin/munin-conf.d
 html_strategy {{ munin_html_strategy }}
 graph_strategy {{ munin_graph_strategy }}
 
-[deverteuil.net;higgs]
-    address 192.168.13.24
+[private.deverteuil.net;higgs]
+    address higgs.private.deverteuil.net
 
-[deverteuil.net;electron]
-    address 192.168.13.20
+[private.deverteuil.net;electron]
+    address electron.private.deverteuil.net
 
-[deverteuil.net;muon]
-    address 192.168.13.28
+[private.deverteuil.net;muon]
+    address muon.private.deverteuil.net
 
 [baryon.deverteuil.net]
     address ssh://baryon.deverteuil.net -W localhost:4949
 
-[deverteuil.net;switch]
+[private.deverteuil.net;switch]
     address 127.0.0.1
 
 #[deverteuil.net;router]
 #    address 127.0.0.1
 
-[deverteuil.net;proton]
-    address 192.168.42.20
+[private.deverteuil.net;proton]
+    address proton.private.deverteuil.net
 
 [deverteuil.net;neutrino.deverteuil.net]
     address ssh://neutrino.deverteuil.net -W localhost:4949
+
+[private.deverteuil.net;munin]
+    address 127.0.0.1
+
+[private.deverteuil.net;ns1]
+    address ns1.private.deverteuil.net
+
+[private.deverteuil.net;ns2]
+    address ns2.private.deverteuil.net
 
 {#
 #
