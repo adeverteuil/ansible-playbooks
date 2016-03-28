@@ -1,6 +1,6 @@
 ---
 - hosts: nameservers
-  roles: [archlinux_system, security, named]
+  roles: [named]
   vars:
     named_allowed_recursion_ips: [127.0.0.1, 192.168.0.0/16]
     bind_localdomain: private.deverteuil.net

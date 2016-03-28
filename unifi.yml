@@ -1,3 +1,3 @@
 ---
 - hosts: unifi
-  roles: [archlinux_system, networking_tools, security, unifi]
+  roles: [unifi]

@@ -1,6 +1,6 @@
 ---
 - hosts: openvpn-server
-  roles: [archlinux_system, security, networking_tools, openvpn-server]
+  roles: [openvpn-server]
   vars:
     openvpn_key_params:
       country: "CA"

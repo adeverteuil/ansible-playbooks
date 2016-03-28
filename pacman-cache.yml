@@ -1,6 +1,6 @@
 ---
 - hosts: pacman-cache
-  roles: [archlinux_system, security, pacman-cache, nfs]
+  roles: [pacman-cache, nfs]
   vars:
     nfs_exports:
     - path: /var/cache/pacman
