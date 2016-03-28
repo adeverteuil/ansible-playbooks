@@ -8,6 +8,7 @@ pacman-cache
 dhcp
 smtp
 munin
+tor
 
 [remote_network]
 neutrino.deverteuil.net
@@ -27,6 +28,7 @@ dhcp
 smtp
 ldap
 munin
+tor
 
 [dhcp-server]
 dhcp
@@ -43,9 +45,6 @@ openvpn
 
 [unifi]
 unifi
-
-[tor_nodes]
-higgs
 
 [mailservers]
 higgs

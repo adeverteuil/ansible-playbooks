@@ -10,6 +10,7 @@ dhcp_static_hosts:
 - {mac: "1e:ab:03:65:d5:a3", ip: "192.168.13.7", name: "pacman-cache"}
 - {mac: "a2:05:aa:8e:aa:85", ip: "192.168.13.8", name: "ns1"}
 - {mac: "ee:4a:9b:dc:ab:47", ip: "192.168.13.9", name: "smtp"}
+- {mac: "4a:5f:a2:16:4a:97", ip: "192.168.13.10", name: "tor"}
 - {mac: "6c:f0:49:09:c6:59", ip: "192.168.13.20", name: "electron"}
 - {mac: "40:6c:8f:54:28:44", ip: "192.168.13.21", name: "quark"}
 - {mac: "34:15:9e:13:a4:5e", ip: "192.168.13.22", name: "fermion"}
