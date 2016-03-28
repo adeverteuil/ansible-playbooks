@@ -1,11 +1,13 @@
 [home_network]
-higgs
 fixion
 unifi
 openvpn
 ns1
+ns2
 pacman-cache
 dhcp
+smtp
+munin
 
 [remote_network]
 neutrino.deverteuil.net
@@ -23,15 +25,14 @@ ns2
 pacman-cache
 dhcp
 smtp
+ldap
+munin
 
 [dhcp-server]
 dhcp
 
 [hypervisor]
 fixion
-
-[pacman-cache]
-pacman-cache
 
 [nameservers]
 ns1
