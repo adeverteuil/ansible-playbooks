@@ -1,15 +1,4 @@
 ---
-- name: stop var-cache-pacman.automount
-  service: name=var-cache-pacman.automount state=stopped
-  ignore_errors: yes
-
-- name: stop var-cache-pacman.mount
-  service: name=var-cache-pacman.mount state=stopped
-  ignore_errors: yes
-
-- name: empty local pacman cache
-  command: pacman -Scc --noconfirm
-
 - name: configure pacman to clean only outdated packages
   lineinfile:
     line: CleanMethod = KeepCurrent
