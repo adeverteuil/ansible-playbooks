@@ -11,7 +11,7 @@
   #   dirname: exported_dirname
   #   hosts: [192.168.13.0/24, ro]
 
-- hosts: archlinux:!pacman-cache
+- hosts: home_network:!pacman-cache
   roles: [pacman-cache-client, nfs]
   vars:
     nfs_mounts:
