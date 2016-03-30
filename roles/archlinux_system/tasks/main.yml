@@ -74,3 +74,10 @@
 
 - name: start and enable haveged
   service: name=haveged state=started enabled=yes
+
+- name: configure search domains
+  lineinfile:
+    dest: /etc/systemd/resolved.conf
+    line: Domains={{ bind_localdomain }}
+    regexp: "^#?Domains="
+  notify: restart systemd-resolved
