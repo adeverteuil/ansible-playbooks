@@ -6,7 +6,6 @@ ansible_become_user: root
 exim_install_spamassassin: yes
 exim_router: smarthost
 exim_smarthost: higgs
-exim_local_domains: [deverteuil.net, alexdev.chickenkiller.com]
 
 iptables_allow_ports:
 - [tcp, 80, HTTP]

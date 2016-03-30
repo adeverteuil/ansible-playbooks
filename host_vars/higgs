@@ -7,7 +7,7 @@ exim_local_domains: [deverteuil.net, alexdev.chickenkiller.com, electron]
 exim_relay_from_hosts: ["192.168.0.0/16"]
 
 dovecot_postmaster: alexandre@deverteuil.net
-dovecot_common_name: higgs.deverteuil.net
+dovecot_common_name: higgs.private.deverteuil.net
 
 iptables_allow_ports:
 - [tcp, 80, HTTP]

@@ -562,7 +562,6 @@ begin routers
 # If the DNS lookup fails, no further routers are tried because of the no_more
 # setting, and consequently the address is unrouteable.
 
-{% if exim_router == "dnslookup" %}
 dnslookup:
   driver = dnslookup
   domains = ! +local_domains
@@ -571,8 +570,8 @@ dnslookup:
 # if ipv6-enabled then instead use:
 # ignore_target_hosts = <; 0.0.0.0 ; 127.0.0.0/8 ; ::1
   no_more
-{% else %}
-# (commented out)
+{% if exim_router != "dnslookup" %}
+  verify_only
 {% endif %}
 
 
@@ -590,6 +589,7 @@ smarthost:
   route_data = {{ exim_smarthost }}
   ignore_target_hosts = <; 0.0.0.0 ; 127.0.0.0/8 ; ::1
   no_more
+  no_verify
 {% else %}
 # (commented out)
 {% endif %}

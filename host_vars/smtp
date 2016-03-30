@@ -1,0 +1,6 @@
+---
+exim_router: smarthost
+exim_smarthost: mail.aei.ca
+
+dovecot_postmaster: alexandre@deverteuil.net
+dovecot_common_name: smtp.private.deverteuil.net
