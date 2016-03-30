@@ -1,0 +1,26 @@
+---
+- name: install ntp
+  pacman: name=ntp state=present
+
+- name: configure ntp
+  template:
+    src: ntp.conf.j2
+    dest: /etc/ntp.conf
+  notify: restart ntp
+
+- name: stop and disable systemd-timesyncd
+  service: name=systemd-timesyncd state=stopped enabled=no
+
+- name: start and enable ntp
+  service: name=ntpd state=started enabled=yes
+
+- name: open NTP port
+  copy:
+    src: 20-ntp
+    dest: /etc/iptables/rules.d/20-ntp
+
+- name: assemble iptables.rules
+  assemble:
+    dest: /etc/iptables/iptables.rules
+    src: /etc/iptables/rules.d
+  notify: reload iptables

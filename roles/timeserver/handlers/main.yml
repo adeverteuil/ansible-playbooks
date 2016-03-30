@@ -1,0 +1,6 @@
+---
+- name: reload iptables
+  service: name=iptables state=reloaded
+
+- name: restart ntpd
+  service: name=ntpd state=restarted

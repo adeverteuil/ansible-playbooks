@@ -1,0 +1,6 @@
+---
+- hosts: fixion
+  roles: [timeserver]
+
+- hosts: home_network:!fixion
+  roles: [systemd-timesyncd]
