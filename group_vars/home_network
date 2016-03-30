@@ -17,3 +17,9 @@ dhcp_static_hosts:
 - {mac: "b8:27:eb:dc:f4:c2", ip: "192.168.13.24", name: "higgs"}
 - {mac: "00:16:ce:21:cc:d7", ip: "192.168.13.28", name: "muon"}
 - {mac: "50:67:ae:f0:2d:01", ip: "192.168.13.31", name: "voip"}
+
+timeserver_upstream_servers:
+- 0.north-america.pool.ntp.org
+- 1.north-america.pool.ntp.org
+- 2.north-america.pool.ntp.org
+- 3.north-america.pool.ntp.org
