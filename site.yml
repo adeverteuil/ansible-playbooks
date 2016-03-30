@@ -4,3 +4,4 @@
 - include: dhcp.yml
 - include: pacman-cache.yml
 - include: mailserver.yml
+- include: ntp.yml
