@@ -2,9 +2,6 @@
 dotfiles_repo_host: ""
 
 exim_router: smarthost
-exim_smarthost: mail.aei.ca
-exim_local_domains: [deverteuil.net, alexdev.chickenkiller.com, electron]
-exim_relay_from_hosts: ["192.168.0.0/16"]
 
 dovecot_postmaster: alexandre@deverteuil.net
 dovecot_common_name: higgs.private.deverteuil.net
