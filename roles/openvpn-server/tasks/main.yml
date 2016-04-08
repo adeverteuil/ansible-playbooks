@@ -16,15 +16,18 @@
     dest: /root/easy-rsa/vars
   with_dict: "{{ openvpn_key_params }}"
 
-- name: open UDP port 1194
+- name: open UDP port 1194 and create NAT rule
   copy:
-    src: 20-openvpn
-    dest: /etc/iptables/rules.d/20-openvpn
+    src: "{{ item }}"
+    dest: /etc/iptables/rules.d/{{ item }}
+  with_items:
+  - 20-openvpn
+  - 30-nat
 
 - name: assemble iptables.rules
   assemble:
     src: /etc/iptables/rules.d/
-    dest: /etc/iptables.rules
+    dest: /etc/iptables/iptables.rules
   notify: reload iptables
 
 - name: configure openvpn
