@@ -1,6 +1,0 @@
----
-- name: reload iptables
-  service: name=iptables state=reloaded
-
-- name: reload systemd
-  command: systemctl daemon-reload

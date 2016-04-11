@@ -27,7 +27,6 @@ ns2
 pacman-cache
 dhcp
 smtp
-ldap
 munin
 tor
 

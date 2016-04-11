@@ -1,8 +1,0 @@
----
-- name: install openldap
-  pacman: name=openldap state=present
-
-- name: configure ldap
-  template:
-    src: ldap.conf.j2
-    dest: /etc/openldap/ldap.conf

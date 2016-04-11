@@ -1,3 +1,0 @@
----
-ldap_suffix: dc=my-domain,dc=com
-ldap_hostname: localhost
