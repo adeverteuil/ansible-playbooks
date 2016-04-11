@@ -1,0 +1,5 @@
+#%PAM-1.0
+# {{ ansible_managed }}
+auth           sufficient      pam_sss.so
+auth           required        pam_unix.so try_first_pass
+auth           required        pam_nologin.so

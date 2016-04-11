@@ -1,0 +1,23 @@
+# {{ ansible_managed }}
+[libdefaults]
+default_realm = {{ ipa_realm }}
+dns_lookup_realm = false
+dns_lookup_kdc = false
+ticket_lifetime = 24h
+forwardable = yes
+
+[realms]
+{{ ipa_realm }} = {
+    admin_server = {{ ipa_server }}:749
+    kdc = {{ ipa_server }}:88
+    default_admin = {{ bind_localdomain }}
+}
+
+[domain_realm]
+.{{ bind_localdomain }} = {{ ipa_realm }}
+{{ bind_localdomain }} = {{ ipa_realm }}
+
+[logging]
+default = FILE:/var/log/krb5libs.log
+kdc = FILE:/var/log/krb5kdc.log
+admin_server = FILE:/var/log/kadmin.log
