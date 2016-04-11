@@ -9,6 +9,7 @@ dhcp
 smtp
 munin
 tor
+borg
 
 [remote_network]
 neutrino.deverteuil.net
@@ -29,6 +30,7 @@ dhcp
 smtp
 munin
 tor
+borg
 
 [dhcp-server]
 dhcp

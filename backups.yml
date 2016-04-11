@@ -1,0 +1,3 @@
+---
+- hosts: borg
+  roles: [backup-server]
