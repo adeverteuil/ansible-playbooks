@@ -1,0 +1,25 @@
+# {{ ansible_managed }}
+[sssd]
+config_file_version = 2
+services = nss, pam, sudo, ssh
+domains = {{ ipa_realm }}
+debug_level = 9
+
+[nss]
+
+[pam]
+
+[ssh]
+
+[sudo]
+
+[domain/{{ ipa_realm }}]
+debug_level = 9
+cache_credentials = true
+krb5_store_password_if_offline = true
+id_provider = ipa
+auth_provider = ipa
+access_provider = ipa
+chpass_provider = ipa
+ldap_tls_cacert = /etc/ipa/ca.crt
+ipa_hostname = {{ ansible_fqdn }}
