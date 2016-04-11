@@ -13,10 +13,13 @@
 
 - hosts: home_network:!pacman-cache
   roles: [pacman-cache-client, nfs]
-  vars:
-    nfs_mounts:
-    - what: "pacman-cache.private.deverteuil.net:/pacman"
-      where: /var/cache/pacman
+  tasks:
+    - name: stop and disable nfs automount
+      service: name=var-cache-pacman.automount state=stopped enabled=no
+  #vars:
+  #  nfs_mounts:
+  #  - what: "pacman-cache.private.deverteuil.net:/pacman"
+  #    where: /var/cache/pacman
   # Format of nfs_mounts items:
   # - what: "host:/path"
   #   where: /path/to/mountpoint
