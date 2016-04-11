@@ -49,6 +49,9 @@
   - strace
   - lsof
   - haveged
+  - rsync
+  - sysdig
+  - linux-headers
 
 - name: ensure gnu-netcat is not present
   pacman: name=gnu-netcat state=absent
