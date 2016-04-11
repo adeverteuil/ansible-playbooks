@@ -1,0 +1,15 @@
+---
+- name: install firewalld
+  pacman: name=firewalld state=present
+
+- name: stop and disable iptables
+  service: name=iptables state=stopped enabled=no
+
+- name: start and enable firewalld
+  service: name=firewalld state=started enabled=yes
+
+- name: test enabling port 80
+  firewalld:
+    service: http
+    state: enabled
+    permanent: no
