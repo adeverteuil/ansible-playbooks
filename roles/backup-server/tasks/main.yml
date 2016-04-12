@@ -30,6 +30,28 @@
     mode: 0700
     state: directory
 
+- name: create a directory for the LUKS keys
+  file:
+    path: /root/keys
+    mode: 0700
+    state: directory
+
+- name: copy the LUKS keys
+  copy:
+    src: /root/lib/crypt/{{ item }}
+    dest: /root/keys/{{ item }}
+  with_items:
+  - disk-backups.key
+  - disk-backups2.key
+
+- name: create the crypttab
+  lineinfile:
+    dest: /etc/crypttab
+    line: "{{ item }}"
+  with_items:
+  - backups        /dev/disk/by-uuid/83b124a4-826e-4aa5-8e72-a540631cfea3   /root/keys/disk-backups.key    nofail
+  - backups2       /dev/disk/by-uuid/e0bd582e-b64f-45c8-9c79-b4539bcb0039   /root/keys/disk-backups2.key   nofail
+
 # create crypttab
 # install LUKS keys
 # create fstab entries or .mount unit files
