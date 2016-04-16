@@ -3,5 +3,9 @@
 - include: named.yml
 - include: dhcp.yml
 - include: pacman-cache.yml
+- include: unifi.yml
+- include: tor_nodes.yml
 - include: mailserver.yml
 - include: ntp.yml
+- include: sso.yml
+- include: munin.yml

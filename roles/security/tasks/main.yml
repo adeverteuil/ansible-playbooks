@@ -2,9 +2,6 @@
 - name: install iptables
   pacman: name=iptables state=present
 
-- name: install sshguard
-  pacman: name=sshguard state=present
-
 - name: create iptables directories
   file:
     path: /etc/iptables/rules.d
@@ -32,9 +29,6 @@
 
 - name: start and enable iptables
   service: name=iptables state=started enabled=yes
-
-- name: start and enable sshguard
-  service: name=sshguard state=started enabled=yes
 
 - name: install sudo
   pacman: name=sudo state=present
