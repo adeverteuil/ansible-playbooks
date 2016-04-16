@@ -19,3 +19,11 @@
 
 - name: load the nf_conntrack_ftp module
   modprobe: name=nf_conntrack_ftp state=present
+
+- name: enable the home_network repository
+  ini_file:
+    section: home_network
+    option: Server
+    value: ftp://pacman-cache.private.deverteuil.net/archlinux/$repo/os/$arch
+    dest: /etc/pacman.conf
+  notify: update pacman cache
