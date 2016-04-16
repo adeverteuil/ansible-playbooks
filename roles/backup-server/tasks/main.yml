@@ -1,4 +1,7 @@
 ---
+- name: install backup
+  pacman: name=backup state=present
+
 - name: create the repository directory
   file:
     path: /var/backups
