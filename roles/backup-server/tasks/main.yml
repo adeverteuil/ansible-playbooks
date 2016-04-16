@@ -44,23 +44,3 @@
   command: ssh-keygen -N "" -f /root/.ssh/id_rsa
   args:
     creates: /root/.ssh/id_rsa.pub
-
-- name: read the public key
-  command: cat /root/.ssh/id_rsa.pub
-  register: pubkey
-  changed_when: false
-
-#
-# on the backup client:
-# install ssh public keys on client with key_options: 'command="to research",no-port-forwarding,no-X11-forwarding,no-pty,no-agent-forwarding,no-user-rc'
-# delegate to backup server to create the repository directory
-# install rsync
-# initialize the repository
-# install the backup filter files
-
-#- name: install the public key on the backup server
-#  delegate_to: borg
-#  authorized_key:
-#    user: backup
-#    key: "{{ pubkey.stdout }}"
-#    key_options: 'command="cd /var/backups/{{ ansible_hostname }};borg serve --restrict-to-path /var/backups/{{ ansible_hostname }}",no-port-forwarding,no-X11-forwarding,no-pty,no-agent-forwarding,no-user-rc'
