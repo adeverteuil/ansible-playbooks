@@ -1,6 +1,6 @@
 ---
 - name: install backup
-  pacman: name=backup state=present
+  pacman: name=python-backup-git state=present
 
 - name: create the repository directory
   file:
@@ -44,3 +44,6 @@
   command: ssh-keygen -N "" -f /root/.ssh/id_rsa
   args:
     creates: /root/.ssh/id_rsa.pub
+
+- name: start and enable backup.timer
+  service: name=backup.timer state=started enabled=yes
