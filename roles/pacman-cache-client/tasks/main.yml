@@ -4,3 +4,26 @@
     line: CleanMethod = KeepCurrent
     regexp: CleanMethod
     dest: /etc/pacman.conf
+
+- name: add the local repository
+  ini_file:
+    section: home_network
+    option: Server
+    value: ftp://pacman-cache.private.deverteuil.net/archlinux/$repo/os/$arch
+    dest: /etc/pacman.conf
+
+- name: enable the nf_conntrack_ftp module
+  copy:
+    src: nf_conntrack_ftp.conf
+    dest: /etc/modules-load.d/nf_conntrack_ftp.conf
+
+- name: load the nf_conntrack_ftp module
+  modprobe: name=nf_conntrack_ftp state=present
+
+- name: enable the home_network repository
+  ini_file:
+    section: home_network
+    option: Server
+    value: ftp://pacman-cache.private.deverteuil.net/archlinux/$repo/os/$arch
+    dest: /etc/pacman.conf
+  notify: update pacman cache

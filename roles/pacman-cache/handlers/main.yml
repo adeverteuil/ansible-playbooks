@@ -1,0 +1,6 @@
+---
+- name: reload vsftpd
+  service: name=vsftpd state=reloaded
+
+- name: reload iptables
+  service: name=iptables state=reloaded
