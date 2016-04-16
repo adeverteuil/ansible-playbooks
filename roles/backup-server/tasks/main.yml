@@ -1,33 +1,7 @@
 ---
-- name: install borg
-  pacman: name=borg state=present
-
-- name: create the backup system group
-  group: name=backup state=present
-
-- name: create the backup system user
-  user:
-    name: backup
-    shell: /bin/bash
-    home: /home/backup
-    createhome: yes
-    group: backup
-    state: present
-
-- name: create the backup user's .ssh directory
-  file:
-    path: /home/backup/.ssh
-    state: directory
-    owner: backup
-    group: backup
-    mode: 0700
-
 - name: create the repository directory
   file:
     path: /var/backups
-    owner: backup
-    group: backup
-    mode: 0700
     state: directory
 
 - name: create a directory for the LUKS keys
@@ -63,14 +37,27 @@
   - LABEL=backups2 /var/backups ext3 rw,noexec,nouser,async,nodev,noauto,nosuid,nofail,x-systemd.automount 0   2
   notify: reload systemd
 
+- name: create ssh keys for root user
+  command: ssh-keygen -N "" -f /root/.ssh/id_rsa
+  args:
+    creates: /root/.ssh/id_rsa.pub
+
+- name: read the public key
+  command: cat /root/.ssh/id_rsa.pub
+  register: pubkey
+  changed_when: false
+
 #
 # on the backup client:
-# create ssh public keys
-# install ssh public keys on server with key_options: 'command="cd {{ pool }}/{{ item.host }};borg serve --restrict-to-path {{ pool }}/{{ item.host }}",no-port-forwarding,no-X11-forwarding,no-pty,no-agent-forwarding,no-user-rc'
+# install ssh public keys on client with key_options: 'command="to research",no-port-forwarding,no-X11-forwarding,no-pty,no-agent-forwarding,no-user-rc'
 # delegate to backup server to create the repository directory
-# install borg
+# install rsync
 # initialize the repository
-# install the backup service and timer unit files
-# start and enable the timer
+# install the backup filter files
 
-# Should I set the purge timer from the client or the server?
+#- name: install the public key on the backup server
+#  delegate_to: borg
+#  authorized_key:
+#    user: backup
+#    key: "{{ pubkey.stdout }}"
+#    key_options: 'command="cd /var/backups/{{ ansible_hostname }};borg serve --restrict-to-path /var/backups/{{ ansible_hostname }}",no-port-forwarding,no-X11-forwarding,no-pty,no-agent-forwarding,no-user-rc'
