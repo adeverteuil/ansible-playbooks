@@ -1,6 +1,6 @@
 ---
 - name: install backup
-  pacman: name=python-backup-git state=present
+  pacman: name=python-backup-git state=latest update_cache=yes
 
 - name: create the repository directory
   file:
@@ -47,3 +47,14 @@
 
 - name: start and enable backup.timer
   service: name=backup.timer state=started enabled=yes
+
+- name: install Munin plugins if Munin is installed
+  file:
+    src: /usr/lib/backup/backup_
+    dest: /etc/munin/plugins/{{ item }}
+    state: link
+  with_items:
+  - backup_age
+  - backup_duration
+  notify: restart munin-node
+  ignore_errors: yes
