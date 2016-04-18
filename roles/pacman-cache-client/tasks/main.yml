@@ -5,13 +5,6 @@
     regexp: CleanMethod
     dest: /etc/pacman.conf
 
-- name: add the local repository
-  ini_file:
-    section: home_network
-    option: Server
-    value: ftp://pacman-cache.private.deverteuil.net/archlinux/$repo/os/$arch
-    dest: /etc/pacman.conf
-
 - name: enable the nf_conntrack_ftp module
   copy:
     src: nf_conntrack_ftp.conf
@@ -23,7 +16,10 @@
 - name: enable the home_network repository
   ini_file:
     section: home_network
-    option: Server
-    value: ftp://pacman-cache.private.deverteuil.net/archlinux/$repo/os/$arch
+    option: "{{ item.key }}"
+    value: "{{ item.value }}"
     dest: /etc/pacman.conf
+  with_dict:
+    Server: "ftp://pacman-cache.private.deverteuil.net/archlinux/$repo/os/$arch"
+    SigLevel: Optional
   notify: update pacman cache
