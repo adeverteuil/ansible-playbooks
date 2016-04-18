@@ -23,22 +23,19 @@
   file:
     path: /var/backups/{{ ansible_hostname }}
     state: directory
+    owner: root
+    group: root
 
 - name: add an entry in the backup configuration
   delegate_to: root@borg
   ini_file:
     dest: /etc/backup
     section: {{ ansible_hostname }}
-    option: sourcehost
-    value: {{ ansible_hostname }}
-
-- name: specify the source directories to backup
-  delegate_to: root@borg
-  ini_file:
-    dest: /etc/backup
-    section: {{ ansible_hostname }}
-    option: sourcedirs
-    value: /
+    option: "{{ item.key }}"
+    value: "{{ item.value }}"
+  with_dict:
+    sourcehost: {{ ansible_hostname }}
+    sourcedirs: /
 
 - name: install filter file
   delegate_to: root@borg
