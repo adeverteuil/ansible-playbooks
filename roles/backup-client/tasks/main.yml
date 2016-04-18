@@ -19,7 +19,7 @@
     key_options: 'command="/usr/lib/rsync/rrsync -ro /",no-port-forwarding,no-X11-forwarding,no-pty,no-agent-forwarding,no-user-rc'
 
 - name: create the repository directory
-  delegate_to: root@borg
+  delegate_to: borg
   file:
     path: /var/backups/{{ ansible_hostname }}
     state: directory
@@ -27,7 +27,7 @@
     group: root
 
 - name: add an entry in the backup configuration
-  delegate_to: root@borg
+  delegate_to: borg
   ini_file:
     dest: /etc/backup
     section: "{{ ansible_hostname }}"
@@ -38,7 +38,7 @@
     sourcedirs: /
 
 - name: install filter file
-  delegate_to: root@borg
+  delegate_to: borg
   copy:
     src: filter
     dest: /etc/backup.d/{{ ansible_hostname }}.filter
