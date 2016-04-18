@@ -10,7 +10,7 @@
   command: cat /root/.ssh/id_rsa.pub
   register: pubkey
   changed_when: false
-  only_once: yes
+  run_once: yes
 
 - name: install the public key on the backup server
   authorized_key:
@@ -30,11 +30,11 @@
   delegate_to: root@borg
   ini_file:
     dest: /etc/backup
-    section: {{ ansible_hostname }}
+    section: "{{ ansible_hostname }}"
     option: "{{ item.key }}"
     value: "{{ item.value }}"
   with_dict:
-    sourcehost: {{ ansible_hostname }}
+    sourcehost: "{{ ansible_hostname }}"
     sourcedirs: /
 
 - name: install filter file
