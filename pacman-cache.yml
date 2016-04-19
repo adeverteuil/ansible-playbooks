@@ -1,6 +1,6 @@
 ---
 - hosts: pacman-cache
-  roles: [pacman-cache, nfs]
+  roles: [pacman-cache]
   vars:
     nfs_exports:
     - path: /var/cache/pacman
@@ -11,11 +11,8 @@
   #   dirname: exported_dirname
   #   hosts: [192.168.13.0/24, ro]
 
-- hosts: home_network:!pacman-cache
-  roles: [pacman-cache-client, nfs]
-  tasks:
-    - name: stop and disable nfs automount
-      service: name=var-cache-pacman.automount state=stopped enabled=no
+- hosts: home_network
+  roles: [pacman-cache-client]
   #vars:
   #  nfs_mounts:
   #  - what: "pacman-cache.private.deverteuil.net:/pacman"
