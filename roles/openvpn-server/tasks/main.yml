@@ -42,3 +42,6 @@
 
 - name: enable openvpn@server
   service: name=openvpn@server enabled=yes
+
+- name: allow IPv4 packet forwarding
+  sysctl: name=net.ipv4.ip_forward value=1 state=present sysctl_file=/etc/sysctl.d/routing.conf
