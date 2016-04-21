@@ -20,7 +20,7 @@
 # Allow ICMP echo requests
 -A INPUT -p icmp -m icmp --icmp-type 8 -m conntrack --ctstate NEW -j ACCEPT
 
-# Attach sshguard, TCP and UDP chains
+# Attach TCP and UDP chains
 -A INPUT -p tcp --syn -m conntrack --ctstate NEW -j TCP
 -A INPUT -p udp -m conntrack --ctstate NEW -j UDP
 
