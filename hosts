@@ -29,7 +29,6 @@ dhcp
 smtp
 munin
 tor
-firewalld-test
 
 [dhcp-server]
 dhcp
