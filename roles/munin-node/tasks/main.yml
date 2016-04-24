@@ -42,3 +42,9 @@
 
 - name: start and enable munin-node
   service: name=munin-node state=started enabled=yes
+
+- name: add the host to munin.conf on the munin master
+  delegate_to: munin
+  template:
+    src: munin.conf.j2
+    dest: /etc/munin/munin-conf.d/{{ ansible_hostname }}.conf

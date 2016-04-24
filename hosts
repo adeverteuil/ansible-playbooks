@@ -49,8 +49,8 @@ unifi
 
 [mailservers]
 higgs
-baryon.deverteuil.net
-electron
+#baryon.deverteuil.net
+#electron
 smtp
 
 [dovecot]

@@ -3,3 +3,7 @@ COMMIT
 :POSTROUTING ACCEPT [0:0]
 # NAT hack
 -A POSTROUTING -s 192.168.66.0/24 -o br0 -j MASQUERADE
+
+:PREROUTING ACCEPT [0:0]
+# Port forwarding for proton backups
+-A PREROUTING -p tcp -s 192.168.13.167 -i br0 -d 192.168.13.6 --dport 2222 -j DNAT --to-destination 192.168.42.20:22

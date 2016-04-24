@@ -7,7 +7,6 @@
 :INPUT DROP [0:0]
 :FORWARD {{ iptables_forward_policy }} [0:0]
 :OUTPUT ACCEPT [0:0]
-:sshguard - [0:0]
 :TCP - [0:0]
 :UDP - [0:0]
 
@@ -21,8 +20,7 @@
 # Allow ICMP echo requests
 -A INPUT -p icmp -m icmp --icmp-type 8 -m conntrack --ctstate NEW -j ACCEPT
 
-# Attach sshguard, TCP and UDP chains
--A INPUT -p tcp -m tcp --dport 22 -j sshguard
+# Attach TCP and UDP chains
 -A INPUT -p tcp --syn -m conntrack --ctstate NEW -j TCP
 -A INPUT -p udp -m conntrack --ctstate NEW -j UDP
 

@@ -3,7 +3,6 @@
 config_file_version = 2
 services = nss, pam, sudo, ssh
 domains = {{ ipa_realm }}
-debug_level = 9
 
 [nss]
 
@@ -14,7 +13,6 @@ debug_level = 9
 [sudo]
 
 [domain/{{ ipa_realm }}]
-debug_level = 9
 cache_credentials = true
 krb5_store_password_if_offline = true
 id_provider = ipa

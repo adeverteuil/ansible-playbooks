@@ -34,3 +34,8 @@
     name: root
     groups: libvirt
     append: yes
+
+- name: exclude VM images from backups
+  copy:
+    src: backup_filter
+    dest: /var/lib/libvirt/.backup
