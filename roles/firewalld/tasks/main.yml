@@ -1,15 +1,16 @@
 ---
-- name: install firewalld
-  pacman: name=firewalld state=present
+- name: install python2-firewalld
+  pacman: name=python2-firewalld state=present
 
 - name: stop and disable iptables
   service: name=iptables state=stopped enabled=no
 
+# interface is only supported in Ansible 2.1.
+# - name: add br0 to the default zone
+#   firewalld:
+#     interface: br0
+#     state: enabled
+#     permanent: yes
+
 - name: start and enable firewalld
   service: name=firewalld state=started enabled=yes
-
-- name: test enabling port 80
-  firewalld:
-    service: http
-    state: enabled
-    permanent: no
