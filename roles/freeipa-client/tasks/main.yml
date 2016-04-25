@@ -1,12 +1,16 @@
 ---
 - name: check if we have a cached kerberos ticket
   delegate_to: "{{ ipa_server }}"
+  remote_user: ""
+  become: no
   command: klist
   run_once: yes
   changed_when: false
 
 - name: check if the host exists in the directory
   delegate_to: "{{ ipa_server }}"
+  remote_user: ""
+  become: no
   command: ipa host-show {{ inventory_hostname }}
   register: host_show
   failed_when: host_show.rc == 1
@@ -14,6 +18,8 @@
 
 - name: create the host principal
   delegate_to: "{{ ipa_server }}"
+  remote_user: ""
+  become: no
   command: ipa host-add {{ ansible_fqdn }} --force
             --sshpubkey \"{{ ansible_ssh_host_key_rsa_public }}\"
             --os {{ ansible_distribution }}
@@ -25,6 +31,8 @@
 
 - name: generate the host keytab
   delegate_to: "{{ ipa_server }}"
+  remote_user: ""
+  become: no
   command: /usr/sbin/ipa-getkeytab -s {{ ipa_server }} -p host/{{ ansible_fqdn }} -k /tmp/{{ ansible_hostname }}.keytab
   when: not keytab.stat.exists
 
@@ -35,11 +43,15 @@
     archive: no
     ssh_args: -l root
   delegate_to: "{{ ipa_server }}"
+  remote_user: ""
+  become: no
   when: not keytab.stat.exists
   notify: restart sssd
 
 - name: remove the keytab file on the FreeIPA server
   delegate_to: "{{ ipa_server }}"
+  remote_user: ""
+  become: no
   file:
     path: /tmp/{{ ansible_hostname }}.keytab
     state: absent
