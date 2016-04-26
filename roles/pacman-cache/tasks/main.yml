@@ -45,13 +45,5 @@
 - name: start and enable vsftpd
   service: name=vsftpd state=started enabled=yes
 
-- name: open port 21
-  copy:
-    src: 20-ftpd
-    dest: /etc/iptables/rules.d
-
-- name: assemble iptables.rules
-  assemble:
-    dest: /etc/iptables/iptables.rules
-    src: /etc/iptables/rules.d
-  notify: reload iptables
+- name: enable service ftp in firewalld
+  firewalld: service=ftp state=enabled permanent=yes immediate=yes
