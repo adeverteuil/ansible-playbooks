@@ -1,0 +1,44 @@
+---
+- name: install packages
+  pacman: name={{ item }} state=present
+  with_items:
+  - rsync
+  - perl
+
+- name: read the public ssh key from the backup server
+  delegate_to: borg
+  command: cat /root/.ssh/id_rsa.pub
+  register: pubkey
+  changed_when: false
+  run_once: yes
+
+- name: install the public key on the backup server
+  authorized_key:
+    user: root
+    key: "{{ pubkey.stdout }}"
+    key_options: 'command="/usr/lib/rsync/rrsync -ro /",no-port-forwarding,no-X11-forwarding,no-pty,no-agent-forwarding,no-user-rc'
+
+- name: create the repository directory
+  delegate_to: borg
+  file:
+    path: /var/backups/{{ ansible_hostname }}
+    state: directory
+    owner: root
+    group: root
+
+- name: add an entry in the backup configuration
+  delegate_to: borg
+  ini_file:
+    dest: /etc/backup
+    section: "{{ ansible_hostname }}"
+    option: "{{ item.key }}"
+    value: "{{ item.value }}"
+  with_dict:
+    sourcehost: "{{ ansible_hostname }}"
+    sourcedirs: /
+
+- name: install filter file
+  delegate_to: borg
+  copy:
+    src: filter
+    dest: /etc/backup.d/{{ ansible_hostname }}.filter

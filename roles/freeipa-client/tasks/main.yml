@@ -123,3 +123,8 @@
 
 - name: start and enable sssd
   service: name=sssd state=started enabled=yes
+
+- name: exclude lastlog and faillog from backups
+  copy:
+    src: backup_excludes
+    dest: /var/log/.backup
