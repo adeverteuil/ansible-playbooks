@@ -1,3 +1,6 @@
 ---
 - name: reload vsftpd
   service: name=vsftpd state=reloaded
+
+- name: update pacman cache
+  pacman: update_cache=yes
