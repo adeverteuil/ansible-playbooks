@@ -23,3 +23,5 @@ timeserver_upstream_servers:
 - 1.north-america.pool.ntp.org
 - 2.north-america.pool.ntp.org
 - 3.north-america.pool.ntp.org
+
+common_resolvers: [192.168.13.8, 192.168.13.88]

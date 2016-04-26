@@ -21,5 +21,12 @@
 
 - name: configure networking
   template:
-    src: bridge-dhcp.network.j2
-    dest: /etc/systemd/network/bridge-dhcp.network
+    src: bridge-static.network.j2
+    dest: /etc/systemd/network/bridge-static.network
+  notify: restart systemd-networkd
+
+- name: remove dhcp networking config file
+  file:
+    path: /etc/systemd/network/bridge-dhcp.network
+    state: absent
+  notify: restart systemd-networkd

@@ -1,0 +1,17 @@
+[Match]
+Name=br0
+
+[Network]
+Address={{ router_static_ip }}
+Gateway={{ router_default_gateway }}
+{% for resolver in common_resolvers %}
+DNS={{ resolver }}
+{% endfor %}
+{% for route in router_routes %}
+
+[Route]
+Gateway={{ route.gateway }}
+Destination={{ route.destination }}
+Source={{ route.source }}
+Scope=global
+{% endfor %}
