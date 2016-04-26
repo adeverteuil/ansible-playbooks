@@ -1,2 +1,7 @@
 ---
-iptables_forward_policy: ACCEPT
+firewalld_forward_ports:
+- 2222:proto=tcp:toport=22:toaddr=192.168.42.20
+# Syntax of a forward_port:
+#    portid[-portid]:proto=protocol[:toport=portid[-portid]][:toaddr=address[/mask]]
+router_routes:
+- {destination: "192.168.42.0/24", gateway: "192.168.66.4"}

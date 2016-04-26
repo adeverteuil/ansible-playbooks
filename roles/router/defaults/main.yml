@@ -1,0 +1,5 @@
+---
+router_forward_ports: []
+# Syntax of a forward_port:
+#    portid[-portid]:proto=protocol[:toport=portid[-portid]][:toaddr=address[/mask]]
+router_routes: []  # list of {destination, gateway} hashes

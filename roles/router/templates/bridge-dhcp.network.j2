@@ -1,0 +1,11 @@
+[Match]
+Name=br0
+
+[Network]
+DHCP=ipv4
+{% for route in router_routes %}
+
+[Route]
+Destination={{ route.destination }}
+Gateway={{ route.gateway }}
+{% endfor %}
