@@ -20,12 +20,8 @@
   when: nfs_exports != []
   notify: reload exports
 
-- name: open NFS ports in iptables
-  copy:
-    src: 20-nfs
-    dest: /etc/iptables/rules.d/20-nfs
-  when: nfs_exports != []
-  notify: reload iptables
+- name: enable NFS service in firewalld
+  firewalld: service=nfs state=enabled permanent=yes immediate=yes
 
 - name: start and enable nfs-server
   service: name=nfs-server state=started enabled=true

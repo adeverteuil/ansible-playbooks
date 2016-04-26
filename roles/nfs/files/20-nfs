@@ -1,2 +1,0 @@
-# NFSv4
--A TCP -p tcp -m tcp --dport 2049 -j ACCEPT
