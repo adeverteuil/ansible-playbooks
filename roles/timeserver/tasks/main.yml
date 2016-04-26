@@ -14,13 +14,5 @@
 - name: start and enable ntp
   service: name=ntpd state=started enabled=yes
 
-- name: open NTP port
-  copy:
-    src: 20-ntp
-    dest: /etc/iptables/rules.d/20-ntp
-
-- name: assemble iptables.rules
-  assemble:
-    dest: /etc/iptables/iptables.rules
-    src: /etc/iptables/rules.d
-  notify: reload iptables
+- name: enable service ntp in firewalld
+  firewalld: service=ntp state=enabled permanent=yes immediate=yes
