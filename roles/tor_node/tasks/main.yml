@@ -13,11 +13,18 @@
   notify:
   - reload tor
 
-- name: allow tor through iptables
+- name: copy tor service file for firewalld
   copy:
-    src: 20-tor
-    dest: /etc/iptables/rules.d/20-tor
-  notify: reload iptables
+    src: tor.xml
+    dest: /etc/firewalld/services/tor.xml
+  register: service_tor
+
+- name: reload firewalld
+  service: name=firewalld state=reloaded
+  when: service_tor.changed
+
+- name: enable tor service in firewalld
+  firewalld: service=tor state=enabled permanent=yes immediate=yes
 
 - name: enable and start tor
   service: name=tor state=started enabled=yes

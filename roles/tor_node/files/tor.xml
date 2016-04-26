@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+ <short>Tor-node</short>
+ <port port="9001" protocol="tcp"/>
+</service>
