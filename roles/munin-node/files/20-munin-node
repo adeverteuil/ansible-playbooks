@@ -1,2 +1,0 @@
-# Munin node
--A TCP -p tcp -m tcp --dport 4949 -j ACCEPT
