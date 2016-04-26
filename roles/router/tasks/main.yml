@@ -1,0 +1,32 @@
+- name: enable IPv4 packet forwarding
+  sysctl: name=net.ipv4.ip_forward value=1 state=present sysctl_file=/etc/sysctl.d/routing.conf
+
+# From Ansible 2.1
+# - name: enable masquerade on public zone
+#   firewalld: masquerade=yes state=enabled permanent=yes immedate=yes zone=public
+
+- name: enable masquerade on public zone
+  command: firewall-cmd {{ item }} --add-masquerade --zone=public
+  with_items: ["", --permanent]
+  register: masquerade
+  changed_when: masquerade.stdout == "success"
+
+- name: forward ports
+  command: firewall-cmd {{ item[0] }} --add-forward-port=port={{ item[1] }}
+  register: forward_port
+  changed_when: forward_port.stdout == "success"
+  with_nested:
+  - ["", --permanent]
+  - "{{ router_forward_ports }}"
+
+- name: configure networking
+  template:
+    src: bridge-static.network.j2
+    dest: /etc/systemd/network/bridge-static.network
+  notify: restart systemd-networkd
+
+- name: remove dhcp networking config file
+  file:
+    path: /etc/systemd/network/bridge-dhcp.network
+    state: absent
+  notify: restart systemd-networkd

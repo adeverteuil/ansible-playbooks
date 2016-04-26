@@ -1,3 +1,3 @@
 ---
-- hosts: [mailservers]
+- hosts: mailservers
   roles: [mailserver]

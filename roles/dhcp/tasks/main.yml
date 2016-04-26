@@ -8,17 +8,8 @@
     dest: /etc/dhcpd.conf
   notify: restart dhcpd
 
-- name: open the dhcp port in iptables
-  copy:
-    src: 20-dhcp
-    dest: /etc/iptables/rules.d/20-dhcp
-  notify: reload iptables
-
-- name: assemble iptables.rules
-  assemble:
-    dest: /etc/iptables/iptables.rules
-    src: /etc/iptables/rules.d
-  notify: reload iptables
-
 - name: start and enable dhcpd
   service: name=dhcpd4 state=started enabled=yes
+
+- name: let dhcp through the firewall
+  firewalld: service=dhcp state=enabled permanent=yes immediate=yes

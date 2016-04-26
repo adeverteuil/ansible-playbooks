@@ -4,6 +4,3 @@
 
 - name: run newaliases
   command: newaliases
-
-- name: reload iptables
-  service: name=iptables state=reloaded

@@ -16,19 +16,8 @@
     dest: /root/easy-rsa/vars
   with_dict: "{{ openvpn_key_params }}"
 
-- name: open UDP port 1194 and create NAT rule
-  copy:
-    src: "{{ item }}"
-    dest: /etc/iptables/rules.d/{{ item }}
-  with_items:
-  - 20-openvpn
-  - 30-nat
-
-- name: assemble iptables.rules
-  assemble:
-    src: /etc/iptables/rules.d/
-    dest: /etc/iptables/iptables.rules
-  notify: reload iptables
+- name: enable service openvpn in firewalld
+  firewalld: service=openvpn state=enabled permanent=yes immediate=yes
 
 - name: configure openvpn
   template:
@@ -42,6 +31,3 @@
 
 - name: enable openvpn@server
   service: name=openvpn@server enabled=yes
-
-- name: allow IPv4 packet forwarding
-  sysctl: name=net.ipv4.ip_forward value=1 state=present sysctl_file=/etc/sysctl.d/routing.conf

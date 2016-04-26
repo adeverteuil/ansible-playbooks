@@ -1,0 +1,4 @@
+Variables that must be defined:
+    router_static_ip
+    router_default_gateway
+    common_resolvers

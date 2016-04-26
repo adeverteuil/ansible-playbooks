@@ -25,13 +25,6 @@
 - include: wsgi.yml
 - include: status.yml
 
-- name: open http and https ports
-  copy:
-    src: 20-webserver
-    dest: /etc/iptables/rules.d/20-webserver
-
-- name: assemble iptables.rules
-  assemble:
-    dest: /etc/iptables/iptables.rules
-    src: /etc/iptables/rules.d
-  notify: reload iptables
+- name: enable http and https services in firewalld
+  firewalld: service={{ item }} state=enabled permanent=yes immediate=yes
+  with_items: [http, https]

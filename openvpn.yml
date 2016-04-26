@@ -1,6 +1,6 @@
 ---
 - hosts: openvpn-server
-  roles: [openvpn-server]
+  roles: [openvpn-server, router]
   vars:
     openvpn_key_params:
       country: "CA"

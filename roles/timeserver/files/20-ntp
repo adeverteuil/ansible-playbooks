@@ -1,2 +1,0 @@
-# NTPD
--A UDP -p udp -m udp --dport 123 -j ACCEPT

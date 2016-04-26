@@ -1,6 +1,0 @@
-{% for proto, port, comment in iptables_allow_ports %}
-{% if comment %}
-# {{ comment }}
-{% endif %}
--A {{ proto|upper }} -p {{ proto }} -m {{ proto }} --dport {{ port }} -j ACCEPT
-{% endfor %}

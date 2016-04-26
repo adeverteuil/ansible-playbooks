@@ -17,11 +17,8 @@
     dest: /etc/mail/aliases
   notify: run newaliases
 
-- name: allow TCP ports for SMTP
-  copy:
-    src: 20-mailserver
-    dest: /etc/iptables/rules.d/20-mailserver
-  notify: reload iptables
+- name: enable service smtp in firewalld
+  firewalld: service=smtp state=enabled permanent=yes immediate=yes
 
 - name: start and enable exim
   service: name=exim state=started enabled=yes

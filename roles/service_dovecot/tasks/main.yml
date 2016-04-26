@@ -19,11 +19,9 @@
     dest: /etc/ssl/dovecot-openssl.cnf
   notify: make dovecot SSL certificate
 
-- name: allow TCP ports for IMAP and POP3
-  copy:
-    src: 20-dovecot
-    dest: /etc/iptables/rules.d/20-dovecot
-  notify: reload iptables
+- name: enable services in firewalld
+  firewalld: service={{ item }} state=enabled permanent=yes immediate=yes
+  with_items: [imap, imaps, pop3, pop3s]
 
 - name: start and enable dovecot
   service: name=dovecot state=started enabled=yes

@@ -1,9 +1,6 @@
 ---
-- name: install packages
-  pacman: name={{ item }} state=present
-  with_items:
-    - abs
-    - vsftpd
+- name: install abs
+  pacman: name=abs state=present
 
 - name: install base-devel packages
   pacman: name={{ item }} state=present
@@ -33,25 +30,13 @@
     dest: /srv/ftp/archlinux
     state: directory
 
-- name: serve anonymous users
-  lineinfile:
-    dest: /etc/vsftpd.conf
-    line: "{{ item }}"
-  with_items:
-  - anon_root=/srv/ftp
-  - no_anon_password=YES
-  notify: reload vsftpd
-
-- name: start and enable vsftpd
-  service: name=vsftpd state=started enabled=yes
-
-- name: open port 21
-  copy:
-    src: 20-ftpd
-    dest: /etc/iptables/rules.d
-
-- name: assemble iptables.rules
-  assemble:
-    dest: /etc/iptables/iptables.rules
-    src: /etc/iptables/rules.d
-  notify: reload iptables
+- name: enable the home_network repository
+  ini_file:
+    section: home_network
+    option: "{{ item.key }}"
+    value: "{{ item.value }}"
+    dest: /etc/pacman.conf
+  with_dict:
+    Server: "file:///srv/ftp/archlinux/$repo/os/$arch"
+    SigLevel: Optional
+  notify: update pacman cache

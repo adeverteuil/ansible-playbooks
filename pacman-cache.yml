@@ -1,6 +1,6 @@
 ---
 - hosts: pacman-cache
-  roles: [pacman-cache]
+  roles: [pacman-cache, firewalld, ftpd]
   vars:
     nfs_exports:
     - path: /var/cache/pacman
@@ -11,7 +11,7 @@
   #   dirname: exported_dirname
   #   hosts: [192.168.13.0/24, ro]
 
-- hosts: home_network
+- hosts: home_network:!pacman-cache
   roles: [pacman-cache-client]
   #vars:
   #  nfs_mounts:

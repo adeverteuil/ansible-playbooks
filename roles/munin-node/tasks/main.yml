@@ -29,16 +29,18 @@
   args:
     creates: /etc/munin/plugins/df
 
-- name: allow TCP port for munin-node
+- name: drop the munin.xml firewalld service definition
   copy:
-    src: 20-munin-node
-    dest: /etc/iptables/rules.d/20-munin-node
+    src: munin.xml
+    dest: /etc/firewalld/services/munin.xml
+  register: munin_service
 
-- name: assemble iptables.rules
-  assemble:
-    dest: /etc/iptables/iptables.rules
-    src: /etc/iptables/rules.d
-  notify: reload iptables
+- name: reload firewalld
+  service: name=firewalld state=reloaded
+  when: munin_service.changed
+
+- name: enable the munin service in firewalld
+  firewalld: service=munin state=enabled permanent=yes immediate=yes
 
 - name: start and enable munin-node
   service: name=munin-node state=started enabled=yes

@@ -4,6 +4,3 @@
 
 - name: restart dovecot
   service: name=dovecot state=restarted
-
-- name: reload iptables
-  service: name=iptables state=reloaded

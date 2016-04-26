@@ -9,4 +9,4 @@
 - include: pacman-cache.yml
 
 - hosts: home_network
-  roles: [archlinux_system, security]
+  roles: [archlinux_system, firewalld]

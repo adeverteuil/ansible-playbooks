@@ -1,3 +1,0 @@
-# DNS
--A UDP -p udp -m udp --dport 53 -j ACCEPT
--A TCP -p tcp -m tcp --dport 53 -j ACCEPT
