@@ -26,5 +26,5 @@
 - include: status.yml
 
 - name: enable http and https services in firewalld
-  firewalld: service={{ item }} state=enables permanent=yes immediate=yes
+  firewalld: service={{ item }} state=enabled permanent=yes immediate=yes
   with_items: [http, https]
