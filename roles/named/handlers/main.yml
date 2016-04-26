@@ -2,8 +2,5 @@
 - name: reload bind
   service: name=named state=reloaded
 
-- name: reload iptables
-  service: name=iptables state=reloaded
-
 - name: reload systemd-resolved
   service: name=systemd-resolved state=reloaded
