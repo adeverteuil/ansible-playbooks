@@ -16,22 +16,6 @@ neutrino.deverteuil.net
 owncloud.deverteuil.net
 #baryon.deverteuil.net
 
-[archlinux]
-#higgs
-fixion
-electron
-#baryon.deverteuil.net
-unifi
-openvpn
-ns1
-ns2
-pacman-cache
-dhcp
-smtp
-munin
-tor
-borg
-
 [dhcp-server]
 dhcp
 
