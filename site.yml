@@ -16,21 +16,6 @@
   roles: [hypervisor]
 - hosts: nameservers
   roles: [named]
-  vars:
-    bind_localdomain: private.deverteuil.net
-    bind_domainadmin: postmaster.deverteuil.net
-    named_forwarders: [206.123.6.230, 199.84.54.230]
-    named_allowed_recursion_ips: [127.0.0.1, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16]
-    named_zones: |
-      zone "iweb.com" IN {
-          type forward;
-          forwarders { 172.17.131.34; 172.16.131.34; };
-      };
-
-      zone "iw.ca" IN {
-          type forward;
-          forwarders { 172.17.131.34; 172.16.131.34; };
-      };
 - hosts: dhcp-server
   roles: [dhcp]
 - hosts: unifi
@@ -48,19 +33,8 @@
   serial: 1
 - hosts: [home_network]
   roles: [munin-node]
-  vars:
-    munin_ssh_public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCs+vK1Iy2R4qPBLIzii14+DupJrBEuI9hKlcPYJKhbfaJFYXYa6J7NjQGBgpnoUWzGUcT1VfYGmhvW0a27D+9GOoWU3jihpGsm+A4/r6wqRwOCn+8yARGXAAjQ+7zOJhn81Jgp9RKg3ISybYPhumHcKXqa2xNYKLQGmY6F7QhvAC2LjyZ+gHa7xdGVquh05tGnIfB2jM8SVX1kHaTucA5YpPm6iJydgAQ1YB9zfNhCLkujgdYfyG4nt1HJXZ7GL7NgskvRB6MFu9GyrCR98hHhfdVfhLknmq9bAia8v8NMl4B3gMUkaJ98V4b+3M7nxhQ7aMKYfORfBnHScx6k1rRJ munin@electron
 - hosts: munin
   roles: [webserver, munin-master]
-  vars_files:
-    - vault_munin.yml
-  vars:
-    munin_managed_switch_ip: 192.168.13.2
-    munin_managed_switch_community: "{{ vault_munin_managed_switch_community}}"
-    munin_ssh_private_key: "{{ vault_munin_ssh_private_key }}"
-    munin_ssh_public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCs+vK1Iy2R4qPBLIzii14+DupJrBEuI9hKlcPYJKhbfaJFYXYa6J7NjQGBgpnoUWzGUcT1VfYGmhvW0a27D+9GOoWU3jihpGsm+A4/r6wqRwOCn+8yARGXAAjQ+7zOJhn81Jgp9RKg3ISybYPhumHcKXqa2xNYKLQGmY6F7QhvAC2LjyZ+gHa7xdGVquh05tGnIfB2jM8SVX1kHaTucA5YpPm6iJydgAQ1YB9zfNhCLkujgdYfyG4nt1HJXZ7GL7NgskvRB6MFu9GyrCR98hHhfdVfhLknmq9bAia8v8NMl4B3gMUkaJ98V4b+3M7nxhQ7aMKYfORfBnHScx6k1rRJ munin@electron
-    munin_graph_strategy: cron
-    munin_html_strategy: cron
 - hosts: borg
   roles: [backup-server]
 - hosts: home_network
@@ -69,11 +43,3 @@
   roles: [service_dovecot]
 - hosts: openvpn-server
   roles: [openvpn-server, router]
-  vars:
-    openvpn_key_params:
-      country: "CA"
-      province: "QC"
-      city: "Verdun"
-      org: "deVerteuil.net"
-      email: "alexandre@deverteuil.net"
-      ou: ""
