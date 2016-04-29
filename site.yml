@@ -7,39 +7,62 @@
 # - Update the system (pacman -Syu)
 
 - hosts: pacman-cache
-  roles: [pacman-cache, firewalld, ftpd]
+  roles:
+  - {role: pacman-cache, tags: [pacman-cache]}
+  - {role: firewalld, tags: [firewalld]}
+  - {role: ftpd, tags: [ftpd]}
 - hosts: home_network:!pacman-cache
-  roles: [pacman-cache-client]
+  roles:
+  - {role: pacman-cache-client, tags: [pacman-cache-client]}
 - hosts: home_network
-  roles: [common, firewalld]
+  roles:
+  - {role: common, tags: [common]}
+  - {role: firewalld, tags: [firewalld]}
 - hosts: hypervisor
-  roles: [hypervisor]
+  roles:
+  - {role: hypervisor, tags: [hypervisor]}
 - hosts: nameservers
-  roles: [named]
+  roles:
+  - {role: named, tags: [named]}
 - hosts: dhcp-server
-  roles: [dhcp]
+  roles:
+  - {role: dhcp, tags: [dhcp]}
 - hosts: unifi
-  roles: [unifi]
+  roles:
+  - {role: unifi, tags: [unifi]}
 - hosts: tor
-  roles: [tor_node]
+  roles:
+  - {role: tor_node, tags: [tor_node]}
 - hosts: mailservers
-  roles: [mailserver]
+  roles:
+  - {role: mailserver, tags: [mailserver]}
 - hosts: fixion
-  roles: [timeserver]
+  roles:
+  - {role: timeserver, tags: [timeserver]}
 - hosts: home_network:!fixion
-  roles: [systemd-timesyncd]
+  roles:
+  - {role: systemd-timesyncd, tags: [systemd-timesyncd]}
 - hosts: home_network
-  roles: [freeipa-client]
+  roles:
+  - {role: freeipa-client, tags: [freeipa-client]}
   serial: 1
 - hosts: [home_network]
-  roles: [munin-node]
+  roles:
+  - {role: munin-node, tags: [munin-node]}
 - hosts: munin
-  roles: [webserver, munin-master]
+  roles:
+  - {role: webserver, tags: [webserver]}
+  - {role: munin-master, tags: [munin-master]}
 - hosts: borg
-  roles: [backup-server]
+  roles:
+  - {role: backup-server, tags: [backup-server]}
 - hosts: home_network
-  roles: [backup-client]
+  roles:
+  - {role: backup-client, tags: [backup-client]}
 - hosts: [dovecot]
-  roles: [service_dovecot]
+  roles:
+  - {role: service_dovecot, tags: [service_dovecot]}
 - hosts: openvpn-server
-  roles: [openvpn-server, router]
+  roles:
+  - {role: openvpn-server, tags: [openvpn-server]}
+  - {role: router, tags: [router]}
