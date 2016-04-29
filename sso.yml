@@ -1,4 +1,0 @@
----
-- hosts: home_network
-  roles: [freeipa-client]
-  serial: 1
