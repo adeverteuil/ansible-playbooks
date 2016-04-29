@@ -14,10 +14,15 @@
 - hosts: home_network:!pacman-cache
   roles:
   - {role: pacman-cache-client, tags: [pacman-cache-client]}
+- hosts: borg
+  roles:
+  - {role: backup-server, tags: [backup-server]}
 - hosts: home_network
   roles:
   - {role: common, tags: [common]}
   - {role: firewalld, tags: [firewalld]}
+  - {role: munin-node, tags: [munin-node]}
+  - {role: backup-client, tags: [backup-client]}
 - hosts: hypervisor
   roles:
   - {role: hypervisor, tags: [hypervisor]}
@@ -46,19 +51,10 @@
   roles:
   - {role: freeipa-client, tags: [freeipa-client]}
   serial: 1
-- hosts: [home_network]
-  roles:
-  - {role: munin-node, tags: [munin-node]}
 - hosts: munin
   roles:
   - {role: webserver, tags: [webserver]}
   - {role: munin-master, tags: [munin-master]}
-- hosts: borg
-  roles:
-  - {role: backup-server, tags: [backup-server]}
-- hosts: home_network
-  roles:
-  - {role: backup-client, tags: [backup-client]}
 - hosts: [dovecot]
   roles:
   - {role: service_dovecot, tags: [service_dovecot]}
