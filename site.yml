@@ -57,7 +57,7 @@
   - {role: munin-master, tags: [munin-master]}
 - hosts: [dovecot]
   roles:
-  - {role: service_dovecot, tags: [service_dovecot]}
+  - {role: dovecot, tags: [dovecot]}
 - hosts: openvpn-server
   roles:
   - {role: openvpn-server, tags: [openvpn-server]}
