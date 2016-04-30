@@ -1,6 +1,7 @@
 ---
 - name: install abs
   pacman: name=abs state=present
+  tags: [install]
 
 - name: install base-devel packages
   pacman: name={{ item }} state=present
@@ -18,17 +19,20 @@
     - make
     - patch
     - pkg-config
+  tags: [install]
 
 - name: configure pacman to clean only outdated packages
   lineinfile:
     line: CleanMethod = KeepCurrent
     regexp: CleanMethod
     dest: /etc/pacman.conf
+  tags: [configure]
 
 - name: create a directory for the local repository
   file:
     dest: /srv/ftp/archlinux
     state: directory
+  tags: [install]
 
 - name: enable the home_network repository
   ini_file:
@@ -40,3 +44,4 @@
     Server: "file:///srv/ftp/archlinux/$repo/os/$arch"
     SigLevel: Optional
   notify: update pacman cache
+  tags: [serve]
