@@ -1,6 +1,7 @@
 ---
 - name: install unifi
   pacman: name=unifi state=present
+  tags: [install]
 
 ## Runs as user unifi, can't bind priviledged port.
 #- name: serve UI on port 443
@@ -14,6 +15,7 @@
     src: unifi.xml
     dest: /etc/firewalld/services/unifi.xml
   register: service_unifi
+  tags: [install]
 
 - name: reload firewalld
   service: name=firewalld state=reloaded
@@ -21,6 +23,8 @@
 
 - name: enable service unifi in firewalld
   firewalld: service=unifi state=enabled permanent=yes immediate=yes
+  tags: [serve]
 
 - name: start and enable unifi
   service: name=unifi state=started enabled=yes
+  tags: [serve]
