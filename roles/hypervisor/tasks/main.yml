@@ -3,6 +3,7 @@
   file:
     path: /var/lib/libvirt
     state: directory
+  tags: [install]
 
 - name: mount the data partition
   mount:
@@ -11,6 +12,7 @@
     fstype: "{{ hypervisor_data_fstype }}"
     state: mounted
   when: hypervisor_data_partition != ""
+  tags: [install]
 
 - name: install packages
   pacman: name={{ item }} state=present
@@ -22,20 +24,25 @@
   - bridge-utils
   - openbsd-netcat
   - libvirt
+  tags: [install]
 
 - name: start virtlogd
   service: name=virtlogd state=started
+  tags: [serve]
 
 - name: start and enable hypervisor
   service: name=libvirtd state=started enabled=yes
+  tags: [serve]
 
 - name: add root to the libvirt group
   user:
     name: root
     groups: libvirt
     append: yes
+  tags: [configure]
 
 - name: exclude VM images from backups
   copy:
     src: backup_filter
     dest: /var/lib/libvirt/.backup
+  tags: [configure]

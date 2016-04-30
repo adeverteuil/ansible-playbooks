@@ -1,0 +1,64 @@
+---
+dotfiles_repo_host: ssh://alex@higgs
+bind_domainadmin: postmaster.deverteuil.net
+bind_localdomain: private.deverteuil.net
+dhcp_static_hosts:
+- {mac: "1a:64:df:7d:30:96", ip: "192.168.13.3", name: "dhcp"}
+- {mac: "5e:a6:fe:6c:36:9f", ip: "192.168.13.4", name: "fixion"}
+- {mac: "52:3a:a7:71:0f:1c", ip: "192.168.13.5", name: "unifi"}
+- {mac: "96:11:c6:ff:f5:76", ip: "192.168.13.6", name: "openvpn"}
+- {mac: "1e:ab:03:65:d5:a3", ip: "192.168.13.7", name: "pacman-cache"}
+- {mac: "a2:05:aa:8e:aa:85", ip: "192.168.13.8", name: "ns1"}
+- {mac: "ee:4a:9b:dc:ab:47", ip: "192.168.13.9", name: "smtp"}
+- {mac: "4a:5f:a2:16:4a:97", ip: "192.168.13.10", name: "tor"}
+- {mac: "6c:f0:49:09:c6:59", ip: "192.168.13.20", name: "electron"}
+- {mac: "40:6c:8f:54:28:44", ip: "192.168.13.21", name: "quark"}
+- {mac: "34:15:9e:13:a4:5e", ip: "192.168.13.22", name: "fermion"}
+- {mac: "b8:27:eb:dc:f4:c2", ip: "192.168.13.24", name: "higgs"}
+- {mac: "00:16:ce:21:cc:d7", ip: "192.168.13.28", name: "muon"}
+- {mac: "50:67:ae:f0:2d:01", ip: "192.168.13.31", name: "voip"}
+
+timeserver_upstream_servers:
+- 0.north-america.pool.ntp.org
+- 1.north-america.pool.ntp.org
+- 2.north-america.pool.ntp.org
+- 3.north-america.pool.ntp.org
+
+common_resolvers: [192.168.13.8, 192.168.13.88]
+
+named_forwarders: [206.123.6.230, 199.84.54.230]
+named_allowed_recursion_ips: [127.0.0.1, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16]
+named_zones: |
+  zone "iweb.com" IN {
+      type forward;
+      forwarders { 172.17.131.34; 172.16.131.34; };
+  };
+
+  zone "iw.ca" IN {
+      type forward;
+      forwarders { 172.17.131.34; 172.16.131.34; };
+  };
+
+munin_managed_switch_ip: 192.168.13.2
+munin_managed_switch_community: "{{ vault_munin_managed_switch_community}}"
+munin_ssh_private_key: "{{ vault_munin_ssh_private_key }}"
+munin_ssh_public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCs+vK1Iy2R4qPBLIzii14+DupJrBEuI9hKlcPYJKhbfaJFYXYa6J7NjQGBgpnoUWzGUcT1VfYGmhvW0a27D+9GOoWU3jihpGsm+A4/r6wqRwOCn+8yARGXAAjQ+7zOJhn81Jgp9RKg3ISybYPhumHcKXqa2xNYKLQGmY6F7QhvAC2LjyZ+gHa7xdGVquh05tGnIfB2jM8SVX1kHaTucA5YpPm6iJydgAQ1YB9zfNhCLkujgdYfyG4nt1HJXZ7GL7NgskvRB6MFu9GyrCR98hHhfdVfhLknmq9bAia8v8NMl4B3gMUkaJ98V4b+3M7nxhQ7aMKYfORfBnHScx6k1rRJ munin@electron
+munin_graph_strategy: cron
+munin_html_strategy: cron
+openvpn_key_params:
+  country: "CA"
+  province: "QC"
+  city: "Verdun"
+  org: "deVerteuil.net"
+  email: "alexandre@deverteuil.net"
+  ou: ""
+
+webserver_serveradmin: alexandre@deverteuil.net
+letsencrypt_email: alexandre@deverteuil.net
+
+exim_postmaster: alex
+exim_local_aliases: ["alexandre: alex"]
+exim_no_sender_verify_domains: [acs-agiledash.corp.internap.com]
+exim_smarthost: mail.aei.ca
+exim_local_domains: [private.deverteuil.net, deverteuil.net, alexdev.chickenkiller.com, electron]
+exim_relay_from_hosts: ["192.168.0.0/16"]

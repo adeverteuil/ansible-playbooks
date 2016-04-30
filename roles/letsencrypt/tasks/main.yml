@@ -1,6 +1,7 @@
 ---
 - name: install letsencrypt client
   pacman: name=letsencrypt state=present
+  tags: [install]
 
 - name: create a webroot for letsencrypt
   file:
@@ -9,6 +10,7 @@
     owner: http
     group: http
     mode: 0750
+  tags: [install]
 
 #- name: configure letsencrypt
 #  template:
@@ -18,12 +20,14 @@
 - name: enable services http and https in firewalld
   firewalld: service={{ item }} state=enabled permanent=yes immediate=yes
   with_items: [http, httpd]
+  tags: [serve]
 
 - name: create service unit file for certificate renewal
   copy:
     src: letsencrypt-renew.service
     dest: /etc/systemd/system/letsencrypt-renew.service
   notify: reload systemd
+  tags: [install]
 
 - name: create timer unit file for certificate renewal
   copy:
@@ -32,6 +36,8 @@
   notify:
   - reload systemd
   - restart letsencrypt-renew.timer
+  tags: [install]
 
 - name: start and enable letsencrypt-renew.timer
   service: name=letsencrypt-renew.timer state=started enabled=true
+  tags: [serve]

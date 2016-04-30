@@ -1,6 +1,0 @@
----
-- hosts: borg
-  roles: [backup-server]
-
-- hosts: home_network
-  roles: [backup-client]

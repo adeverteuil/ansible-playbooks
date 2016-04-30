@@ -83,6 +83,7 @@ zone "13.168.192.in-addr.arpa" IN {
     file "13.168.192.in-addr.arpa.zone";
     masters { 192.168.13.8; };
 {% endif %}
+};
 zone "42.168.192.in-addr.arpa" IN {
 {% if named_master %}
     type master;

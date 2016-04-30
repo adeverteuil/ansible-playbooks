@@ -7,6 +7,7 @@
   - python-virtualenv
   - perl-libwww  # For the Munin apache plugins
   - lynx  # For apachectl status
+  tags: [install]
 
 - name: set ServerAdmin directive
   lineinfile:
@@ -14,11 +15,13 @@
     line: ServerAdmin {{ webserver_serveradmin }}
     regexp: ^#?ServerAdmin.*$
   notify: restart apache
+  tags: [configure]
 
 - name: create the conf.d directory
   file:
     dest: /etc/httpd/conf.d
     state: directory
+  tags: [install]
 
 - include: ssl.yml
 - include: vhosts.yml
@@ -28,3 +31,4 @@
 - name: enable http and https services in firewalld
   firewalld: service={{ item }} state=enabled permanent=yes immediate=yes
   with_items: [http, https]
+  tags: [serve]

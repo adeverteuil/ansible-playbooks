@@ -4,6 +4,7 @@
   with_items:
   - rsync
   - perl
+  tags: [install]
 
 - name: read the public ssh key from the backup server
   delegate_to: borg
@@ -11,12 +12,14 @@
   register: pubkey
   changed_when: false
   run_once: yes
+  tags: [configure]
 
 - name: install the public key on the backup server
   authorized_key:
     user: root
     key: "{{ pubkey.stdout }}"
     key_options: 'command="/usr/lib/rsync/rrsync -ro /",no-port-forwarding,no-X11-forwarding,no-pty,no-agent-forwarding,no-user-rc'
+  tags: [configure]
 
 - name: create the repository directory
   delegate_to: borg
@@ -25,6 +28,7 @@
     state: directory
     owner: root
     group: root
+  tags: [install]
 
 - name: add an entry in the backup configuration
   delegate_to: borg
@@ -36,9 +40,11 @@
   with_dict:
     sourcehost: "{{ ansible_hostname }}"
     sourcedirs: /
+  tags: [configure]
 
 - name: install filter file
   delegate_to: borg
   copy:
     src: filter
     dest: /etc/backup.d/{{ ansible_hostname }}.filter
+  tags: [configure]

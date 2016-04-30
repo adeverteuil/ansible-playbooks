@@ -14,23 +14,7 @@ borg
 [remote_network]
 neutrino.deverteuil.net
 owncloud.deverteuil.net
-baryon.deverteuil.net
-
-[archlinux]
-higgs
-fixion
-electron
-baryon.deverteuil.net
-unifi
-openvpn
-ns1
-ns2
-pacman-cache
-dhcp
-smtp
-munin
-tor
-borg
+#baryon.deverteuil.net
 
 [dhcp-server]
 dhcp
@@ -49,17 +33,17 @@ openvpn
 unifi
 
 [mailservers]
-higgs
+#higgs
 #baryon.deverteuil.net
 #electron
 smtp
 
 [dovecot]
-higgs
-baryon.deverteuil.net
+#higgs
+#baryon.deverteuil.net
 
 [nfsservers]
-higgs
+#higgs
 electron
 
 [webservers]

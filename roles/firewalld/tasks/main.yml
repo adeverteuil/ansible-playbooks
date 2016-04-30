@@ -1,9 +1,11 @@
 ---
 - name: install python2-firewalld
   pacman: name=python2-firewalld state=present
+  tags: [install]
 
 - name: stop and disable iptables
   service: name=iptables state=stopped enabled=no
+  tags: [serve]
 
 # interface is only supported in Ansible 2.1.
 # - name: add br0 to the default zone
@@ -14,13 +16,16 @@
 
 - name: start and enable firewalld
   service: name=firewalld state=started enabled=yes
+  tags: [serve]
 
 - name: check if br0 is binded to the public zone
   command: firewall-cmd --zone=public --query-interface=br0
   failed_when: false
   changed_when: false
   register: query_interface
+  tags: [configure]
 
 - name: bind br0 to the public zone
   command: firewall-cmd --zone=public --add-interface=br0
   when: query_interface.stdout == "no"
+  tags: [configure]

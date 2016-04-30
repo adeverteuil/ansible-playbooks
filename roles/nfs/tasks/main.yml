@@ -1,6 +1,7 @@
 ---
 - name: install nfs-utils
   pacman: name=nfs-utils state=present
+  tags: [install]
 
 - name: bind mount directories to be exported
   template:
@@ -8,10 +9,12 @@
     dest: /etc/systemd/system/srv-nfs-{{ item.dirname }}.mount
   with_items: "{{ nfs_exports }}"
   notify: reload systemd configuration
+  tags: [install]
 
 - name: enable and start bind mounts
   service: name=srv-nfs-{{ item.dirname }}.mount state=started enabled=true
   with_items: "{{ nfs_exports }}"
+  tags: [serve]
 
 - name: configure exports
   template:
@@ -19,13 +22,16 @@
     dest: /etc/exports
   when: nfs_exports != []
   notify: reload exports
+  tags: [configure]
 
 - name: enable NFS service in firewalld
   firewalld: service=nfs state=enabled permanent=yes immediate=yes
+  tags: [serve]
 
 - name: start and enable nfs-server
   service: name=nfs-server state=started enabled=true
   when: nfs_exports != []
+  tags: [serve]
 
 - name: create mount unit files
   template:
@@ -33,6 +39,7 @@
     dest: /etc/systemd/system/{{ item.where[1:]|replace("/", "-") }}.mount
   with_items: "{{ nfs_mounts }}"
   notify: reload systemd configuration
+  tags: [install]
 
 - name: create automount unit files
   template:
@@ -40,7 +47,9 @@
     dest: /etc/systemd/system/{{ item.where[1:]|replace("/", "-") }}.automount
   with_items: "{{ nfs_mounts }}"
   notify: reload systemd configuration
+  tags: [install]
 
 - name: start and enable automount units
   service: name={{ item.where[1:]|replace("/", "-") }}.automount state=started enabled=yes
   with_items: "{{ nfs_mounts }}"
+  tags: [serve]

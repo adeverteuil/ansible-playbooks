@@ -1,11 +1,13 @@
 ---
 - name: install munin
   pacman: name=munin state=present
+  tags: [install]
 
 - name: configure munin
   template:
     src: munin.conf.j2
     dest: /etc/munin/munin.conf
+  tags: [configure]
 
 - name: ensure /var/lib/munin/.ssh exists
   file:
@@ -14,6 +16,7 @@
     owner: munin
     group: munin
     mode: 0700
+  tags: [install]
 
 - name: copy ssh private key
   template:
@@ -22,6 +25,7 @@
     owner: munin
     group: munin
     mode: 0600
+  tags: [install]
 
 - name: copy ssh public key
   template:
@@ -30,6 +34,7 @@
     owner: munin
     group: munin
     mode: 0640
+  tags: [install]
 
 - name: configure the ssh client
   copy:
@@ -37,6 +42,7 @@
     dest: /var/lib/munin/.ssh/config
     owner: munin
     group: munin
+  tags: [configure]
 
 - name: create html output directory
   file:
@@ -44,17 +50,20 @@
     state: directory
     owner: munin
     group: munin
+  tags: [install]
 
 - name: add http to the munin group
   user:
     name: http
     groups: munin
     append: yes
+  tags: [install]
 
 - name: make the munin log directory group-writeable
   file:
     path: /var/log/munin
     mode: 0775
+  tags: [install]
 
 - name: make the cgi-tmp directory group-writeable
   file:
@@ -63,12 +72,14 @@
     owner: munin
     group: munin
     state: directory
+  tags: [install]
 
 - name: copy the munin-cron.service file
   copy:
     src: munin-cron.service
     dest: /etc/systemd/system/munin-cron.service
   notify: reload systemd
+  tags: [install]
 
 - name: copy the munin.timer file
   copy:
@@ -77,6 +88,7 @@
   notify:
   - reload systemd
   - restart munin.timer
+  tags: [install]
 
 - name: install the snmp_communities configuration file
   template:
@@ -86,21 +98,25 @@
     owner: root
     group: munin
   notify: restart munin-node
+  tags: [configure]
 
 - name: install the snmp_hostnames configuration file
   template:
     src: snmp_hostnames.j2
     dest: /etc/munin/plugin-conf.d/snmp_hostnames
   notify: restart munin-node
+  tags: [configure]
 
 - name: install the SNMP Perl module
   pacman: name=perl-net-snmp state=present
+  tags: [install]
 
 - name: auto-enable snmp plugins for the switch
   shell: munin-node-configure --shell --snmp {{ munin_managed_switch_ip }} --snmpcommunity {{ munin_managed_switch_community }} | sh
   notify: restart munin-node
   args:
     creates: /etc/munin/plugins/snmp_{{ munin_managed_switch_ip }}_uptime
+  tags: [configure]
 
 #- name: auto-enable snmp plugins for the router
 #  shell: munin-node-configure --shell --snmp {{ munin_router_ip }} --snmpcommunity {{ munin_router_community }} | sh
@@ -112,9 +128,11 @@
 
 - name: start and enable munin-cron timer
   service: name=munin-cron.timer state=started enabled=yes
+  tags: [serve]
 
 - name: install perl-cgi-fast
   pacman: name=perl-cgi-fast state=present
+  tags: [install]
 
 #- name: install mod_fcgid
 #  pacman: name=mod_fcgid state=present
@@ -130,6 +148,7 @@
     line: "        LoadModule cgid_module modules/mod_cgid.so"
     regexp: ^ *#?LoadModule cgid_module.*$
   notify: restart apache
+  tags: [configure]
 
 - name: load mod_rewrite in Apache
   lineinfile:
@@ -137,9 +156,11 @@
     line: LoadModule rewrite_module modules/mod_rewrite.so
     regexp: ^#?LoadModule rewrite_module.*$
   notify: restart apache
+  tags: [configure]
 
 - name: create the Apache VirtualHost
   template:
     src: virtualhost.conf.j2
     dest: /etc/httpd/vhosts/munin.conf
   notify: restart httpd
+  tags: [configure]

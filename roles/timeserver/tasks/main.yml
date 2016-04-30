@@ -1,18 +1,23 @@
 ---
 - name: install ntp
   pacman: name=ntp state=present
+  tags: [install]
 
 - name: configure ntp
   template:
     src: ntp.conf.j2
     dest: /etc/ntp.conf
   notify: restart ntp
+  tags: [configure]
 
 - name: stop and disable systemd-timesyncd
   service: name=systemd-timesyncd state=stopped enabled=no
+  tags: [serve]
 
 - name: start and enable ntp
   service: name=ntpd state=started enabled=yes
+  tags: [serve]
 
 - name: enable service ntp in firewalld
   firewalld: service=ntp state=enabled permanent=yes immediate=yes
+  tags: [serve]

@@ -1,6 +1,7 @@
 ---
 - name: install spamassassin
   pacman: name=spamassassin state=present
+  tags: [install]
 
 - name: update spamassassin rules
   command: sa-update
@@ -13,6 +14,8 @@
   #   2: lint of site pre files failed, cannot continue
   #   3: some failures, but at least one channel suceeded
   #   4 or higher means all channels failed
+  tags: [configure]
 
 - name: start and enable spamassassin
   service: name=spamassassin state=started enabled=true
+  tags: [serve]

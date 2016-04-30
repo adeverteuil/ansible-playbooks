@@ -1,39 +1,46 @@
 ---
 - name: install munin-node
   pacman: name=munin-node state=present
+  tags: [install]
 
 - name: copy ssh key
   authorized_key:
     user: munin
     key: "{{ munin_ssh_public_key }}"
+  tags: [configure]
 
 - name: configure munin-node
   template:
     src: munin-node.conf.j2
     dest: /etc/munin/munin-node.conf
   notify: restart munin-node
+  tags: [configure]
 
 - name: configure the smart plugins
   copy:
     src: smart
     dest: /etc/munin/plugin-conf.d/smart
+  tags: [configure]
 
 - name: configure the exim plugins
   copy:
     src: exim
     dest: /etc/munin/plugin-conf.d/exim
+  tags: [configure]
 
 - name: auto-enable plugins
   shell: munin-node-configure --shell | sh
   notify: restart munin-node
   args:
     creates: /etc/munin/plugins/df
+  tags: [configure]
 
 - name: drop the munin.xml firewalld service definition
   copy:
     src: munin.xml
     dest: /etc/firewalld/services/munin.xml
   register: munin_service
+  tags: [install]
 
 - name: reload firewalld
   service: name=firewalld state=reloaded
@@ -41,12 +48,15 @@
 
 - name: enable the munin service in firewalld
   firewalld: service=munin state=enabled permanent=yes immediate=yes
+  tags: [serve]
 
 - name: start and enable munin-node
   service: name=munin-node state=started enabled=yes
+  tags: [serve]
 
 - name: add the host to munin.conf on the munin master
   delegate_to: munin
   template:
     src: munin.conf.j2
     dest: /etc/munin/munin-conf.d/{{ ansible_hostname }}.conf
+  tags: [configure]

@@ -1,12 +1,14 @@
 ---
 - name: install exim
   pacman: name=exim state=present
+  tags: [install]
 
 - name: configure exim
   template:
     src: exim.conf.j2
     dest: /etc/mail/exim.conf
   notify: reload exim
+  tags: [configure]
 
 - include: spamassassin.yml
   when: exim_install_spamassassin
@@ -16,9 +18,12 @@
     src: aliases.j2
     dest: /etc/mail/aliases
   notify: run newaliases
+  tags: [configure]
 
 - name: enable service smtp in firewalld
   firewalld: service=smtp state=enabled permanent=yes immediate=yes
+  tags: [serve]
 
 - name: start and enable exim
   service: name=exim state=started enabled=yes
+  tags: [serve]
