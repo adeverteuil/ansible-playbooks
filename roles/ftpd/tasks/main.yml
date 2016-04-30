@@ -1,5 +1,6 @@
 - name: install vsftpd
   pacman: name=vsftpd state=present
+  tags: [install]
 
 - name: serve anonymous users
   lineinfile:
@@ -9,9 +10,12 @@
   - anon_root=/srv/ftp
   - no_anon_password=YES
   notify: reload vsftpd
+  tags: [configure]
 
 - name: start and enable vsftpd
   service: name=vsftpd state=started enabled=yes
+  tags: [serve]
 
 - name: enable service ftp in firewalld
   firewalld: service=ftp state=enabled permanent=yes immediate=yes
+  tags: [serve]
