@@ -1,15 +1,19 @@
 ---
 - name: install dhcp
   pacman: name=dhcp state=present
+  tags: [install]
 
 - name: configure dhcp
   template:
     src: dhcpd.conf.j2
     dest: /etc/dhcpd.conf
   notify: restart dhcpd
+  tags: [configure]
 
 - name: start and enable dhcpd
   service: name=dhcpd4 state=started enabled=yes
+  tags: [serve]
 
 - name: let dhcp through the firewall
   firewalld: service=dhcp state=enabled permanent=yes immediate=yes
+  tags: [configure]
