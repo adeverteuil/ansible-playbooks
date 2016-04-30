@@ -5,22 +5,26 @@
     state: directory
     owner: http
     group: http
+  tags: [install]
 
 - name: copy default virtualhost document
   copy:
     src: index.html
     dest: /srv/http/default/index.html
+  tags: [install]
 
 - name: create vhosts config files directory
   file:
     path: /etc/httpd/vhosts
     state: directory
+  tags: [install]
 
 - name: create default virtualhost
   template:
     src: 0-default.conf.j2
     dest: /etc/httpd/vhosts/0-default.conf
   notify: restart apache
+  tags: [install]
 
 - name: include vhosts files
   lineinfile:
@@ -28,3 +32,4 @@
     insertafter: \# Virtual hosts
     line: Include vhosts/*
   notify: restart apache
+  tags: [install]

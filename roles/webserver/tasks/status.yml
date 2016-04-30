@@ -5,6 +5,7 @@
     line: Include conf/extra/httpd-info.conf
     regexp: ^#?Include conf/extra/httpd-info.conf
   notify: restart apache
+  tags: [configure]
 
 - name: uncomment mod_info
   lineinfile:
@@ -12,8 +13,10 @@
     line: LoadModule info_module modules/mod_info.so
     regexp: ^#?LoadModule info_module modules/mod_info.so
   notify: restart apache
+  tags: [configure]
 
 - name: configure mod_status and mod_info
   template:
     src: httpd-info.conf
     dest: /etc/httpd/conf/extra/httpd-info.conf
+  tags: [configure]
