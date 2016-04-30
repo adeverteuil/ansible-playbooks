@@ -24,6 +24,7 @@
             --sshpubkey \"{{ ansible_ssh_host_key_rsa_public }}\"
             --os {{ ansible_distribution }}
   when: host_show.rc != 0
+  tags: [install]
 
 - name: check if /etc/krb5.keytab exists
   stat: path=/etc/krb5.keytab
@@ -35,6 +36,7 @@
   become: no
   command: /usr/sbin/ipa-getkeytab -s {{ ipa_server }} -p host/{{ ansible_fqdn }} -k /tmp/{{ ansible_hostname }}.keytab
   when: not keytab.stat.exists
+  tags: [install]
 
 - name: transfer the keytab over to the IPA client
   synchronize:
@@ -47,6 +49,7 @@
   become: no
   when: not keytab.stat.exists
   notify: restart sssd
+  tags: [install]
 
 - name: remove the keytab file on the FreeIPA server
   delegate_to: "{{ ipa_server }}"
@@ -55,9 +58,11 @@
   file:
     path: /tmp/{{ ansible_hostname }}.keytab
     state: absent
+  tags: [install]
 
 - name: install sssd
   pacman: name=sssd state=present
+  tags: [install]
 
 - name: configure sssd
   template:
@@ -65,6 +70,7 @@
     dest: /etc/sssd/sssd.conf
     mode: 0600
   notify: restart sssd
+  tags: [configure]
 
 - name: disable group and passwd caching for NSCD
   lineinfile:
@@ -72,11 +78,13 @@
     line: "	enable-cache		{{ item }}		no"
     dest: /etc/nscd.conf
   with_items: [group, passwd]
+  tags: [configure]
 
 - name: configure NSS
   template:
     src: nsswitch.conf.j2
     dest: /etc/nsswitch.conf
+  tags: [configure]
 
 - name: configure PAM
   template:
@@ -89,11 +97,13 @@
   - system-login
   - su
   - su-l
+  tags: [configure]
 
 - name: configure krb5
   template:
     src: krb5.conf.j2
     dest: /etc/krb5.conf
+  tags: [configure]
 
 - name: set AuthorizedKeysCommand for sshd
   lineinfile:
@@ -101,6 +111,7 @@
     line: AuthorizedKeysCommand /usr/bin/sss_ssh_authorizedkeys
     dest: /etc/ssh/sshd_config
   notify: restart sshd
+  tags: [configure]
 
 - name: set AuthorizedKeysCommandUser for sshd
   lineinfile:
@@ -108,6 +119,7 @@
     line: AuthorizedKeysCommandUser nobody
     dest: /etc/ssh/sshd_config
   notify: restart sshd
+  tags: [configure]
 
 - name: set GlobalKnownHostsFile for ssh
   lineinfile:
@@ -120,11 +132,14 @@
     regexp: ProxyCommand
     line: ProxyCommand /usr/bin/sss_ssh_knownhostsproxy -p %p %h
     dest: /etc/ssh/ssh_config
+  tags: [configure]
 
 - name: start and enable sssd
   service: name=sssd state=started enabled=yes
+  tags: [serve]
 
 - name: exclude lastlog and faillog from backups
   copy:
     src: backup_excludes
     dest: /var/log/.backup
+  tags: [configure]
