@@ -3,18 +3,32 @@
   pacman: name=dovecot state=present
   tags: [install]
 
-- name: configure dovecot
+- name: configure dovecot general options
   template:
-    src: 10-mail.conf.j2
-    dest: /etc/dovecot/conf.d/10-mail.conf
+    src: dovecot.conf.j2
+    dest: /etc/dovecot/dovecot.conf
   notify: restart dovecot
   tags: [configure]
 
-- name: configure pam
-  copy:
-    src: dovecot.pam
-    dest: /etc/pam.d/dovecot
+- name: configure dovecot specific options
+  template:
+    src: "{{ item }}.j2"
+    dest: /etc/dovecot/conf.d/{{ item }}
+  with_items:
+    - 10-auth.conf
+    - 10-mail.conf
+    - 10-ssl.conf
+  notify: restart dovecot
   tags: [configure]
+
+- name: configure dovecot pam module
+  template:
+    src: pam_dovecot.j2
+    dest: /etc/pam.d/dovecot
+  notify: restart dovecot
+  tags: [configure]
+
+- include: ipa.yml
 
 - name: configure SSL certificate
   template:

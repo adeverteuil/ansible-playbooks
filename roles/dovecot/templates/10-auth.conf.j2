@@ -1,0 +1,12 @@
+# {{ ansible_managed }}
+passdb {
+  driver = pam
+}
+userdb {
+  driver = passwd
+}
+auth_mechanisms = plain
+#auth_gssapi_hostname = {{ ansible_fqdn }}
+#auth_krb5_keytab = /etc/dovecot/krb5.keytab
+#auth_realms = {{ bind_localdomain }}
+#auth_default_realm = {{ bind_localdomain }}
