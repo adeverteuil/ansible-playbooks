@@ -6,6 +6,19 @@
 # - Install the python2 and openssh packages
 # - Update the system (pacman -Syu)
 
+- hosts: fixion
+  roles:
+  - {role: timeserver, tags: [timeserver]}
+- hosts: home_network:!fixion
+  roles:
+  - {role: systemd-timesyncd, tags: [systemd-timesyncd]}
+  remote_user: root
+- hosts: home_network
+  roles:
+  - {role: common, tags: [common]}
+  - {role: freeipa-client, tags: [freeipa-client]}
+  serial: 1
+  remote_user: root
 - hosts: pacman-cache
   roles:
   - {role: pacman-cache, tags: [pacman-cache]}
@@ -19,7 +32,6 @@
   - {role: backup-server, tags: [backup-server]}
 - hosts: home_network
   roles:
-  - {role: common, tags: [common]}
   - {role: firewalld, tags: [firewalld]}
   - {role: munin-node, tags: [munin-node]}
   - {role: backup-client, tags: [backup-client]}
@@ -41,16 +53,6 @@
 - hosts: mailservers
   roles:
   - {role: mailserver, tags: [mailserver]}
-- hosts: fixion
-  roles:
-  - {role: timeserver, tags: [timeserver]}
-- hosts: home_network:!fixion
-  roles:
-  - {role: systemd-timesyncd, tags: [systemd-timesyncd]}
-- hosts: home_network
-  roles:
-  - {role: freeipa-client, tags: [freeipa-client]}
-  serial: 1
 - hosts: munin
   roles:
   - {role: webserver, tags: [webserver]}

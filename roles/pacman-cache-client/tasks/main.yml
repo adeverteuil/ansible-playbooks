@@ -6,6 +6,9 @@
     dest: /etc/pacman.conf
   tags: [configure]
 
+- name: ensure linux-headers is installed
+  pacman: name=linux-headers state=present
+
 - name: enable the nf_conntrack_ftp module
   copy:
     src: nf_conntrack_ftp.conf

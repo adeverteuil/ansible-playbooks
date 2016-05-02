@@ -1,3 +1,5 @@
+freeipa
+
 [home_network]
 fixion
 unifi
@@ -10,6 +12,7 @@ smtp
 munin
 tor
 borg
+home
 
 [remote_network]
 neutrino.deverteuil.net
