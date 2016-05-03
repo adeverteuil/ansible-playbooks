@@ -53,13 +53,11 @@
 - hosts: mailservers
   roles:
   - {role: mailserver, tags: [mailserver]}
+  - {role: dovecot, tags: [dovecot]}
 - hosts: munin
   roles:
   - {role: webserver, tags: [webserver]}
   - {role: munin-master, tags: [munin-master]}
-- hosts: [dovecot]
-  roles:
-  - {role: dovecot, tags: [dovecot]}
 - hosts: openvpn-server
   roles:
   - {role: openvpn-server, tags: [openvpn-server]}

@@ -681,7 +681,6 @@ userforward:
   reply_transport = address_reply
   directory_transport = address_maildir
 
-
 # This router matches local user mailboxes. If the router fails, the error
 # message is "Unknown user".
 
@@ -697,6 +696,17 @@ localuser:
 # local_part_suffix_optional
   transport = local_delivery
   cannot_route_message = Unknown user
+
+# This router delivers mail to any dovecot virtual
+# user who has a directory under /home/vmail/
+# Place after remote router and before localuser router
+# + addressing support requires uncommenting
+dovecot_router:
+  driver = accept
+  #local_part_suffix = +*
+  #local_part_suffix_optional
+  require_files = +{{ exim_delivery_directory }}
+  transport = dovecot_transport
 
 
 
@@ -725,8 +735,6 @@ remote_smtp:
 # Some systems use the alternative approach of running mail deliveries under a
 # particular group instead of using the sticky bit. The commented options below
 # show how this can be done.
-
-# Changé pour un maildir par Alexandre de Verteuil 2014-08-06.
 
 local_delivery:
   driver = appendfile
@@ -779,6 +787,18 @@ address_maildir:
     envelope_to_add
     return_path_add
 
+dovecot_transport:
+  debug_print = "T: dovecot_virtual appendfile for $local_part@$domain"
+  driver = appendfile
+  directory = {{ exim_delivery_directory }}
+  maildir_format
+  delivery_date_add
+  envelope_to_add
+  return_path_add
+  user = vmail
+  group = vmail
+  mode = 0660
+  mode_fail_narrower = false
 
 
 ######################################################################

@@ -1,12 +1,9 @@
 # {{ ansible_managed }}
 passdb {
-  driver = pam
+  driver = passwd-file
+  args = /etc/dovecot/passwd
 }
 userdb {
-  driver = passwd
+  driver = static
+  args = uid=vmail gid=vmail home={{ dovecot_vuser_home }}
 }
-auth_mechanisms = plain
-#auth_gssapi_hostname = {{ ansible_fqdn }}
-#auth_krb5_keytab = /etc/dovecot/krb5.keytab
-#auth_realms = {{ bind_localdomain }}
-#auth_default_realm = {{ bind_localdomain }}

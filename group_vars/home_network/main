@@ -57,8 +57,11 @@ webserver_serveradmin: alexandre@deverteuil.net
 letsencrypt_email: alexandre@deverteuil.net
 
 exim_postmaster: alex
-exim_local_aliases: ["alexandre: alex"]
 exim_no_sender_verify_domains: [acs-agiledash.corp.internap.com]
 exim_smarthost: mail.aei.ca
 exim_local_domains: [private.deverteuil.net, deverteuil.net, alexdev.chickenkiller.com, electron]
 exim_relay_from_hosts: ["192.168.0.0/16"]
+exim_delivery_directory: /var/spool/mail/$local_part@$domain/mail/
+
+dovecot_vuser_home: /var/spool/mail/%u
+dovecot_mailbox_directory: "{{ dovecot_vuser_home }}/mail"
