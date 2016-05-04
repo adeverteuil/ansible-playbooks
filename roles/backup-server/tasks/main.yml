@@ -9,6 +9,13 @@
     state: directory
   tags: [install]
 
+- name: exclude the backups from udpatedb
+  lineinfile:
+    dest: /etc/updatedb.conf
+    regexp: ^PRUNEPATHS
+    line: PRUNEPATHS = "/afs /media /mnt /net /sfs /tmp /udev /var/cache /var/lib/pacman/local /var/lock /var/run /var/spool /var/tmp /var/backups"
+  tags: [configure]
+
 - name: create a directory for the LUKS keys
   file:
     path: /root/keys
