@@ -3,11 +3,20 @@
   pacman: name=dovecot state=present
   tags: [install]
 
-- name: create the vmail user
+- name: create the vmail user and home directory
   user:
     name: vmail
-    createhome: no
+    createhome: yes
+    home: "{{ dovecot_vmail_directory }}"
     shell: /usr/bin/false
+  tags: [install]
+
+- name: add exim to the mail group
+  user:
+    name: exim
+    groups: mail
+    append: yes
+  tags: [install]
 
 - name: configure dovecot general options
   template:
@@ -44,6 +53,7 @@
 - name: make dovecot SSL certificate
   script: make_ssl_cert.sh
   when: cert.changed
+  tags: [configure]
 
 - name: enable services in firewalld
   firewalld: service={{ item }} state=enabled permanent=yes immediate=yes
