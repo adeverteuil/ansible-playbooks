@@ -1,0 +1,27 @@
+#!/usr/bin/bash
+
+set -o errexit -o pipefail
+
+MAILDIR=/var/vmail
+NICE="/usr/bin/nice -n 20 /usr/bin/ionice -c 2 -n 7"
+SA="$NICE /usr/bin/vendor_perl/sa-learn --no-sync"
+
+cd $MAILDIR
+
+for mailbox in */mail/*
+do
+    d=$(basename $mailbox)
+    case $d in
+        INBOX|brouillons)
+            # These are not processed.
+            ;;
+        spam)
+            $SA --spam "$d" > /dev/null
+            ;;
+        *)
+            $SA --ham "$d" > /dev/null
+            ;;
+    esac
+done
+
+/usr/bin/vendor_perl/sa-learn --sync > /dev/null

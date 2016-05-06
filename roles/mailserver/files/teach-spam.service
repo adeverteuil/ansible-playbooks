@@ -1,0 +1,6 @@
+[Unit]
+Description=Train SpamAssassin's Bayesian filter
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/teach-spam
