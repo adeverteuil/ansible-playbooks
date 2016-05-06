@@ -681,6 +681,21 @@ userforward:
   reply_transport = address_reply
   directory_transport = address_maildir
 
+virtualforward:
+  driver = redirect
+  require_files = +/var/vmail/$local_part@$domain/filter
+  file = /var/vmail/$local_part@$domain/filter
+  allow_filter
+  no_verify
+  no_expn
+  check_ancestor
+  file_transport = address_file
+  pipe_transport = address_pipe
+  reply_transport = address_reply
+  directory_transport = address_maildir
+  user = vmail
+  group = mail
+
 # This router matches local user mailboxes. If the router fails, the error
 # message is "Unknown user".
 
