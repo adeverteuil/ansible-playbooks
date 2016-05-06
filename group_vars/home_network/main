@@ -61,7 +61,8 @@ exim_no_sender_verify_domains: [acs-agiledash.corp.internap.com]
 exim_smarthost: mail.aei.ca
 exim_local_domains: [private.deverteuil.net, deverteuil.net, alexdev.chickenkiller.com]
 exim_relay_from_hosts: ["192.168.0.0/16"]
-exim_delivery_directory: /var/spool/mail/$local_part@$domain/
+exim_delivery_directory: /var/spool/mail/$local_part@$domain
+exim_vuser_home: /var/vmail/$local_part@$domain
 
 dovecot_vmail_directory: /var/vmail
 dovecot_vuser_home: "{{ dovecot_vmail_directory }}/%u"

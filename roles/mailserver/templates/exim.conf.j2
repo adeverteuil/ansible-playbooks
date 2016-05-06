@@ -683,8 +683,8 @@ userforward:
 
 virtualforward:
   driver = redirect
-  require_files = +/var/vmail/$local_part@$domain/filter
-  file = /var/vmail/$local_part@$domain/filter
+  require_files = +{{ exim_vuser_home }}/filter
+  file = {{ exim_vuser_home }}/filter
   allow_filter
   no_verify
   no_expn
