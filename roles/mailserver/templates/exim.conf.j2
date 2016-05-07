@@ -683,6 +683,8 @@ userforward:
 
 virtualforward:
   driver = redirect
+  no_check_local_user
+  router_home_directory = {{ exim_vuser_home }}
   require_files = +{{ exim_vuser_home }}/filter
   file = {{ exim_vuser_home }}/filter
   allow_filter
