@@ -16,4 +16,4 @@
 
 - name: let dhcp through the firewall
   firewalld: service=dhcp state=enabled permanent=yes immediate=yes
-  tags: [configure]
+  tags: [serve]

@@ -26,6 +26,7 @@
 - name: reload firewalld
   service: name=firewalld state=reloaded
   when: service_tor.changed
+  tags: [install]
 
 - name: enable tor service in firewalld
   firewalld: service=tor state=enabled permanent=yes immediate=yes
