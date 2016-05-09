@@ -12,13 +12,11 @@
 - hosts: home_network:!fixion
   roles:
   - {role: systemd-timesyncd, tags: [systemd-timesyncd]}
-  remote_user: root
 - hosts: home_network
   roles:
   - {role: common, tags: [common]}
   - {role: freeipa-client, tags: [freeipa-client]}
   serial: 1
-  remote_user: root
 - hosts: pacman-cache
   roles:
   - {role: pacman-cache, tags: [pacman-cache]}
