@@ -1,0 +1,16 @@
+# {{ ansible_managed }}
+passdb {
+  driver = passwd-file
+  args = /etc/dovecot/passwd
+}
+userdb {
+  driver = static
+  args = uid=vmail gid=mail home={{ dovecot_vuser_home }}
+}
+service auth {
+  unix_listener auth-client {
+    mode = 0660
+    user = dovecot
+    group = mail
+  }
+}

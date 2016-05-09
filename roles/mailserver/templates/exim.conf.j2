@@ -144,7 +144,7 @@ acl_smtp_data = acl_check_data
 
 # Allow any client to use TLS.
 
-# tls_advertise_hosts = *
+tls_advertise_hosts = *
 
 # Specify the location of the Exim server's TLS certificate and private key.
 # The private key must not be encrypted (password protected). You can put
@@ -152,8 +152,8 @@ acl_smtp_data = acl_check_data
 # need the first setting, or in separate files, in which case you need both
 # options.
 
-# tls_certificate = /etc/ssl/exim.crt
-# tls_privatekey = /etc/ssl/exim.pem
+tls_certificate = /etc/mail/private/exim.pem
+#tls_privatekey = /etc/ssl/private/exim.pem
 
 # In order to support roaming users who wish to send email from anywhere,
 # you may want to make Exim listen on other ports as well as port 25, in
@@ -165,6 +165,7 @@ acl_smtp_data = acl_check_data
 # non-standard port 465.
 
 # daemon_smtp_ports = 25 : 465 : 587
+daemon_smtp_ports = 25 : 587
 # tls_on_connect_ports = 465
 
 
@@ -681,6 +682,22 @@ userforward:
   reply_transport = address_reply
   directory_transport = address_maildir
 
+virtualforward:
+  driver = redirect
+  no_check_local_user
+  router_home_directory = {{ exim_vuser_home }}
+  require_files = +{{ exim_vuser_home }}/filter
+  file = {{ exim_vuser_home }}/filter
+  allow_filter
+  no_verify
+  no_expn
+  check_ancestor
+  file_transport = address_file
+  pipe_transport = address_pipe
+  reply_transport = address_reply
+  directory_transport = address_maildir
+  user = vmail
+  group = mail
 
 # This router matches local user mailboxes. If the router fails, the error
 # message is "Unknown user".
@@ -697,6 +714,17 @@ localuser:
 # local_part_suffix_optional
   transport = local_delivery
   cannot_route_message = Unknown user
+
+# This router delivers mail to any dovecot virtual
+# user who has a directory under /home/vmail/
+# Place after remote router and before localuser router
+# + addressing support requires uncommenting
+dovecot_router:
+  driver = accept
+  #local_part_suffix = +*
+  #local_part_suffix_optional
+  require_files = +{{ exim_delivery_directory }}
+  transport = dovecot_transport
 
 
 
@@ -725,8 +753,6 @@ remote_smtp:
 # Some systems use the alternative approach of running mail deliveries under a
 # particular group instead of using the sticky bit. The commented options below
 # show how this can be done.
-
-# Changé pour un maildir par Alexandre de Verteuil 2014-08-06.
 
 local_delivery:
   driver = appendfile
@@ -779,6 +805,18 @@ address_maildir:
     envelope_to_add
     return_path_add
 
+dovecot_transport:
+  debug_print = "T: dovecot_virtual appendfile for $local_part@$domain"
+  driver = appendfile
+  directory = {{ exim_delivery_directory }}
+  maildir_format
+  delivery_date_add
+  envelope_to_add
+  return_path_add
+  user = vmail
+  group = mail
+  mode = 0660
+  mode_fail_narrower = false
 
 
 ######################################################################
@@ -836,6 +874,13 @@ begin rewrite
 # messages from authenticated users from anywhere on the Internet.
 
 begin authenticators
+
+dovecot_plain:
+  driver = dovecot
+  public_name = PLAIN
+  server_socket = /var/run/dovecot/auth-client
+  server_set_id = $auth1
+  server_advertise_condition = ${if def:tls_in_cipher }
 
 # PLAIN authentication has no server prompts. The client sends its
 # credentials in one lump, containing an authorization ID (which we do not

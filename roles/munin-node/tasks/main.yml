@@ -45,6 +45,7 @@
 - name: reload firewalld
   service: name=firewalld state=reloaded
   when: munin_service.changed
+  tags: [install]
 
 - name: enable the munin service in firewalld
   firewalld: service=munin state=enabled permanent=yes immediate=yes

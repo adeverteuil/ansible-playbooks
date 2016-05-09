@@ -1,0 +1,3 @@
+Generating encrypted passwords
+
+    doveadm pw -s SHA512-CRYPT
