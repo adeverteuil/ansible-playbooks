@@ -23,6 +23,13 @@
     state: directory
   tags: [install]
 
+- name: include the files in conf.d
+  lineinfile:
+    dest: /etc/httpd/conf/httpd.conf
+    line: IncludeOptional conf.d/*.conf
+  notify: restart httpd
+  tags: [configure]
+
 - include: ssl.yml
 - include: vhosts.yml
 - include: wsgi.yml

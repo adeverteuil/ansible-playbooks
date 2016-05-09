@@ -50,6 +50,10 @@
 - hosts: tor
   roles:
   - {role: tor_node, tags: [tor_node]}
+- hosts: webservers
+  roles:
+  - {role: webserver, tags: [webserver]}
+  - {role: letsencrypt, tags: [letsencrypt]}
 - hosts: mailservers
   roles:
   - {role: mailserver, tags: [mailserver]}

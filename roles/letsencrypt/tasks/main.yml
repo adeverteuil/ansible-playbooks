@@ -10,6 +10,7 @@
     owner: http
     group: http
     mode: 0750
+    recurse: yes
   tags: [install]
 
 #- name: configure letsencrypt
@@ -19,7 +20,7 @@
 
 - name: enable services http and https in firewalld
   firewalld: service={{ item }} state=enabled permanent=yes immediate=yes
-  with_items: [http, httpd]
+  with_items: [http, https]
   tags: [serve]
 
 - name: create service unit file for certificate renewal

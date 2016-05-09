@@ -2,6 +2,7 @@
     ServerName {{ ansible_default_ipv4.address }}
     DocumentRoot /srv/http/default
     <Directory /srv/http/default>
+        Options -Indexes
         <Files index.html>
             Require all granted
         </Files>
@@ -30,6 +31,7 @@
 
     SetEnvIf User-Agent ".*MSIE.*" nokeepalive ssl-unclean-shutdown downgrade-1.0 force-response-1.0
     <Directory /srv/http/default>
+        Options -Indexes
         <Files index.html>
             Require all granted
         </Files>

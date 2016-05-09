@@ -53,9 +53,6 @@ openvpn_key_params:
   email: "alexandre@deverteuil.net"
   ou: ""
 
-webserver_serveradmin: alexandre@deverteuil.net
-letsencrypt_email: alexandre@deverteuil.net
-
 exim_postmaster: alex
 exim_no_sender_verify_domains: [acs-agiledash.corp.internap.com]
 exim_smarthost: mail.aei.ca
@@ -68,3 +65,10 @@ dovecot_vmail_directory: /var/vmail
 dovecot_vuser_home: "{{ dovecot_vmail_directory }}/%u"
 dovecot_mailbox_directory: "{{ dovecot_vuser_home }}/mail"
 dovecot_inbox_directory: /var/spool/mail/%u
+
+webserver_serveradmin: alexandre@deverteuil.net
+letsencrypt_email: alexandre@deverteuil.net
+letsencrypt_domains:
+  - smtp.deverteuil.net
+  - imap.deverteuil.net
+letsencrypt_webroot: /srv/http/default/.well-known/letsencrypt
