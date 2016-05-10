@@ -71,4 +71,6 @@ letsencrypt_email: alexandre@deverteuil.net
 letsencrypt_domains:
   - smtp.deverteuil.net
   - imap.deverteuil.net
-letsencrypt_webroot: /srv/http/default/.well-known/letsencrypt
+  - smtp.private.deverteuil.net
+  - imap.private.deverteuil.net
+  - web.private.deverteuil.net
