@@ -18,8 +18,8 @@
         SSLRequireSSL
     </Directory>
 
-    SSLCertificateFile /etc/httpd/ssl/self-signed.crt
-    SSLCertificateKeyFile /etc/httpd/ssl/server.key
+    SSLCertificateFile {{ webserver_certificate_file }}
+    SSLCertificateKeyFile {{ webserver_certificate_keyfile }}
 
     SSLVerifyClient none
     SSLProxyEngine off
