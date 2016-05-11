@@ -1,2 +1,4 @@
 ---
 webserver_serveradmin: you@example.com
+webserver_certificate_file: /etc/httpd/ssl/self-signed.crt
+webserver_certificate_keyfile: /etc/httpd/ssl/server.key
