@@ -1,6 +1,18 @@
 ---
+- name: add GPG key for unifi repository
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: C0A52C50
+  tags: [install]
+
+- name: add the unifi repository
+  apt_repository:
+    repo: deb http://www.ubnt.com/downloads/unifi/debian stable ubiquiti
+    state: present
+  tags: [install]
+
 - name: install unifi
-  pacman: name=unifi state=present
+  apt: name=unifi state=present
   tags: [install]
 
 ## Runs as user unifi, can't bind priviledged port.
