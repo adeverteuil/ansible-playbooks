@@ -1,0 +1,47 @@
+---
+- name: remove unused repositories
+  apt_repository:
+    repo: "{{ item }}"
+    state: absent
+  with_items:
+  - deb cdrom:[Debian GNU/Linux 8.4.0 _Jessie_ - Official amd64 CD Binary-1 20160402-14:46]/ jessie main
+  - deb-src http://debian.mirror.iweb.ca/debian/ jessie main
+  - deb-src http://security.debian.org/ jessie/updates main
+  - deb-src http://debian.mirror.iweb.ca/debian/ jessie-updates main
+
+- name: install packages
+  apt: name={{ item }} state=present
+  with_items:
+  - firewalld
+  - vim
+  - sudo
+  - tmux
+  - git
+  - sysstat
+  - haveged
+  - rsync
+  - strace
+  #- sysdig
+  #- linux-headers
+  tags: [install]
+
+- name: install networking tools
+  apt: name={{ item }} state=present
+  with_items:
+    - mtr
+    - ethtool
+    - net-tools
+    - nmap
+    - iperf
+    - dnstracer
+    - tcpdump
+    - ipcalc
+  tags: [install]
+
+- name: start and enable services
+  service: name={{ item }} state=started enabled=yes
+  with_items:
+  - sysstat
+  - haveged
+  - firewalld
+  tags: [serve]
