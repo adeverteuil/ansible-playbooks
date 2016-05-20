@@ -1,6 +1,6 @@
 ---
 - name: install ntp
-  pacman: name=ntp state=present
+  apt: name=ntp state=present
   tags: [install]
 
 - name: configure ntp
@@ -10,12 +10,8 @@
   notify: restart ntp
   tags: [configure]
 
-- name: stop and disable systemd-timesyncd
-  service: name=systemd-timesyncd state=stopped enabled=no
-  tags: [serve]
-
 - name: start and enable ntp
-  service: name=ntpd state=started enabled=yes
+  service: name=ntp state=started enabled=yes
   tags: [serve]
 
 - name: enable service ntp in firewalld

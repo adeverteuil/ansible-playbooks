@@ -1,0 +1,4 @@
+---
+- hosts: fixion
+  roles:
+  - timeserver
