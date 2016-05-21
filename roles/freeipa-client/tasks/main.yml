@@ -60,6 +60,11 @@
     state: absent
   tags: [install]
 
+- name: create the directory /etc/sssd
+  file:
+    path: /etc/sssd
+    state: directory
+
 - name: configure sssd
   template:
     src: sssd.conf.j2
