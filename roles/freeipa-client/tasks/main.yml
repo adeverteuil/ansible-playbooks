@@ -1,7 +1,7 @@
 ---
 - name: check if we have a cached kerberos ticket
   delegate_to: "{{ ipa_server }}"
-  remote_user: ""
+  vars: {ansible_user: ""}
   become: no
   command: klist
   run_once: yes
@@ -9,7 +9,7 @@
 
 - name: check if the host exists in the directory
   delegate_to: "{{ ipa_server }}"
-  remote_user: ""
+  vars: {ansible_user: ""}
   become: no
   command: ipa host-show {{ inventory_hostname }}
   register: host_show
@@ -18,7 +18,7 @@
 
 - name: create the host principal
   delegate_to: "{{ ipa_server }}"
-  remote_user: ""
+  vars: {ansible_user: ""}
   become: no
   command: ipa host-add {{ ansible_fqdn }} --force
             --sshpubkey \"{{ ansible_ssh_host_key_rsa_public }}\"
@@ -32,7 +32,7 @@
 
 - name: generate the host keytab
   delegate_to: "{{ ipa_server }}"
-  remote_user: ""
+  vars: {ansible_user: ""}
   become: no
   command: /usr/sbin/ipa-getkeytab -s {{ ipa_server }} -p host/{{ ansible_fqdn }} -k /tmp/{{ ansible_hostname }}.keytab
   when: not keytab.stat.exists
@@ -45,7 +45,7 @@
     archive: no
     ssh_args: -l root
   delegate_to: "{{ ipa_server }}"
-  remote_user: ""
+  vars: {ansible_user: ""}
   become: no
   when: not keytab.stat.exists
   notify: restart sssd
@@ -53,15 +53,11 @@
 
 - name: remove the keytab file on the FreeIPA server
   delegate_to: "{{ ipa_server }}"
-  remote_user: ""
+  vars: {ansible_user: ""}
   become: no
   file:
     path: /tmp/{{ ansible_hostname }}.keytab
     state: absent
-  tags: [install]
-
-- name: install sssd
-  pacman: name=sssd state=present
   tags: [install]
 
 - name: configure sssd
@@ -72,32 +68,15 @@
   notify: restart sssd
   tags: [configure]
 
-- name: disable group and passwd caching for NSCD
-  lineinfile:
-    regexp: enable-cache.*{{ item }}
-    line: "	enable-cache		{{ item }}		no"
-    dest: /etc/nscd.conf
-  with_items: [group, passwd]
-  tags: [configure]
+- name: install sssd
+  apt: name=sssd state=present
+  tags: [install]
 
-- name: configure NSS
-  template:
-    src: nsswitch.conf.j2
-    dest: /etc/nsswitch.conf
-  tags: [configure]
-
-- name: configure PAM
-  template:
-    src: pam_{{ item }}.j2
-    dest: /etc/pam.d/{{ item }}
-  with_items:
-  - system-auth
-  - sudo
-  - passwd
-  - system-login
-  - su
-  - su-l
-  tags: [configure]
+- name: automatically create user home directories
+  copy:
+    src: mkhomedir
+    dest: /usr/share/pam-configs/mkhomedir
+  notify: execute pam-auth-update
 
 - name: configure krb5
   template:

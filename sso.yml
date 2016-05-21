@@ -1,4 +1,5 @@
 ---
-- hosts: all
+- hosts: home_network
   roles:
   - timeserver
+  - freeipa-client
