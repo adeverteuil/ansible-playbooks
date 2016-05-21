@@ -1,5 +1,5 @@
 ---
-- hosts: home_network
+- hosts: home_network:fixion
   roles:
   - timeserver
   - freeipa-client
