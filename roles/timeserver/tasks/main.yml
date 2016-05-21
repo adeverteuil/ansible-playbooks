@@ -15,5 +15,5 @@
   tags: [serve]
 
 - name: enable service ntp in firewalld
-  firewalld: service=ntp state=enabled permanent=yes immediate=yes
+  firewalld: service=ntp state={{ timeserver_firewalld_service_state }} permanent=yes immediate=yes
   tags: [serve]

@@ -20,10 +20,7 @@ dhcp_static_hosts:
 - {mac: "50:67:ae:f0:2d:01", ip: "192.168.13.31", name: "voip"}
 
 timeserver_upstream_servers:
-- 0.north-america.pool.ntp.org
-- 1.north-america.pool.ntp.org
-- 2.north-america.pool.ntp.org
-- 3.north-america.pool.ntp.org
+- ntp.private.deverteuil.net
 
 common_resolvers: [192.168.13.8, 192.168.13.88]
 

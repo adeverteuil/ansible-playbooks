@@ -18,10 +18,9 @@ filegen clockstats file clockstats type day enable
 # pool.ntp.org maps to about 1000 low-stratum NTP servers.  Your server will
 # pick a different set every time it starts up.  Please consider joining the
 # pool: <http://www.pool.ntp.org/join.html>
-server 0.debian.pool.ntp.org iburst
-server 1.debian.pool.ntp.org iburst
-server 2.debian.pool.ntp.org iburst
-server 3.debian.pool.ntp.org iburst
+{% for timeserver in timeserver_upstream_servers %}
+server {{ timeserver }} iburst
+{% endfor %}
 
 
 # Access control configuration; see /usr/share/doc/ntp-doc/html/accopt.html for
