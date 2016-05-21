@@ -1,4 +1,5 @@
 ---
 - hosts: fixion
   roles:
-  - timeserver
+  - bridge
+  - hypervisor
