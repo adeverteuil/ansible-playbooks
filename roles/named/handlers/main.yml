@@ -1,6 +1,3 @@
 ---
 - name: reload bind
-  service: name=named state=reloaded
-
-- name: reload systemd-resolved
-  service: name=systemd-resolved state=reloaded
+  service: name=bind9 state=reloaded
