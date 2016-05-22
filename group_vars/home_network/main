@@ -3,8 +3,8 @@ dotfiles_repo_host: ssh://alex@higgs
 bind_domainadmin: postmaster.deverteuil.net
 bind_localdomain: private.deverteuil.net
 dhcp_static_hosts:
-- {mac: "1a:64:df:7d:30:96", ip: "192.168.13.3", name: "dhcp"}
-- {mac: "5e:a6:fe:6c:36:9f", ip: "192.168.13.4", name: "fixion"}
+- {mac: "52:54:00:3b:66:17", ip: "192.168.13.3", name: "dhcp"}
+- {mac: "00:1e:67:fc:f0:7a", ip: "192.168.13.4", name: "fixion"}
 - {mac: "52:3a:a7:71:0f:1c", ip: "192.168.13.5", name: "unifi"}
 - {mac: "96:11:c6:ff:f5:76", ip: "192.168.13.6", name: "openvpn"}
 - {mac: "1e:ab:03:65:d5:a3", ip: "192.168.13.7", name: "pacman-cache"}
