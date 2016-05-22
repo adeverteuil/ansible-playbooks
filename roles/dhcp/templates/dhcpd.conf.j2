@@ -25,8 +25,8 @@ max-lease-time 14400;  # A day
 authoritative;
 
 key DHCP_UPDATER {
-  algorithm HMAC-SHA256;
-  secret L7RdeyMksNGSsCf6aodRzA==;
+  algorithm HMAC-MD5.SIG-ALG.REG.INT;
+  secret {{ dhcp_update_key }};
 };
 
 subnet 192.168.13.0 netmask 255.255.255.0 {
