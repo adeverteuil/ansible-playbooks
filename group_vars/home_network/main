@@ -68,8 +68,10 @@ dovecot_inbox_directory: /var/spool/mail/%u
 webserver_serveradmin: alexandre@deverteuil.net
 letsencrypt_email: alexandre@deverteuil.net
 letsencrypt_domains:
+  - web.deverteuil.net
   - smtp.deverteuil.net
   - imap.deverteuil.net
+  - wp-yves.deverteuil.net
   - smtp.private.deverteuil.net
   - imap.private.deverteuil.net
   - web.private.deverteuil.net
