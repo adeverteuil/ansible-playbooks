@@ -5,6 +5,7 @@
   - task-web-server
   - php5
   - php5-mysql
+  - php5-gd
   #- mod_wsgi
   #- python-virtualenv
   #- perl-libwww  # For the Munin apache plugins
