@@ -1,8 +1,5 @@
 ---
 letsencrypt_email: webmaster@{{ ansible_fqdn }}
 letsencrypt_domains: ["{{ ansible_fqdn }}"]
-letsencrypt_webroot: /srv/http/default
+letsencrypt_webroot: /var/www/html
 letsencrypt_authenticator: webroot
-
-# Simply add this alias in all your virtualhosts:
-# Alias /.well-known/letsencrypt/ {{ letsencrypt_webroot }}/.well-known/letsencrypt

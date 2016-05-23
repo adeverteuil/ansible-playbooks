@@ -1,5 +1,0 @@
-[Unit]
-Description=Renew Let's Encrypt certificates
-
-[Service]
-ExecStart=/usr/bin/sh -c '/usr/bin/letsencrypt renew | grep "The following certs have been renewed" && systemctl restart httpd'

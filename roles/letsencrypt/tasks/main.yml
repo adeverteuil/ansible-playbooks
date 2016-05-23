@@ -1,46 +1,55 @@
 ---
+- name: add the jessie-backports repository
+  apt_repository:
+    repo: deb http://ftp.debian.org/debian jessie-backports main
+    state: present
+    update_cache: yes
+  tags: [install]
+
 - name: install letsencrypt client
-  pacman: name=letsencrypt state=present
+  apt: name=letsencrypt state=present default_release=jessie-backports
   tags: [install]
 
 - name: create a webroot for letsencrypt
   file:
     path: "{{ letsencrypt_webroot }}"
     state: directory
-    owner: http
-    group: http
-    mode: 0750
+    owner: www-data
+    group: www-data
+    mode: 0755
     recurse: yes
   tags: [install]
+
+- name: configure the Alias directive in apache2 config
+  template:
+    src: letsencrypt.conf.j2
+    dest: /etc/apache2/conf-available/letsencrypt.conf
+  notify: restart apache2
+  tags: [configure]
+
+- name: enable letsencrypt.conf for apache2
+  command: a2enconf letsencrypt
+  args:
+    creates: /etc/apache2/conf-enabled/letsencrypt.conf
+  notify: restart apache2
+  tags: [configure]
 
 - name: configure letsencrypt
   template:
     src: cli.ini.j2
     dest: /etc/letsencrypt/cli.ini
+  tags: [configure]
 
 - name: enable services http and https in firewalld
   firewalld: service={{ item }} state=enabled permanent=yes immediate=yes
   with_items: [http, https]
   tags: [serve]
 
-- name: create service unit file for certificate renewal
+- name: renew certificates monthly
   copy:
-    src: letsencrypt-renew.service
-    dest: /etc/systemd/system/letsencrypt-renew.service
-  notify: reload systemd
-  tags: [install]
-
-- name: create timer unit file for certificate renewal
-  copy:
-    src: letsencrypt-renew.timer
-    dest: /etc/systemd/system/letsencrypt-renew.timer
-  notify:
-  - reload systemd
-  - restart letsencrypt-renew.timer
-  tags: [install]
-
-- name: start and enable letsencrypt-renew.timer
-  service: name=letsencrypt-renew.timer state=started enabled=true
+    src: letsencrypt_renew.sh
+    dest: /etc/cron.monthly/letsencrypt
+    mode: 0744
   tags: [serve]
 
 #- name: request SSL certificates
