@@ -43,6 +43,21 @@
   notify: reload bind
   tags: [install]
 
+- name: create a directory to extend bind9.service
+  file:
+    path: /etc/systemd/system/bind9.service.d
+    state: directory
+  tags: [configure]
+
+- name: start bind9 with ipv4 support only
+  file:
+    src: ipv4.conf
+    dest: /etc/systemd/system/bind9.service.d/ipv4.conf
+  notify:
+  - reload systemd
+  - restart bind9
+  tags: [configure]
+
 - name: start and enable bind
   service: name=bind9 state=started enabled=yes
   tags: [serve]
