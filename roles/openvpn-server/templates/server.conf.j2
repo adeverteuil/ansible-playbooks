@@ -1,17 +1,17 @@
 # {{ ansible_managed }}
 #
-# based on /usr/share/openvpn/examples/server.conf
+# /usr/share/doc/openvpn/examples/sample-config-files/server.conf.gz
 
 dev tun
 topology subnet
 server 192.168.66.0 255.255.255.0
 ifconfig-pool-persist ipp.txt
-ca /root/easy-rsa/keys/ca.crt
-cert /root/easy-rsa/keys/openvpn-server.crt
-key /root/easy-rsa/keys/openvpn-server.key
-dh /root/easy-rsa/keys/dh2048.pem
+ca /root/openvpn/keys/ca.crt
+cert /root/openvpn/keys/openvpn-server.crt
+key /root/openvpn/keys/openvpn-server.key
+dh /root/openvpn/keys/dh2048.pem
 user nobody
-group nobody
+group nogroup
 ;persist-key
 ;persist-tun
 push "route 192.168.13.0 255.255.255.0"
