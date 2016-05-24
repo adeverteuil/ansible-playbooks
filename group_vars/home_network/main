@@ -6,7 +6,7 @@ dhcp_static_hosts:
 - {mac: "52:54:00:3b:66:17", ip: "192.168.13.3", name: "dhcp"}
 - {mac: "00:1e:67:fc:f0:7a", ip: "192.168.13.4", name: "fixion"}
 - {mac: "52:3a:a7:71:0f:1c", ip: "192.168.13.5", name: "unifi"}
-- {mac: "96:11:c6:ff:f5:76", ip: "192.168.13.6", name: "openvpn"}
+- {mac: "52:54:00:ac:a9:e6", ip: "192.168.13.6", name: "openvpn"}
 - {mac: "1e:ab:03:65:d5:a3", ip: "192.168.13.7", name: "pacman-cache"}
 - {mac: "a2:05:aa:8e:aa:85", ip: "192.168.13.8", name: "ns1"}
 - {mac: "ee:4a:9b:dc:ab:47", ip: "192.168.13.9", name: "smtp"}
@@ -25,7 +25,9 @@ timeserver_upstream_servers:
 
 common_resolvers: [192.168.13.8, 192.168.13.88]
 
-named_forwarders: [206.123.6.230, 199.84.54.230]
+#named_forwarders: [206.123.6.230, 199.84.54.230]
+named_forwarders: [8.8.8.8, 8.8.4.4]
+
 named_allowed_recursion_ips: [127.0.0.1, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16]
 named_zones: |
   zone "iweb.com" IN {
@@ -51,6 +53,8 @@ openvpn_key_params:
   org: "deVerteuil.net"
   email: "alexandre@deverteuil.net"
   ou: ""
+  size: 2048
+  expire: 3650
 
 exim_postmaster: alex
 exim_no_sender_verify_domains: [acs-agiledash.corp.internap.com]
