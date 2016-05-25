@@ -50,7 +50,7 @@
   tags: [configure]
 
 - name: start bind9 with ipv4 support only
-  file:
+  copy:
     src: ipv4.conf
     dest: /etc/systemd/system/bind9.service.d/ipv4.conf
   notify:
