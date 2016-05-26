@@ -11,7 +11,7 @@
   delegate_to: "{{ ipa_server }}"
   vars: {ansible_user: ""}
   become: no
-  command: ipa host-show {{ inventory_hostname }}
+  command: flock /tmp/ansible-lock ipa host-show {{ inventory_hostname }}
   register: host_show
   failed_when: host_show.rc == 1
   changed_when: false
@@ -20,7 +20,7 @@
   delegate_to: "{{ ipa_server }}"
   vars: {ansible_user: ""}
   become: no
-  command: ipa host-add {{ ansible_fqdn }} --force
+  command: flock /tmp/ansible-lock ipa host-add {{ ansible_fqdn }} --force
             --sshpubkey \"{{ ansible_ssh_host_key_rsa_public }}\"
             --os {{ ansible_distribution }}
   when: host_show.rc != 0
@@ -34,7 +34,7 @@
   delegate_to: "{{ ipa_server }}"
   vars: {ansible_user: ""}
   become: no
-  command: /usr/sbin/ipa-getkeytab -s {{ ipa_server }} -p host/{{ ansible_fqdn }} -k /tmp/{{ ansible_hostname }}.keytab
+  command: flock /tmp/ansible-lock /usr/sbin/ipa-getkeytab -s {{ ipa_server }} -p host/{{ ansible_fqdn }} -k /tmp/{{ ansible_hostname }}.keytab
   when: not keytab.stat.exists
   tags: [install]
 
