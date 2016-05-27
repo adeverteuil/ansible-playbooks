@@ -17,11 +17,3 @@
 - name: let dhcp through the firewall
   firewalld: service=dhcp state=enabled permanent=yes immediate=yes
   tags: [serve]
-
-# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=717217
-- name: fix UDP checksum error
-  command: firewall-cmd {{ item }} --direct --add-rule ipv4 mangle POSTROUTING 0 -p udp --dport bootpc -j CHECKSUM --checksum-fill
-  register: direct
-  changed_when: '"ALREADY_ENABLED" not in direct.stdout'
-  with_items: ["", --permanent]
-  tags: [serve]
