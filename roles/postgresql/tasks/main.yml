@@ -1,12 +1,16 @@
 ---
 - name: install postgresql
   apt: name={{ item }} state=present
-  with_items: [postgresql, postgresql-doc, postgresql-client, phppgadmin]
+  with_items: [postgresql, postgresql-doc, postgresql-client, phppgadmin, python-psycopg2]
   tags: [install]
 
-#- name: install psycopg2
-#  pacman: name=python2-psycopg2 state=present
-#  tags: [install]
+- name: listen on all interfaces
+  lineinfile:
+    dest: /etc/postgresql/9.4/main/postgresql.conf
+    line: "listen_addresses = '*'			# what IP address(es) to listen on;"
+    regexp: "^#?listen_addresses"
+  notify: restart postgresql
+  tags: [configure]
 
 - name: start and enable postgresql
   service: name=postgresql state=started enabled=yes
@@ -15,12 +19,14 @@
 - name: open port 5432 in the firewall
   firewalld: service=postgresql state=enabled immediate=yes permanent=yes
 
+- name: allow connections from webserver
+  lineinfile:
+    dest: /etc/postgresql/9.4/main/pg_hba.conf
+    line: host all all web.private.deverteuil.net md5
+
 #- name: create a munin user
 #  postgresql_user:
 #    name: munin
 #    role_attr_flags: NOSUPERUSER,NOCREATEDB,NOCREATEROLE
 #    state: present
 #  tags: [configure]
-#
-## Not sure if needs to add line in pg_hba.conf
-## local all munin trust
