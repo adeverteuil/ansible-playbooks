@@ -16,16 +16,16 @@
 #
 # This is a Debian specific file
 
-dc_eximconfig_configtype='satellite'
+dc_eximconfig_configtype='smarthost'
 dc_other_hostnames=''
 dc_local_interfaces='127.0.0.1 ; ::1'
-dc_readhost='web.private.deverteuil.net'
+dc_readhost='{{ ansible_fqdn }}'
 dc_relay_domains=''
 dc_minimaldns='false'
 dc_relay_nets=''
 dc_smarthost='smtp.private.deverteuil.net'
 CFILEMODE='644'
 dc_use_split_config='false'
-dc_hide_mailname='true'
+dc_hide_mailname='false'
 dc_mailname_in_oh='true'
 dc_localdelivery='mail_spool'

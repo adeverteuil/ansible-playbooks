@@ -59,6 +59,7 @@ exim_local_domains: [private.deverteuil.net, deverteuil.net, alexdev.chickenkill
 exim_relay_from_hosts: ["192.168.0.0/16"]
 exim_delivery_directory: /var/spool/mail/$local_part@$domain
 exim_vuser_home: /var/vmail/$local_part@$domain
+exim_root_alias: alexandre@deverteuil.net
 
 dovecot_vmail_directory: /var/vmail
 dovecot_vuser_home: "{{ dovecot_vmail_directory }}/%u"

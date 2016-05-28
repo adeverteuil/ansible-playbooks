@@ -62,11 +62,17 @@
   with_items: ["", --permanent]
   tags: [serve]
 
-- name: Configure exim4
-  copy:
-    src: update-exim4.conf.conf
+- name: configure exim4
+  template:
+    src: update-exim4.conf.conf.j2
     dest: /etc/exim4/update-exim4.conf.conf
   notify:
   - update exim4 configuration
   - restart exim4
   tags: [configure]
+
+- name: set email to send root mail to
+  lineinfile:
+    dest: /etc/aliases
+    line: "root: {{ exim_root_alias }}"
+    regexp: ^root
