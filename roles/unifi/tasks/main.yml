@@ -38,6 +38,13 @@
   firewalld: service=unifi state=enabled permanent=yes immediate=yes
   tags: [serve]
 
+- name: forward http and httpd ports
+  command: firewall-cmd {{ item }} --add-forward-port=port=443:proto=tcp:toport=8443
+  register: forward
+  changed_when: '"ALREADY_ENABLED" not in forward.stdout'
+  with_items: ["", --permanent]
+  tags: [serve]
+
 - name: start and enable unifi
   service: name=unifi state=started enabled=yes
   tags: [serve]
