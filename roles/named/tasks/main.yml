@@ -49,13 +49,21 @@
     state: directory
   tags: [configure]
 
-- name: start bind9 with ipv4 support only
+- name: work around Debian bug 767798
   copy:
     src: ipv4.conf
     dest: /etc/systemd/system/bind9.service.d/ipv4.conf
   notify:
   - reload systemd
   - restart bind9
+  tags: [configure]
+
+- name: start bind9 with ipv4 support only
+  lineinfile:
+    dest: /etc/default/bind9
+    line: 'OPTIONS="-u bind -4"'
+    regexp: ^OPTIONS
+  notify: restart bind9
   tags: [configure]
 
 - name: start and enable bind
