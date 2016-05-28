@@ -1,38 +1,26 @@
 ---
 - name: install postgresql
-  pacman: name=postgresql state=present
+  apt: name={{ item }} state=present
+  with_items: [postgresql, postgresql-doc, postgresql-client, phppgadmin]
   tags: [install]
 
-- name: install psycopg2
-  pacman: name=python2-psycopg2 state=present
-  tags: [install]
-
-- name: create the /var/lib/postgres directory
-  file:
-    path: /var/lib/postgres
-    state: directory
-    owner: postgres
-    group: postgres
-  tags: [install]
-
-- name: initialize the database
-  command: initdb --locale en_US.UTF-8 -E UTF8 -D '/var/lib/postgres/data'
-  args:
-      creates: /var/lib/postgres/data/PG_VERSION
-  become: yes
-  become_user: postgres
-  tags: [configure]
+#- name: install psycopg2
+#  pacman: name=python2-psycopg2 state=present
+#  tags: [install]
 
 - name: start and enable postgresql
   service: name=postgresql state=started enabled=yes
   tags: [serve]
 
-- name: create a munin user
-  postgresql_user:
-    name: munin
-    role_attr_flags: NOSUPERUSER,NOCREATEDB,NOCREATEROLE
-    state: present
-  tags: [configure]
+- name: open port 5432 in the firewall
+  firewalld: service=postgresql state=enabled immediate=yes permanent=yes
 
-# Not sure if needs to add line in pg_hba.conf
-# local all munin trust
+#- name: create a munin user
+#  postgresql_user:
+#    name: munin
+#    role_attr_flags: NOSUPERUSER,NOCREATEDB,NOCREATEROLE
+#    state: present
+#  tags: [configure]
+#
+## Not sure if needs to add line in pg_hba.conf
+## local all munin trust
