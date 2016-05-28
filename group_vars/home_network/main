@@ -72,8 +72,10 @@ letsencrypt_domains:
   - smtp.deverteuil.net
   - imap.deverteuil.net
   - wp-yves.deverteuil.net
+  - tt-rss.deverteuil.net
   - smtp.private.deverteuil.net
   - imap.private.deverteuil.net
   - web.private.deverteuil.net
+  - tt-rss.private.deverteuil.net
 webserver_certificate_file: /etc/letsencrypt/live/smtp.deverteuil.net/cert.pem
 webserver_certificate_keyfile: /etc/letsencrypt/live/smtp.deverteuil.net/privkey.pem

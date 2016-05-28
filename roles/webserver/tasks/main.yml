@@ -6,10 +6,13 @@
   - php5
   - php5-mysql
   - php5-gd
+  - php5-pgsql
+  - php5-curl
   #- mod_wsgi
   #- python-virtualenv
   #- perl-libwww  # For the Munin apache plugins
   #- lynx  # For apachectl status
+  notify: restart apache2
   tags: [install]
 
 - name: write the default VirtualHost index page

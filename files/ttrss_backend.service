@@ -1,0 +1,10 @@
+[Unit]
+Description=ttrss_backend
+After=network.target mysql.service postgresql.service
+
+[Service]
+User=www-data
+ExecStart=/var/www/tt-rss/update_daemon2.php
+
+[Install]
+WantedBy=multi-user.target
