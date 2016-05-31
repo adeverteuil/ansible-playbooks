@@ -1,16 +1,23 @@
 ---
-- name: install tor
-  pacman: name=tor state=present
-  tags: [install]
+# https://www.torproject.org/docs/debian.html.en
+- name: install the tor keys
+  apt_key:
+    keyserver: keys.gnupg.net
+    id: A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89
 
-- name: install arm (Anonymizing Relay Monitor)
-  pacman: name=arm state=present
+- name: install the tor repository
+  apt_repository:
+    repo: deb http://deb.torproject.org/torproject.org jessie main
+    state: present
+
+- name: install packages
+  apt: name={{ item }} state=present
+  with_items: [tor, tor-arm]
   tags: [install]
 
 - name: configure tor
   template:
     dest: /etc/tor/torrc
-    backup: yes
     src: torrc.j2
   notify:
   - reload tor
