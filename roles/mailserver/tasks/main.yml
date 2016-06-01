@@ -1,39 +1,24 @@
 ---
-- name: install exim
-  pacman: name=exim state=present
-  tags: [install]
+- name: install the exim4-daemon-heavy package
+  apt: name=exim4-daemon-heavy state=present
+  notify: restart exim4
 
-- name: create the /etc/mail/private directory
-  file:
-    path: /etc/mail/private
-    mode: 0700
-    owner: exim
-    group: exim
-    state: directory
-
-- name: create the self-signed SSL certificate
-  command: openssl req -x509 -newkey rsa:1024 -keyout /etc/mail/private/exim.pem -out /etc/mail/private/exim.pem -days 9999 -nodes
-  args:
-    creates: /etc/mail/private/exim.pem
-  notify: reload exim
-  tags: [configure]
-
-- name: configure exim
+- name: configure Exim4
   template:
-    src: exim.conf.j2
-    dest: /etc/mail/exim.conf
-  notify: reload exim
+    src: exim4.conf.j2
+    dest: /etc/exim4/exim4.conf
+  notify: reload exim4
   tags: [configure]
 
-- include: spamassassin.yml
-  when: exim_install_spamassassin
+#- include: spamassassin.yml
+#  when: exim_install_spamassassin
 
-- name: update aliases
-  template:
-    src: aliases.j2
-    dest: /etc/mail/aliases
-  notify: run newaliases
-  tags: [configure]
+#- name: update aliases
+#  template:
+#    src: aliases.j2
+#    dest: /etc/mail/aliases
+#  notify: run newaliases
+#  tags: [configure]
 
 - name: enable service smtp in firewalld
   firewalld: service=smtp state=enabled permanent=yes immediate=yes
@@ -55,6 +40,6 @@
   firewalld: service=submission state=enabled permanent=yes immediate=yes
   tags: [serve]
 
-- name: start and enable exim
-  service: name=exim state=started enabled=yes
+- name: start and enable exim4
+  service: name=exim4 state=started enabled=yes
   tags: [serve]

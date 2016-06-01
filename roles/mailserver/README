@@ -1,0 +1,3 @@
+SSL certificates is hacky. It just uses Dovecot's self-signed certs.
+Exim4 ships with an example script at
+/usr/share/doc/exim4-base/examples/exim-gencert

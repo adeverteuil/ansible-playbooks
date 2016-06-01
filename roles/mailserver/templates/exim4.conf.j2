@@ -2,6 +2,8 @@
 #                  Runtime configuration file for Exim               #
 ######################################################################
 
+# {{ ansible_managed }}
+
 
 # This is a default configuration file which will operate correctly in
 # uncomplicated installations. Please see the manual for a complete list
@@ -152,8 +154,8 @@ tls_advertise_hosts = *
 # need the first setting, or in separate files, in which case you need both
 # options.
 
-tls_certificate = /etc/mail/private/exim.pem
-#tls_privatekey = /etc/ssl/private/exim.pem
+tls_certificate = /etc/dovecot/dovecot.pem
+tls_privatekey = /etc/dovecot/private/dovecot.pem
 
 # In order to support roaming users who wish to send email from anywhere,
 # you may want to make Exim listen on other ports as well as port 25, in
@@ -635,7 +637,7 @@ system_aliases:
   driver = redirect
   allow_fail
   allow_defer
-  data = ${lookup{$local_part}lsearch{/etc/mail/aliases}}
+  data = ${lookup{$local_part}lsearch{/etc/aliases}}
 # user = exim
   file_transport = address_file
   pipe_transport = address_pipe

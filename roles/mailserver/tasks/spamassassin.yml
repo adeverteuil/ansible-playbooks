@@ -1,6 +1,7 @@
 ---
 - name: install spamassassin
-  pacman: name=spamassassin state=present
+  apt: name={{ item }} state=present
+  with_items: [spamassassin, spamc]
   tags: [install]
 
 - name: update spamassassin rules

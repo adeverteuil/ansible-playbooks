@@ -1,6 +1,9 @@
 ---
-- name: reload exim
-  service: name=exim state=reloaded
+- name: restart exim4
+  service: name=exim4 state=restarted
+
+- name: reload exim4
+  service: name=exim4 state=reloaded
 
 - name: run newaliases
   command: newaliases
