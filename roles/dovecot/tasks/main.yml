@@ -1,6 +1,6 @@
 ---
 - name: install dovecot
-  pacman: name=dovecot state=present
+  apt: name=dovecot-imapd state=present
   tags: [install]
 
 - name: create the vmail user and home directory
@@ -11,19 +11,12 @@
     shell: /usr/bin/false
   tags: [install]
 
-- name: add exim to the mail group
-  user:
-    name: exim
-    groups: mail
-    append: yes
-  tags: [install]
-
-- name: configure dovecot general options
-  template:
-    src: dovecot.conf.j2
-    dest: /etc/dovecot/dovecot.conf
-  notify: restart dovecot
-  tags: [configure]
+#- name: add exim to the mail group
+#  user:
+#    name: exim
+#    groups: mail
+#    append: yes
+#  tags: [install]
 
 - name: configure dovecot specific options
   template:
@@ -36,28 +29,33 @@
   notify: restart dovecot
   tags: [configure]
 
-- name: configure dovecot pam module
-  template:
-    src: pam_dovecot.j2
-    dest: /etc/pam.d/dovecot
-  notify: restart dovecot
-  tags: [configure]
-
 - name: configure SSL certificate
   template:
     src: dovecot-openssl.cnf.j2
-    dest: /etc/ssl/dovecot-openssl.cnf
-  register: cert
+    dest: /etc/dovecot/dovecot-openssl.cnf
+  register: sslconf
+  tags: [configure]
+
+- name: rename old SSL files
+  command: 'mv "{{ item }}" "{{ item }}.old"'
+  args:
+    removes: "{{ item }}"
+  when: sslconf.changed
+  with_items:
+  - /etc/dovecot/dovecot.pem
+  - /etc/dovecot/private/dovecot.pem
   tags: [configure]
 
 - name: make dovecot SSL certificate
-  script: make_ssl_cert.sh
-  when: cert.changed
+  command: /usr/share/dovecot/mkcert.sh
+  args:
+    creates: /etc/dovecot/dovecot.pem
+    chdir: /etc/dovecot
+  notify: restart dovecot
   tags: [configure]
 
-- name: enable services in firewalld
-  firewalld: service={{ item }} state=enabled permanent=yes immediate=yes
-  with_items: [imap, imaps]
+- name: enable imaps in firewalld
+  firewalld: service=imaps state=enabled permanent=yes immediate=yes
   tags: [serve]
 
 - name: start and enable dovecot
