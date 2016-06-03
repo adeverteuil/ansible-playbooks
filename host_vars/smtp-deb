@@ -5,3 +5,5 @@ exim_postmaster: alexandre@deverteuil.net
 
 dovecot_postmaster: alexandre@deverteuil.net
 dovecot_common_name: smtp.private.deverteuil.net
+
+exim_install_spamassassin: yes
