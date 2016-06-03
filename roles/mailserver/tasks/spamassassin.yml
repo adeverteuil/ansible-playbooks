@@ -5,10 +5,12 @@
   tags: [install]
 
 - name: update spamassassin rules
-  command: /usr/bin/vendor_perl/sa-update
+  become: yes
+  become_user: debian-spamd
+  shell: sa-update --gpghomedir /var/lib/spamassassin/sa-update-keys
   register: result
-  failed_when: result.rc not in [0, 1]
-  changed_when: result.rc in [0, 3]
+  failed_when: 'result.rc not in [0, 1]'
+  changed_when: 'result.rc in [0, 3]'
   # From the source code of /usr/bin/vendor_perl/sa-update:
   #   0: updates found and successfully applied
   #   1: no updates were needed (success with nothing to do)
@@ -17,26 +19,29 @@
   #   4 or higher means all channels failed
   tags: [configure]
 
-- name: start and enable spamassassin
-  service: name=spamassassin state=started enabled=true
-  tags: [serve]
+- name: enable daily sa-update
+  lineinfile:
+    dest: /etc/default/spamassassin
+    line: CRON=1
+    regexp: ^CRON=
+  tags: [configure]
 
-- name: install teach-spam
+- name: use per-vuser bayes database
+  lineinfile:
+    dest: /etc/default/spamassassin
+    # See "man spamd" for options documentation.
+    line: 'OPTIONS="--create-prefs --max-children 5 --helper-home-dir --virtual-config-dir=/var/vmail/%u/bayes -x -u mail"'
+    regexp: ^OPTIONS=
+  notify: restart spamassassin
+  tags: [configure]
+
+- name: run sa-learn every day
   copy:
     src: teach-spam
-    dest: /usr/local/bin/teach-spam
-    mode: 0744
-    owner: vmail
-    group: vmail
-  tags: [install]
+    dest: /etc/cron.daily/teach-spam
+    mode: 744
+  tags: [serve]
 
-- name: install teach-spam timer and service
-  copy:
-    src: teach-spam.{{ item }}
-    dest: /etc/systemd/system/teach-spam.{{ item }}
-  with_items: [service, timer]
-  tags: [install]
-
-- name: start and enable teach-spam.timer
-  service: name=teach-spam.timer state=started enabled=yes
+- name: start and enable spamassassin
+  service: name=spamassassin state=started enabled=true
   tags: [serve]

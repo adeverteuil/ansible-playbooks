@@ -1,5 +1,0 @@
-[Unit]
-Description=Periodically run teach-spam
-
-[Timer]
-OnCalendar=daily

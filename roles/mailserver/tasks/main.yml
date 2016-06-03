@@ -10,8 +10,8 @@
   notify: reload exim4
   tags: [configure]
 
-#- include: spamassassin.yml
-#  when: exim_install_spamassassin
+- include: spamassassin.yml
+  when: exim_install_spamassassin
 
 #- name: update aliases
 #  template:

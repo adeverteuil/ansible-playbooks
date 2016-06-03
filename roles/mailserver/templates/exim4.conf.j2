@@ -113,6 +113,7 @@ hostlist   relay_from_hosts = localhost{% for h in exim_relay_from_hosts %}:{{ h
 
 acl_smtp_rcpt = acl_check_rcpt
 acl_smtp_data = acl_check_data
+#acl_smtp_data_prdr = acl_check_data_prdr
 
 # You should not change those settings until you understand how ACLs work.
 
@@ -522,9 +523,10 @@ acl_check_data:
   # you must install SpamAssassin. You may also need to set the spamd_address
   # option above.
 {% if exim_install_spamassassin %}
-  # Modifié par Alexandre 2014-08-09
-  # Avec :true, toujours ajouter les entêtes.
   warn    spam       = nobody:true
+                       # PRDR not requested AND size < 10K.
+          #condition  = ${if and { {eq {$prdr_requested}{no}} {< {$message_size}{10K}} }}
+          condition  = ${if < {$message_size}{10K}}
           add_header = X-Spam_score: $spam_score\n\
                        X-Spam_score_int: $spam_score_int\n\
                        X-Spam_bar: $spam_bar\n\
@@ -537,6 +539,18 @@ acl_check_data:
 
   accept
 
+acl_check_data_prdr:
+
+{% if exim_install_spamassassin %}
+  warn    spam       = $local_part@$domain:true
+          condition  = ${if < {$message_size}{10K}}
+          add_header = X-Spam_score: $spam_score\n\
+                       X-Spam_score_int: $spam_score_int\n\
+                       X-Spam_bar: $spam_bar\n\
+                       X-Spam_report: $spam_report
+{% endif %}
+
+  accept
 
 
 ######################################################################
@@ -808,17 +822,21 @@ address_maildir:
     return_path_add
 
 dovecot_transport:
-  debug_print = "T: dovecot_virtual appendfile for $local_part@$domain"
-  driver = appendfile
-  directory = {{ exim_delivery_directory }}
-  maildir_format
+  debug_print = "T: dovecot_virtual lmtp for $local_part@$domain"
+  driver = lmtp
+  socket = /var/run/dovecot/lmtp
+  batch_max = 20
+  #debug_print = "T: dovecot_virtual appendfile for $local_part@$domain"
+  #driver = appendfile
+  #directory = {{ exim_delivery_directory }}
+  #maildir_format
   delivery_date_add
   envelope_to_add
   return_path_add
-  user = vmail
-  group = mail
-  mode = 0660
-  mode_fail_narrower = false
+  #user = vmail
+  #group = mail
+  #mode = 0660
+  #mode_fail_narrower = false
 
 
 ######################################################################
