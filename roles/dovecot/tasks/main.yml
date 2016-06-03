@@ -1,6 +1,7 @@
 ---
 - name: install dovecot
-  apt: name=dovecot-imapd state=present
+  apt: name={{ item }} state=present
+  with_items: [dovecot-imapd, dovecot-lmtpd, dovecot-sieve]
   tags: [install]
 
 - name: create the vmail user and home directory
@@ -25,6 +26,7 @@
   with_items:
     - 10-auth.conf
     - 10-mail.conf
+    - 10-master.conf
     - 10-ssl.conf
   notify: restart dovecot
   tags: [configure]
