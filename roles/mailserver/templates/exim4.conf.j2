@@ -522,33 +522,15 @@ acl_check_data:
   # Add headers to a message if it is judged to be spam. Before enabling this,
   # you must install SpamAssassin. You may also need to set the spamd_address
   # option above.
-{% if exim_install_spamassassin %}
-  warn    spam       = nobody:true
-                       # PRDR not requested AND size < 10K.
-          #condition  = ${if and { {eq {$prdr_requested}{no}} {< {$message_size}{10K}} }}
-          condition  = ${if < {$message_size}{10K}}
-          add_header = X-Spam_score: $spam_score\n\
-                       X-Spam_score_int: $spam_score_int\n\
-                       X-Spam_bar: $spam_bar\n\
-                       X-Spam_report: $spam_report
-{% else %}
-  # (commented out)
-{% endif %}
+
+  # warn    spam       = nobody:true
+  #         condition  = ${if < {$message_size}{10K}}
+  #         add_header = X-Spam_score: $spam_score\n\
+  #                      X-Spam_score_int: $spam_score_int\n\
+  #                      X-Spam_bar: $spam_bar\n\
+  #                      X-Spam_report: $spam_report
 
   # Accept the message.
-
-  accept
-
-acl_check_data_prdr:
-
-{% if exim_install_spamassassin %}
-  warn    spam       = $local_part@$domain:true
-          condition  = ${if < {$message_size}{10K}}
-          add_header = X-Spam_score: $spam_score\n\
-                       X-Spam_score_int: $spam_score_int\n\
-                       X-Spam_bar: $spam_bar\n\
-                       X-Spam_report: $spam_report
-{% endif %}
 
   accept
 
@@ -698,23 +680,6 @@ userforward:
   reply_transport = address_reply
   directory_transport = address_maildir
 
-virtualforward:
-  driver = redirect
-  no_check_local_user
-  router_home_directory = {{ exim_vuser_home }}
-  require_files = +{{ exim_vuser_home }}/filter
-  file = {{ exim_vuser_home }}/filter
-  allow_filter
-  no_verify
-  no_expn
-  check_ancestor
-  file_transport = address_file
-  pipe_transport = address_pipe
-  reply_transport = address_reply
-  directory_transport = address_maildir
-  user = vmail
-  group = mail
-
 # This router matches local user mailboxes. If the router fails, the error
 # message is "Unknown user".
 
@@ -823,20 +788,13 @@ address_maildir:
 
 dovecot_transport:
   debug_print = "T: dovecot_virtual lmtp for $local_part@$domain"
+  transport_filter = /usr/bin/spamc -u $local_part@$domain
   driver = lmtp
   socket = /var/run/dovecot/lmtp
   batch_max = 20
-  #debug_print = "T: dovecot_virtual appendfile for $local_part@$domain"
-  #driver = appendfile
-  #directory = {{ exim_delivery_directory }}
-  #maildir_format
   delivery_date_add
   envelope_to_add
   return_path_add
-  #user = vmail
-  #group = mail
-  #mode = 0660
-  #mode_fail_narrower = false
 
 
 ######################################################################
