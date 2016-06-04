@@ -3,5 +3,3 @@ dovecot_postmaster: root@{{ ansible_fqdn }}
 dovecot_common_name: "{{ ansible_fqdn }}"
 dovecot_vmail_directory: /var/vmail
 dovecot_vuser_home: "{{ dovecot_vmail_directory }}/%u"
-dovecot_mailbox_directory: "{{ dovecot_vuser_home }}/mail"
-dovecot_inbox_directory: "{{ dovecot_mailbox_directory }}/INBOX"

@@ -7,6 +7,8 @@
 # Based on a script found at:
 # http://christian.weblog.heimdaheim.de/2013/06/19/sa-learn-dovecot-virtual-users-and-virtual-user-configs/
 
+[ $UID -eq 0 ] && sudo -u vmail $0 $@ && exit
+
 set errexit pipefail
 shopt -q nocasematch
 

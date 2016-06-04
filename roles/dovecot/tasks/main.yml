@@ -12,13 +12,6 @@
     shell: /usr/bin/false
   tags: [install]
 
-#- name: add exim to the mail group
-#  user:
-#    name: exim
-#    groups: mail
-#    append: yes
-#  tags: [install]
-
 - name: configure dovecot specific options
   template:
     src: "{{ item }}.j2"
