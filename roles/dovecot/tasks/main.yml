@@ -1,7 +1,11 @@
 ---
 - name: install dovecot
   apt: name={{ item }} state=present
-  with_items: [dovecot-imapd, dovecot-lmtpd, dovecot-sieve]
+  with_items:
+  - dovecot-imapd
+  - dovecot-lmtpd
+  - dovecot-sieve
+  - dovecot-managesieved
   tags: [install]
 
 - name: create the vmail user and home directory
@@ -10,6 +14,14 @@
     createhome: yes
     home: "{{ dovecot_vmail_directory }}"
     shell: /usr/bin/false
+  tags: [install]
+
+- name: install the default sieve
+  copy:
+    src: default.sieve
+    dest: /var/vmail/default.sieve
+    owner: vmail
+    group: vmail
   tags: [install]
 
 - name: configure dovecot specific options
@@ -51,6 +63,22 @@
     chdir: /etc/dovecot
   notify: restart dovecot
   tags: [configure]
+
+- name: drop the sieve.xml firewalld service definition
+  copy:
+    src: sieve.xml
+    dest: /etc/firewalld/services/sieve.xml
+  register: sieve_service
+  tags: [install]
+
+- name: reload firewalld
+  service: name=firewalld state=reloaded
+  when: sieve_service.changed
+  tags: [install]
+
+- name: enable the sieve service in firewalld
+  firewalld: service=sieve state=enabled permanent=yes immediate=yes
+  tags: [serve]
 
 - name: enable imaps in firewalld
   firewalld: service=imaps state=enabled permanent=yes immediate=yes
