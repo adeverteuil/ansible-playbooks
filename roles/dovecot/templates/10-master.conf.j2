@@ -53,11 +53,11 @@ service lmtp {
   }
 
   # Create inet listener only if you can't use the above UNIX socket
-  #inet_listener lmtp {
+  inet_listener lmtp {
     # Avoid making LMTP visible for the entire internet
-    #address =
-    #port = 
-  #}
+    address = 127.0.0.1
+    port = 24
+  }
 }
 
 service imap {
