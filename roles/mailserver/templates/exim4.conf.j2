@@ -797,9 +797,12 @@ dovecot_transport:
   transport_filter = /usr/bin/spamc -u $local_part@$domain
   # Using TCP because callout verification does not work over LMTP on UNIX socket.
   # https://bugs.exim.org/show_bug.cgi?id=321
+  # http://serverfault.com/questions/527405/exim-recipient-verification-with-callout-to-lmtp-server
   driver = smtp
   protocol = lmtp
   port = 24
+  # For spam filtering purposes:
+  max_rcpt = 1
   delivery_date_add
   envelope_to_add
   return_path_add
