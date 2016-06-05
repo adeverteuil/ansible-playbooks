@@ -7,6 +7,3 @@
 
 - name: run newaliases
   command: newaliases
-
-- name: restart spamassassin
-  service: name=spamassassin state=restarted

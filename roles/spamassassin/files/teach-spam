@@ -16,7 +16,7 @@ MAILDIR=/var/vmail
 NICE="/usr/bin/nice -n 20 /usr/bin/ionice -c 2 -n 7"
 SA="/usr/bin/sa-learn"
 
-for mailbox in $MAILDIR/*; do
+for mailbox in $MAILDIR/*/*; do
 
     # Create the bayes database.
     dbpath=$mailbox/bayes
@@ -31,7 +31,7 @@ for mailbox in $MAILDIR/*; do
             INBOX|brouillons|drafts)
                 # These are not processed.
                 ;;
-            spam)
+            spam|junk|pourriels)
                 $NICE $SA --no-sync --spam \
                     --dbpath $dbpath "$folder" \
                     > /dev/null

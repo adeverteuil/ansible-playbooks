@@ -30,7 +30,7 @@
   lineinfile:
     dest: /etc/default/spamassassin
     # See "man spamd" for options documentation.
-    line: 'OPTIONS="--create-prefs --max-children 5 --helper-home-dir --virtual-config-dir=/var/vmail/%u/bayes -x -u vmail"'
+    line: 'OPTIONS="--create-prefs --max-children 5 --helper-home-dir --virtual-config-dir=/var/vmail/%d/%l/bayes -x -u vmail"'
     regexp: ^OPTIONS=
   notify: restart spamassassin
   tags: [configure]
