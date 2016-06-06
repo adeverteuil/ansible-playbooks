@@ -47,9 +47,19 @@
   tags: [serve]
 
 - name: create /var/log/lastlog
+  # I don't want to touch it if it already exists
+  # so I use the command rather than the file module.
+  # Using copy scans terabytes of sparse zeroes for
+  # comparison with an empty content.
+  command: touch /var/log/lastlog
+  args:
+    creates: /var/log/lastlog
+  tags: [configure]
+
+- name: ensure proper permissions and ownership for lastlog
   file:
     path: /var/log/lastlog
-    state: touch
+    state: file
     group: utmp
     mode: 0644
   tags: [configure]
