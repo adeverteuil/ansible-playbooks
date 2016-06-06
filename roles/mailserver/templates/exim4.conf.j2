@@ -154,8 +154,8 @@ tls_advertise_hosts = *
 # need the first setting, or in separate files, in which case you need both
 # options.
 
-tls_certificate = /etc/dovecot/dovecot.pem
-tls_privatekey = /etc/dovecot/private/dovecot.pem
+tls_certificate = /etc/exim4/exim4.pem
+tls_privatekey = /etc/exim4/private/exim4.pem
 
 # In order to support roaming users who wish to send email from anywhere,
 # you may want to make Exim listen on other ports as well as port 25, in
@@ -438,9 +438,9 @@ acl_check_rcpt:
   # actually relaying out from MTAs, you should probably add recipient
   # verification here.
 
-  require message = Local recipient verification failed
-          domains = +local_domains
-          verify  = recipient/callout=no_cache
+  deny message = Local recipient verification failed
+       domains = +local_domains
+       !verify = recipient/callout=no_cache
 
   # Note that, by putting this test before any DNS black list checks, you will
   # always accept from these hosts, even if they end up on a black list. The
@@ -473,9 +473,9 @@ acl_check_rcpt:
   # relay domains is to use a callout (add /callout), but please read the
   # documentation about callouts before doing this.
 
-  require message = Remote recipient verification failed
-          !domains = +local_domains
-          verify   = recipient
+  deny message  = Remote recipient verification failed
+       !domains = +local_domains
+       !verify  = recipient
 
   #############################################################################
   # There are no default checks on DNS black lists because the domains that

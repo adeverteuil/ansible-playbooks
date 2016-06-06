@@ -4,3 +4,6 @@ Exim4 ships with an example script at
 
 sa-learn, dovecot virtual users and virtual user configs
 http://christian.weblog.heimdaheim.de/2013/06/19/sa-learn-dovecot-virtual-users-and-virtual-user-configs/
+
+#TODO
+SSL certificates don't get created. I have to copy the one from dovecot.
