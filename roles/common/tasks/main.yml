@@ -76,3 +76,16 @@
     dest: /etc/aliases
     line: "root: {{ exim_root_alias }}"
     regexp: ^root
+
+- name: generate locales
+  lineinfile:
+    dest: /etc/locale.gen
+    line: "{{ item }}"
+    regexp: ^[# ]*{{ item }}
+  with_items:
+  - en_CA.UTF-8 UTF-8
+  - en_DK.UTF-8 UTF-8
+  - en_US.UTF-8 UTF-8
+  - fr_CA.UTF-8 UTF-8
+  notify: run locale-gen
+  tags: [configure]

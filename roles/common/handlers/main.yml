@@ -4,3 +4,6 @@
 
 - name: restart exim4
   service: name=exim4 state=restarted
+
+- name: run locale-gen
+  command: locale-gen
