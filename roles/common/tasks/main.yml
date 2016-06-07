@@ -1,8 +1,9 @@
 ---
-- name: remove unused repositories
+- name: remove or add source package repositories
   apt_repository:
     repo: "{{ item }}"
-    state: absent
+    state: "{{ common_deb_src_repos }}"
+    mode: 0644
   with_items:
   - deb-src http://debian.mirror.iweb.ca/debian/ jessie main
   - deb-src http://security.debian.org/ jessie/updates main
