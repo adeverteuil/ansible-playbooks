@@ -5,3 +5,6 @@ execute the letsencript command manually.
 
 The client is not always non-interactive. There is a prompt when
 expanding the list of certificates. The renewal is automated though.
+
+Simply add this alias in all your virtualhosts:
+Alias /.well-known/letsencrypt/ {{ letsencrypt_webroot }}/.well-known/letsencrypt

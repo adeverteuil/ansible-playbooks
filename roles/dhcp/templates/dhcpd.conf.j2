@@ -1,26 +1,32 @@
 # dhcpd.conf
 # {{ ansible_managed }}
 #
-# Sample configuration file for ISC dhcpd
+# Sample configuration file for ISC dhcpd for Debian
 #
-
-# option definitions common to all supported networks...
-option domain-name "{{ bind_localdomain }}";
-option domain-name-servers 192.168.13.8, 192.168.13.88;
-use-host-decl-names on;
-default-lease-time 604800;  # A week
-max-lease-time 2592000;  # A month
-authoritative;
-
-# DDNS statements
+#
+# The ddns-updates-style parameter controls whether or not the server will
+# attempt to do a DNS update when a lease is confirmed. We default to the
+# behavior of the version 2 packages ('none', since DHCP v2 didn't
+# have support for DDNS.)
 ddns-updates on;
 ddns-update-style standard;
 allow client-updates;
 do-forward-updates on;
 
+# option definitions common to all supported networks...
+option domain-name "{{ bind_localdomain }}";
+option domain-name-servers 192.168.13.8, 192.168.13.88;
+use-host-decl-names on;
+default-lease-time 3600;  # An hour
+max-lease-time 14400;  # A day
+
+# If this DHCP server is the official DHCP server for the local
+# network, the authoritative directive should be uncommented.
+authoritative;
+
 key DHCP_UPDATER {
-  algorithm HMAC-SHA256;
-  secret L7RdeyMksNGSsCf6aodRzA==;
+  algorithm HMAC-MD5.SIG-ALG.REG.INT;
+  secret {{ dhcp_update_key }};
 };
 
 subnet 192.168.13.0 netmask 255.255.255.0 {

@@ -1,0 +1,42 @@
+//
+// Do any local configuration here
+// {{ ansible_managed }}
+//
+
+// Consider adding the 1918 zones here, if they are not used in your
+// organization
+//include "/etc/bind/zones.rfc1918";
+
+zone "{{ bind_localdomain }}" IN {
+{% if named_master %}
+    type master;
+    file "/var/lib/bind/{{ bind_localdomain }}.db";
+    allow-update { key DHCP_UPDATER; };
+{% else %}
+    type slave;
+    file "/var/cache/bind/{{ bind_localdomain }}.db";
+    masters { 192.168.13.8; };
+{% endif %}
+};
+zone "13.168.192.in-addr.arpa" IN {
+{% if named_master %}
+    type master;
+    file "/var/lib/bind/13.168.192.in-addr.arpa.db";
+    allow-update { key DHCP_UPDATER; };
+{% else %}
+    type slave;
+    file "/var/cache/bind/13.168.192.in-addr.arpa.db";
+    masters { 192.168.13.8; };
+{% endif %}
+};
+zone "42.168.192.in-addr.arpa" IN {
+{% if named_master %}
+    type master;
+    file "/var/lib/bind/42.168.192.in-addr.arpa.db";
+    allow-update { key DHCP_UPDATER; };
+{% else %}
+    type slave;
+    file "/var/cache/bind/42.168.192.in-addr.arpa.db";
+    masters { 192.168.13.8; };
+{% endif %}
+};

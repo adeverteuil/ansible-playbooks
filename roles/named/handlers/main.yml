@@ -1,6 +1,9 @@
 ---
-- name: reload bind
-  service: name=named state=reloaded
+- name: reload systemd
+  command: systemctl daemon-reload
 
-- name: reload systemd-resolved
-  service: name=systemd-resolved state=reloaded
+- name: reload bind
+  service: name=bind9 state=reloaded
+
+- name: restart bind
+  service: name=bind9 state=restarted

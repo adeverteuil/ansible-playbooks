@@ -1,6 +1,6 @@
 ---
-- name: generate locales
-  command: locale-gen
+- name: update exim4 configuration
+  command: update-exim4.conf
 
-- name: restart systemd-resolved
-  service: name=systemd-resolved state=restarted
+- name: restart exim4
+  service: name=exim4 state=restarted

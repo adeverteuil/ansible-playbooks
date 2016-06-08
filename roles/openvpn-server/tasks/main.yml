@@ -1,28 +1,20 @@
 ---
 - name: install openvpn
-  pacman: name=openvpn state=present
+  apt: name=openvpn state=present
   tags: [install]
 
-- name: install easy-rsa
-  pacman: name=easy-rsa state=present
-  tags: [install]
-
-- name: copy easy-rsa to /root
-  command: cp -r /usr/share/easy-rsa /root
+- name: copy make easy-rsa certificate authority
+  command: make-cadir openvpn
   args:
-    creates: /root/easy-rsa
+    chdir: /root
+    creates: /root/openvpn
   tags: [install]
 
 - name: configure easy-rsa vars
-  lineinfile:
-    line: export KEY_{{ item.key|upper }}="{{ item.value }}"
-    dest: /root/easy-rsa/vars
-  with_dict: "{{ openvpn_key_params }}"
+  template:
+    src: vars.j2
+    dest: /root/openvpn/vars
   tags: [configure]
-
-- name: enable service openvpn in firewalld
-  firewalld: service=openvpn state=enabled permanent=yes immediate=yes
-  tags: [serve]
 
 - name: configure openvpn
   template:
@@ -33,9 +25,23 @@
 - name: copy sample client configuration file
   copy:
     src: client.conf.sample
-    dest: /etc/openvpn/client.conf.sample
+    dest: /root/client.conf.sample
   tags: [configure]
 
 - name: enable openvpn@server
   service: name=openvpn@server enabled=yes
+  tags: [serve]
+
+- name: check if the server certificate exists
+  stat: path=/root/openvpn/keys/openvpn-server.crt
+  register: crt
+  tags: [serve]
+
+- name: start openvpn server
+  service: name=openvpn@server state=started
+  when: crt.stat.exists
+  tags: [serve]
+
+- name: enable service openvpn in firewalld
+  firewalld: service=openvpn state=enabled permanent=yes immediate=yes
   tags: [serve]

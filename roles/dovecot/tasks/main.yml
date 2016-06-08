@@ -1,6 +1,11 @@
 ---
 - name: install dovecot
-  pacman: name=dovecot state=present
+  apt: name={{ item }} state=present
+  with_items:
+  - dovecot-imapd
+  - dovecot-lmtpd
+  - dovecot-sieve
+  - dovecot-managesieved
   tags: [install]
 
 - name: create the vmail user and home directory
@@ -11,19 +16,13 @@
     shell: /usr/bin/false
   tags: [install]
 
-- name: add exim to the mail group
-  user:
-    name: exim
-    groups: mail
-    append: yes
+- name: install the default sieve
+  copy:
+    src: default.sieve
+    dest: /var/vmail/default.sieve
+    owner: vmail
+    group: vmail
   tags: [install]
-
-- name: configure dovecot general options
-  template:
-    src: dovecot.conf.j2
-    dest: /etc/dovecot/dovecot.conf
-  notify: restart dovecot
-  tags: [configure]
 
 - name: configure dovecot specific options
   template:
@@ -32,32 +31,57 @@
   with_items:
     - 10-auth.conf
     - 10-mail.conf
+    - 10-master.conf
     - 10-ssl.conf
-  notify: restart dovecot
-  tags: [configure]
-
-- name: configure dovecot pam module
-  template:
-    src: pam_dovecot.j2
-    dest: /etc/pam.d/dovecot
+    - 15-mailboxes.conf
+    - 20-lmtp.conf
+    - 90-sieve.conf
   notify: restart dovecot
   tags: [configure]
 
 - name: configure SSL certificate
   template:
     src: dovecot-openssl.cnf.j2
-    dest: /etc/ssl/dovecot-openssl.cnf
-  register: cert
+    dest: /etc/dovecot/dovecot-openssl.cnf
+  register: sslconf
+  tags: [configure]
+
+- name: rename old SSL files
+  command: 'mv "{{ item }}" "{{ item }}.old"'
+  args:
+    removes: "{{ item }}"
+  when: sslconf.changed
+  with_items:
+  - /etc/dovecot/dovecot.pem
+  - /etc/dovecot/private/dovecot.pem
   tags: [configure]
 
 - name: make dovecot SSL certificate
-  script: make_ssl_cert.sh
-  when: cert.changed
+  command: /usr/share/dovecot/mkcert.sh
+  args:
+    creates: /etc/dovecot/dovecot.pem
+    chdir: /etc/dovecot
+  notify: restart dovecot
   tags: [configure]
 
-- name: enable services in firewalld
-  firewalld: service={{ item }} state=enabled permanent=yes immediate=yes
-  with_items: [imap, imaps]
+- name: drop the sieve.xml firewalld service definition
+  copy:
+    src: sieve.xml
+    dest: /etc/firewalld/services/sieve.xml
+  register: sieve_service
+  tags: [install]
+
+- name: reload firewalld
+  service: name=firewalld state=reloaded
+  when: sieve_service.changed
+  tags: [install]
+
+- name: enable the sieve service in firewalld
+  firewalld: service=sieve state=enabled permanent=yes immediate=yes
+  tags: [serve]
+
+- name: enable imaps in firewalld
+  firewalld: service=imaps state=enabled permanent=yes immediate=yes
   tags: [serve]
 
 - name: start and enable dovecot

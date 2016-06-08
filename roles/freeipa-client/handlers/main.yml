@@ -4,3 +4,6 @@
 
 - name: restart sshd
   service: name=sshd state=restarted
+
+- name: execute pam-auth-update
+  command: pam-auth-update --package

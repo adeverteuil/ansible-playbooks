@@ -1,0 +1,5 @@
+---
+- hosts: fixion
+  roles:
+  - bridge
+  - hypervisor

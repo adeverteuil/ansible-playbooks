@@ -1,3 +1,0 @@
----
-hypervisor_data_partition: "LABEL=data"
-hypervisor_data_fstype: ext4

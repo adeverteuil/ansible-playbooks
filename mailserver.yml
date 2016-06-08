@@ -1,0 +1,3 @@
+---
+- hosts: smtp
+  roles: [dovecot, spamassassin, mailserver]

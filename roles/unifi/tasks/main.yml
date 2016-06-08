@@ -1,6 +1,18 @@
 ---
+- name: add GPG key for unifi repository
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: C0A52C50
+  tags: [install]
+
+- name: add the unifi repository
+  apt_repository:
+    repo: deb http://www.ubnt.com/downloads/unifi/debian stable ubiquiti
+    state: present
+  tags: [install]
+
 - name: install unifi
-  pacman: name=unifi state=present
+  apt: name=unifi state=present
   tags: [install]
 
 ## Runs as user unifi, can't bind priviledged port.
@@ -24,6 +36,13 @@
 
 - name: enable service unifi in firewalld
   firewalld: service=unifi state=enabled permanent=yes immediate=yes
+  tags: [serve]
+
+- name: forward http and httpd ports
+  command: firewall-cmd {{ item }} --add-forward-port=port=443:proto=tcp:toport=8443
+  register: forward
+  changed_when: '"ALREADY_ENABLED" not in forward.stdout'
+  with_items: ["", --permanent]
   tags: [serve]
 
 - name: start and enable unifi

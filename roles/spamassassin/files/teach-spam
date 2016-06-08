@@ -1,0 +1,48 @@
+#!/bin/bash
+
+# Script, which allows per-user bayes db's for a dovecot virtual user
+# setup. sa-learn parses a set amount of folders (.Junk.Spam and .Junk.Ham) for
+# Ham/Spam and adds it to the per-user db.
+
+# Based on a script found at:
+# http://christian.weblog.heimdaheim.de/2013/06/19/sa-learn-dovecot-virtual-users-and-virtual-user-configs/
+
+[ $UID -eq 0 ] && sudo -u vmail $0 $@ && exit
+
+set errexit pipefail
+shopt -q nocasematch
+
+MAILDIR=/var/vmail
+NICE="/usr/bin/nice -n 20 /usr/bin/ionice -c 2 -n 7"
+SA="/usr/bin/sa-learn"
+
+for mailbox in $MAILDIR/*/*; do
+
+    # Create the bayes database.
+    dbpath=$mailbox/bayes
+    [ ! -d $dbpath ] && mkdir -p $dbpath
+
+    for folder in $mailbox/mail/*; do
+
+        # Skip regular files.
+        [ -f $folder ] && continue
+
+        case $(basename $folder) in
+            INBOX|brouillons|drafts)
+                # These are not processed.
+                ;;
+            spam|junk|pourriels)
+                $NICE $SA --no-sync --spam \
+                    --dbpath $dbpath "$folder" \
+                    > /dev/null
+                ;;
+            *)
+                $NICE $SA --no-sync --ham \
+                    --dbpath $dbpath "$folder" \
+                    > /dev/null
+                ;;
+        esac
+
+        $NICE $SA --sync --dbpath $dbpath > /dev/null
+    done
+done

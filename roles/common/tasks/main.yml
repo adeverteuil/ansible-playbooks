@@ -1,94 +1,78 @@
 ---
-- name: set the localtime
-  file:
-    path: /etc/localtime
-    state: link
-    force: yes
-    src: /usr/share/zoneinfo/America/Montreal
+- name: remove unused repositories
+  apt_repository:
+    repo: "{{ item }}"
+    state: absent
+  with_items:
+  - deb-src http://debian.mirror.iweb.ca/debian/ jessie main
+  - deb-src http://security.debian.org/ jessie/updates main
+  - deb-src http://debian.mirror.iweb.ca/debian/ jessie-updates main
   tags: [configure]
-
-- name: enable en_CA.UTF-8 locale
-  lineinfile:
-    dest: /etc/locale.gen
-    line: en_CA.UTF-8 UTF-8
-    regexp: "^#?en_CA.UTF-8 UTF-8"
-  notify: generate locales
-  tags: [configure]
-
-- name: enable en_DK.UTF-8 locale
-  lineinfile:
-    dest: /etc/locale.gen
-    line: en_DK.UTF-8 UTF-8
-    regexp: "^#?en_DK.UTF-8 UTF-8"
-  notify: generate locales
-  tags: [configure]
-
-- name: setup locale
-  copy:
-    src: locale.conf
-    dest: /etc/locale.conf
-  tags: [configure]
-
-- name: configure vconsole
-  copy:
-    src: vconsole.conf
-    dest: /etc/vconsole.conf
-  tags: [configure]
-
-- name: install updatemirrors script
-  copy:
-    src: updatemirrors
-    dest: /usr/local/bin/updatemirrors
-    mode: 0744
-  tags: [install]
 
 - name: install packages
-  pacman: name={{ item }} state=present
+  apt: name={{ item }} state=present
   with_items:
+  - firewalld
   - vim
   - sudo
   - tmux
   - git
-  - findutils
-  - mlocate
   - sysstat
-  - strace
-  - lsof
   - haveged
   - rsync
-  - sysdig
-  - linux-headers
+  - strace
+  #- sysdig
+  #- linux-headers
   tags: [install]
 
 - name: install networking tools
-  pacman: name={{ item }} state=present
+  apt: name={{ item }} state=present
   with_items:
     - mtr
-    - bind-tools
     - ethtool
     - net-tools
-    - openbsd-netcat
     - nmap
     - iperf
     - dnstracer
     - tcpdump
     - ipcalc
-    - iptraf-ng
-    - traceroute
   tags: [install]
 
-- name: start and enable sysstat
-  service: name=sysstat state=started enabled=yes
+- name: start and enable services
+  service: name={{ item }} state=started enabled=yes
+  with_items:
+  - sysstat
+  - haveged
+  - firewalld
   tags: [serve]
 
-- name: start and enable haveged
-  service: name=haveged state=started enabled=yes
-  tags: [serve]
-
-- name: configure search domains
-  lineinfile:
-    dest: /etc/systemd/resolved.conf
-    line: Domains={{ bind_localdomain }}
-    regexp: "^#?Domains="
-  notify: restart systemd-resolved
+- name: create /var/log/lastlog
+  file:
+    path: /var/log/lastlog
+    state: touch
+    group: utmp
+    mode: 0644
   tags: [configure]
+
+# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=717217
+- name: fix UDP checksum error
+  command: firewall-cmd {{ item }} --direct --add-rule ipv4 mangle POSTROUTING 0 -p udp --dport bootps -j CHECKSUM --checksum-fill
+  register: direct
+  changed_when: '"ALREADY_ENABLED" not in direct.stdout'
+  with_items: ["", --permanent]
+  tags: [serve]
+
+- name: configure exim4
+  template:
+    src: update-exim4.conf.conf.j2
+    dest: /etc/exim4/update-exim4.conf.conf
+  notify:
+  - update exim4 configuration
+  - restart exim4
+  tags: [configure]
+
+- name: set email to send root mail to
+  lineinfile:
+    dest: /etc/aliases
+    line: "root: {{ exim_root_alias }}"
+    regexp: ^root

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>ManageSieve</short>
+  <port protocol="tcp" port="4190"/>
+</service>

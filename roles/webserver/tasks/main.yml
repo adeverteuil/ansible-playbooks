@@ -1,39 +1,53 @@
 ---
 - name: install packages
-  pacman: name={{ item }} state=present
+  apt: name={{ item }} state=present
   with_items:
-  - apache
-  - mod_wsgi
-  - python-virtualenv
-  - perl-libwww  # For the Munin apache plugins
-  - lynx  # For apachectl status
+  - task-web-server
+  - php5
+  - php5-mysql
+  - php5-gd
+  - php5-pgsql
+  - php5-curl
+  #- mod_wsgi
+  #- python-virtualenv
+  #- perl-libwww  # For the Munin apache plugins
+  #- lynx  # For apachectl status
+  notify: restart apache2
   tags: [install]
 
-- name: set ServerAdmin directive
-  lineinfile:
-    dest: /etc/httpd/conf/httpd.conf
-    line: ServerAdmin {{ webserver_serveradmin }}
-    regexp: ^#?ServerAdmin.*$
-  notify: restart apache
+- name: write the default VirtualHost index page
+  copy:
+    src: index.html
+    dest: /var/www/html/index.html
   tags: [configure]
 
-- name: create the conf.d directory
-  file:
-    dest: /etc/httpd/conf.d
-    state: directory
-  tags: [install]
-
-- name: include the files in conf.d
-  lineinfile:
-    dest: /etc/httpd/conf/httpd.conf
-    line: IncludeOptional conf.d/*.conf
-  notify: restart httpd
+- name: customize the default VirtualHosts
+  template:
+    src: "{{ item }}.j2"
+    dest: /etc/apache2/sites-available/{{ item }}
+  with_items: [000-default.conf, default-ssl.conf]
+  notify: restart apache2
   tags: [configure]
 
-- include: ssl.yml
-- include: vhosts.yml
-- include: wsgi.yml
-- include: status.yml
+- name: enable mod_ssl
+  apache2_module: name=ssl state=present
+  notify: restart apache2
+  tags: [configure]
+
+- name: enable the SSLHonorCipherOrder directive
+  lineinfile:
+    dest: /etc/apache2/mods-available/ssl.conf
+    line: "	SSLHonorCipherOrder on"
+    regexp: "^\\s*#?SSLHonorCipherOrder"
+  notify: restart apache2
+  tags: [configure]
+
+- name: enable the site default-ssl
+  command: a2ensite default-ssl
+  args:
+    creates: /etc/apache2/sites-enabled/default-ssl.conf
+  notify: restart apache2
+  tags: [configure]
 
 - name: enable http and https services in firewalld
   firewalld: service={{ item }} state=enabled permanent=yes immediate=yes

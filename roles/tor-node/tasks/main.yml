@@ -1,0 +1,44 @@
+---
+# https://www.torproject.org/docs/debian.html.en
+- name: install the tor keys
+  apt_key:
+    keyserver: keys.gnupg.net
+    id: A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89
+
+- name: install the tor repository
+  apt_repository:
+    repo: deb http://deb.torproject.org/torproject.org jessie main
+    state: present
+
+- name: install packages
+  apt: name={{ item }} state=present
+  with_items: [tor, tor-arm]
+  tags: [install]
+
+- name: configure tor
+  template:
+    dest: /etc/tor/torrc
+    src: torrc.j2
+  notify:
+  - reload tor
+  tags: [configure]
+
+- name: copy tor service file for firewalld
+  copy:
+    src: tor.xml
+    dest: /etc/firewalld/services/tor.xml
+  register: service_tor
+  tags: [install]
+
+- name: reload firewalld
+  service: name=firewalld state=reloaded
+  when: service_tor.changed
+  tags: [install]
+
+- name: enable tor service in firewalld
+  firewalld: service=tor state=enabled permanent=yes immediate=yes
+  tags: [serve]
+
+- name: enable and start tor
+  service: name=tor state=started enabled=yes
+  tags: [serve]

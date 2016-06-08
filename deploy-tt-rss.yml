@@ -1,0 +1,64 @@
+---
+- hosts: postgresql
+  become: yes
+  become_user: postgres
+  tasks:
+
+  - name: create a database user
+    postgresql_user:
+      name: ttrss
+      password: "{{ ttrss_db_password }}"
+      state: present
+
+  - name: create the database
+    postgresql_db:
+      name: ttrss
+      owner: ttrss
+      state: present
+
+  vars:
+    ttrss_db_password: "{{ vault_ttrss_db_password }}"
+  vars_files:
+  - vault-tt-rss.yml
+
+- hosts: web
+  tasks:
+
+  - name: create the DocumentRoot
+    file:
+      path: /var/www/tt-rss
+      state: directory
+      owner: www-data
+      group: www-data
+    
+  - name: install tt-rss with git
+    git:
+      clone: yes
+      repo: https://tt-rss.org/git/tt-rss.git
+      dest: /var/www/tt-rss
+    become: yes
+    become_user: www-data
+
+  - name: create the VirtualHost
+    copy:
+      src: files/tt-rss.conf
+      dest: /etc/apache2/sites-available/tt-rss.conf
+    notify: restart apache2
+
+  - name: enable the site
+    command: a2ensite tt-rss
+    args:
+      creates: /etc/apache2/sites-enabled/tt-rss.conf
+    notify: restart apache2
+
+  - name: copy the ttrss_backend.service unit file
+    copy:
+      src: files/ttrss_backend.service
+      dest: /etc/systemd/system/ttrss_backend.service
+  
+  - name: start and enable ttrss_backend
+    service: name=ttrss_backend state=started enabled=yes
+
+  handlers:
+  - name: restart apache2
+    service: name=apache2 state=restarted

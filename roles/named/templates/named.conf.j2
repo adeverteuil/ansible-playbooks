@@ -1,112 +1,17 @@
-// vim:set ts=4 sw=4 et:
+// This is the primary configuration file for the BIND DNS server named.
+// {{ ansible_managed }}
+//
+// Please read /usr/share/doc/bind9/README.Debian.gz for information on the
+// structure of BIND configuration files in Debian, *BEFORE* you customize
+// this configuration file.
+//
+// If you are just adding zones, please do that in /etc/bind/named.conf.local
 
-options {
-    directory "/var/named";
-    pid-file "/run/named/named.pid";
-
-    // Uncomment these to enable IPv6 connections support
-    // IPv4 will still work:
-    //  listen-on-v6 { any; };
-    // Add this for no IPv4:
-    //  listen-on { none; };
-
-    allow-recursion { {% for f in named_allowed_recursion_ips %}{{f}}; {% endfor %}};
-{% if named_master %}
-    allow-transfer { 192.168.13.88; };
-{% else %}
-    allow-notify { 192.168.13.8; };
-{% endif %}
-    allow-update { none; };
-{% if named_forwarders %}
-    forwarders { {% for f in named_forwarders %}{{f}}; {% endfor %}};
-{% endif %}
-
-    version none;
-    hostname none;
-    server-id none;
-};
-
-key DHCP_UPDATER {
-  algorithm HMAC-SHA256;
-  secret L7RdeyMksNGSsCf6aodRzA==;
-};
-
-
-zone "localhost" IN {
-    type master;
-    file "localhost.zone";
-};
-
-zone "0.0.127.in-addr.arpa" IN {
-    type master;
-    file "127.0.0.zone";
-};
-
-zone "1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa" {
-    type master;
-    file "localhost.ip6.zone";
-};
-
-zone "255.in-addr.arpa" IN {
-    type master;
-    file "empty.zone";
-};
-
-zone "0.in-addr.arpa" IN {
-    type master;
-    file "empty.zone";
-};
-
-zone "." IN {
-    type hint;
-    file "root.hint";
-};
-
-zone "{{ bind_localdomain }}" IN {
-{% if named_master %}
-    type master;
-    file "{{ bind_localdomain }}.zone";
-    allow-update { key DHCP_UPDATER; };
-{% else %}
-    type slave;
-    file "{{ bind_localdomain }}.zone";
-    masters { 192.168.13.8; };
-{% endif %}
-};
-zone "13.168.192.in-addr.arpa" IN {
-{% if named_master %}
-    type master;
-    file "13.168.192.in-addr.arpa.zone";
-    allow-update { key DHCP_UPDATER; };
-{% else %}
-    type slave;
-    file "13.168.192.in-addr.arpa.zone";
-    masters { 192.168.13.8; };
-{% endif %}
-};
-zone "42.168.192.in-addr.arpa" IN {
-{% if named_master %}
-    type master;
-    file "42.168.192.in-addr.arpa.zone";
-    allow-update { key DHCP_UPDATER; };
-{% else %}
-    type slave;
-    file "42.168.192.in-addr.arpa.zone";
-    masters { 192.168.13.8; };
-{% endif %}
-};
+include "/etc/bind/named.conf.options";
+include "/etc/bind/rndc.key";
+include "/etc/bind/named.conf.local";
+include "/etc/bind/named.conf.default-zones";
 {#
-//zone "example.org" IN {
-//    type slave;
-//    file "example.zone";
-//    masters {
-//        192.168.1.100;
-//    };
-//    allow-query { any; };
-//    allow-transfer { any; };
-//};
-#}
-
 logging {
     channel journald {
             syslog daemon;
@@ -114,3 +19,4 @@ logging {
         };
     category default { journald; };
 };
+#}

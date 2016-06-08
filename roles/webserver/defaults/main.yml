@@ -1,4 +1,4 @@
 ---
-webserver_serveradmin: you@example.com
-webserver_certificate_file: /etc/httpd/ssl/self-signed.crt
-webserver_certificate_keyfile: /etc/httpd/ssl/server.key
+webserver_serveradmin: webmaster@localhost
+webserver_certificate_file: /etc/ssl/certs/ssl-cert-snakeoil.pem
+webserver_certificate_keyfile: /etc/ssl/private/ssl-cert-snakeoil.key

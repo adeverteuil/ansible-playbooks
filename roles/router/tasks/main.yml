@@ -21,17 +21,3 @@
   - ["", --permanent]
   - "{{ router_forward_ports }}"
   tags: [serve]
-
-- name: configure networking
-  template:
-    src: bridge-static.network.j2
-    dest: /etc/systemd/network/bridge-static.network
-  notify: restart systemd-networkd
-  tags: [configure]
-
-- name: remove dhcp networking config file
-  file:
-    path: /etc/systemd/network/bridge-dhcp.network
-    state: absent
-  notify: restart systemd-networkd
-  tags: [configure]
