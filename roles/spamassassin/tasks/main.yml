@@ -1,0 +1,47 @@
+---
+- name: install spamassassin
+  apt: name={{ item }} state=present
+  with_items: [spamassassin, spamc]
+  tags: [install]
+
+- name: update spamassassin rules
+  become: yes
+  become_user: debian-spamd
+  shell: sa-update --gpghomedir /var/lib/spamassassin/sa-update-keys
+  register: result
+  failed_when: 'result.rc not in [0, 1]'
+  changed_when: 'result.rc in [0, 3]'
+  # From the source code of /usr/bin/vendor_perl/sa-update:
+  #   0: updates found and successfully applied
+  #   1: no updates were needed (success with nothing to do)
+  #   2: lint of site pre files failed, cannot continue
+  #   3: some failures, but at least one channel suceeded
+  #   4 or higher means all channels failed
+  tags: [configure]
+
+- name: enable daily sa-update
+  lineinfile:
+    dest: /etc/default/spamassassin
+    line: CRON=1
+    regexp: ^CRON=
+  tags: [configure]
+
+- name: use per-vuser bayes database
+  lineinfile:
+    dest: /etc/default/spamassassin
+    # See "man spamd" for options documentation.
+    line: 'OPTIONS="--create-prefs --max-children 5 --helper-home-dir --virtual-config-dir=/var/vmail/%d/%l/bayes -x -u vmail"'
+    regexp: ^OPTIONS=
+  notify: restart spamassassin
+  tags: [configure]
+
+- name: run sa-learn every day
+  copy:
+    src: teach-spam
+    dest: /etc/cron.daily/teach-spam
+    mode: 0755
+  tags: [serve]
+
+- name: start and enable spamassassin
+  service: name=spamassassin state=started enabled=true
+  tags: [serve]

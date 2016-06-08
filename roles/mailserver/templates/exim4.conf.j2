@@ -2,6 +2,8 @@
 #                  Runtime configuration file for Exim               #
 ######################################################################
 
+# {{ ansible_managed }}
+
 
 # This is a default configuration file which will operate correctly in
 # uncomplicated installations. Please see the manual for a complete list
@@ -152,8 +154,8 @@ tls_advertise_hosts = *
 # need the first setting, or in separate files, in which case you need both
 # options.
 
-tls_certificate = /etc/mail/private/exim.pem
-#tls_privatekey = /etc/ssl/private/exim.pem
+tls_certificate = /etc/exim4/exim4.pem
+tls_privatekey = /etc/exim4/private/exim4.pem
 
 # In order to support roaming users who wish to send email from anywhere,
 # you may want to make Exim listen on other ports as well as port 25, in
@@ -436,6 +438,10 @@ acl_check_rcpt:
   # actually relaying out from MTAs, you should probably add recipient
   # verification here.
 
+  deny message = Local recipient verification failed
+       domains = +local_domains
+       !verify = recipient/callout=no_cache
+
   # Note that, by putting this test before any DNS black list checks, you will
   # always accept from these hosts, even if they end up on a black list. The
   # assumption is that they are your friends, and if they get onto a black
@@ -467,7 +473,9 @@ acl_check_rcpt:
   # relay domains is to use a callout (add /callout), but please read the
   # documentation about callouts before doing this.
 
-  require verify = recipient
+  deny message  = Remote recipient verification failed
+       !domains = +local_domains
+       !verify  = recipient
 
   #############################################################################
   # There are no default checks on DNS black lists because the domains that
@@ -519,22 +527,17 @@ acl_check_data:
   # Add headers to a message if it is judged to be spam. Before enabling this,
   # you must install SpamAssassin. You may also need to set the spamd_address
   # option above.
-{% if exim_install_spamassassin %}
-  # Modifié par Alexandre 2014-08-09
-  # Avec :true, toujours ajouter les entêtes.
-  warn    spam       = nobody:true
-          add_header = X-Spam_score: $spam_score\n\
-                       X-Spam_score_int: $spam_score_int\n\
-                       X-Spam_bar: $spam_bar\n\
-                       X-Spam_report: $spam_report
-{% else %}
-  # (commented out)
-{% endif %}
+
+  # warn    spam       = nobody:true
+  #         condition  = ${if < {$message_size}{10K}}
+  #         add_header = X-Spam_score: $spam_score\n\
+  #                      X-Spam_score_int: $spam_score_int\n\
+  #                      X-Spam_bar: $spam_bar\n\
+  #                      X-Spam_report: $spam_report
 
   # Accept the message.
 
   accept
-
 
 
 ######################################################################
@@ -635,7 +638,7 @@ system_aliases:
   driver = redirect
   allow_fail
   allow_defer
-  data = ${lookup{$local_part}lsearch{/etc/mail/aliases}}
+  data = ${lookup{$local_part}lsearch{/etc/aliases}}
 # user = exim
   file_transport = address_file
   pipe_transport = address_pipe
@@ -682,23 +685,6 @@ userforward:
   reply_transport = address_reply
   directory_transport = address_maildir
 
-virtualforward:
-  driver = redirect
-  no_check_local_user
-  router_home_directory = {{ exim_vuser_home }}
-  require_files = +{{ exim_vuser_home }}/filter
-  file = {{ exim_vuser_home }}/filter
-  allow_filter
-  no_verify
-  no_expn
-  check_ancestor
-  file_transport = address_file
-  pipe_transport = address_pipe
-  reply_transport = address_reply
-  directory_transport = address_maildir
-  user = vmail
-  group = mail
-
 # This router matches local user mailboxes. If the router fails, the error
 # message is "Unknown user".
 
@@ -720,10 +706,11 @@ localuser:
 # Place after remote router and before localuser router
 # + addressing support requires uncommenting
 dovecot_router:
-  driver = accept
+  driver = manualroute
+  route_data = localhost
+  self = send
   #local_part_suffix = +*
   #local_part_suffix_optional
-  require_files = +{{ exim_delivery_directory }}
   transport = dovecot_transport
 
 
@@ -806,17 +793,19 @@ address_maildir:
     return_path_add
 
 dovecot_transport:
-  debug_print = "T: dovecot_virtual appendfile for $local_part@$domain"
-  driver = appendfile
-  directory = {{ exim_delivery_directory }}
-  maildir_format
+  debug_print = "T: dovecot_virtual lmtp for $local_part@$domain"
+  transport_filter = /usr/bin/spamc -u $local_part@$domain
+  # Using TCP because callout verification does not work over LMTP on UNIX socket.
+  # https://bugs.exim.org/show_bug.cgi?id=321
+  # http://serverfault.com/questions/527405/exim-recipient-verification-with-callout-to-lmtp-server
+  driver = smtp
+  protocol = lmtp
+  port = 24
+  # For spam filtering purposes:
+  max_rcpt = 1
   delivery_date_add
   envelope_to_add
   return_path_add
-  user = vmail
-  group = mail
-  mode = 0660
-  mode_fail_narrower = false
 
 
 ######################################################################
