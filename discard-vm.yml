@@ -1,0 +1,14 @@
+---
+# usage: ansible-playbook --ask-vault-pass discard-vm.yml --extra-vars "name=<vm_name>"
+
+- hosts: "{{ name }}"
+  tasks:
+  - name: print the name
+    debug: var=name
+
+# Remove host from FreeIPA server.
+# Remove SSH known_hosts keys from local system.
+# Hard shutdown the system.
+# Delete the system from libvirtd.
+# Remove forward and backward DNS entries.
+# Remove the host from the inventory
