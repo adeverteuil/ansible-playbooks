@@ -14,9 +14,24 @@
     failed_when: host_del.rc not in [0, 2]
     tags: [freeipa]
 
-# Remove host from FreeIPA server.
+- hosts: localhost
+  tasks:
+
+  - name: hard shutdown the VM
+    become: no
+    virt:
+      name: "{{ name }}"
+      state: destroyed
+      uri: qemu+ssh://fixion/system
+
+  - name: undefine the VM
+    become: no
+    virt:
+      name: "{{ name }}"
+      command: undefine
+      uri: qemu+ssh://fixion/system
+    #XXX This does not delete any volumes.
+
 # Remove SSH known_hosts keys from local system.
-# Hard shutdown the system.
-# Delete the system from libvirtd.
 # Remove forward and backward DNS entries.
 # Remove the host from the inventory
