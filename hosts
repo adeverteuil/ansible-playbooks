@@ -2,54 +2,26 @@ freeipa
 
 [home_network]
 fixion
-unifi
-openvpn
-ns1
-ns2
-pacman-cache
 dhcp
-smtp
-munin
-tor
-borg
+ns2
+ns1
+web
+mysql
+openvpn
 home
-web
-
-[remote_network]
-neutrino.deverteuil.net
-owncloud.deverteuil.net
-#baryon.deverteuil.net
-
-[dhcp-server]
-dhcp
-
-[hypervisor]
-fixion
-
-[nameservers]
-ns1
-ns2
-
-[openvpn-server]
-openvpn
-
-[unifi]
 unifi
-
-[mailservers]
-#higgs
-#baryon.deverteuil.net
-#electron
+postgresql
+tor
 smtp
+apt
 
-[dovecot]
-#higgs
-#baryon.deverteuil.net
-
-[nfsservers]
-#higgs
-electron
-
-[webservers]
-#electron
-web
+# Datacenter bootstrapping
+# 
+# 1. fixion
+# 2. ns1 (ns2 whenever later)
+# 3. dhcp
+# 4. unifi
+# 5. freeipa
+#
+# 6. web (eventually for letsencrypt dependency)
+# 7. the rest
