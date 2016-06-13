@@ -67,10 +67,6 @@
   args:
     creates: /root/.ssh/id_rsa.pub
   tags: [configure]
-
-#- name: start and enable backup.timer
-#  service: name=backup.timer state=started enabled=yes
-#  tags: [serve]
 #
 #- name: install Munin plugins if Munin is installed
 #  file:
