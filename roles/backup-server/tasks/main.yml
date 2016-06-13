@@ -2,7 +2,7 @@
 - name: install package signing key
   apt_key:
     keyserver: keyserver.ubuntu.com
-    id: DD237C00
+    id: F13D33FF
   tags: [install]
 
 - name: install local repository
