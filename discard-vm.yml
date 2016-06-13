@@ -17,12 +17,26 @@
 - hosts: localhost
   tasks:
 
+  - name: grap VM XML
+    virt:
+      command: get_xml
+      name: "{{ name }}"
+    register: xml
+    # <source file='/var/lib/libvirt/images/{{ name }}.qcow2'/>
+
   - name: hard shutdown the VM
     become: no
     virt:
       name: "{{ name }}"
       state: destroyed
       uri: qemu+ssh://fixion/system
+
+  #TODO
+  #- name: delete the storage
+  #  delegate_to: fixion
+  #  file:
+  #    path: "{{ xml.stdout }}"
+  #    state: absent
 
   - name: undefine the VM
     become: no
@@ -31,6 +45,16 @@
       command: undefine
       uri: qemu+ssh://fixion/system
     #XXX This does not delete any volumes.
+  
+  - name: remove forward and reverse DNS entries
+    shell: |
+      nsupdate -k ~/lib/dnssec/dhcp_updater.conf << EOF
+      del {{ hostvars[name]['ansible_fqdn'] }}
+      del {{ hostvars[name]['ansible_default_ipv4']['address']|ipaddr('revdns') }}
+      send
+
+  - name: remove host from the inventory
+    command: sed -i "/^[# ]*{{ name }}\>/d" {{ inventory_file }}
 
 # Remove SSH known_hosts keys from local system.
 # Remove forward and backward DNS entries.
