@@ -1,19 +1,27 @@
 ---
-- name: install backup
-  pacman: name=python-backup-git state=latest update_cache=yes
+- name: install package signing key
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: DD237C00
   tags: [install]
 
-- name: create the repository directory
-  file:
-    path: /var/backups
-    state: directory
+- name: install local repository
+  apt_repository:
+    repo: deb http://apt.private.deverteuil.net/~alex/debian/ internal/
+    state: present
   tags: [install]
+
+- name: install packages
+  apt: name={{ item }} state=present
+  with_items:
+  - python3-backup
+  - cryptsetup
 
 - name: exclude the backups from udpatedb
   lineinfile:
     dest: /etc/updatedb.conf
     regexp: ^PRUNEPATHS
-    line: PRUNEPATHS = "/afs /media /mnt /net /sfs /tmp /udev /var/cache /var/lib/pacman/local /var/lock /var/run /var/spool /var/tmp /var/backups"
+    line: PRUNEPATHS="/tmp /var/spool /media /var/lib/backup"
   tags: [configure]
 
 - name: create a directory for the LUKS keys
@@ -23,14 +31,14 @@
     state: directory
   tags: [install]
 
-- name: copy the LUKS keys
-  copy:
-    src: /root/lib/crypt/{{ item }}
-    dest: /root/keys/{{ item }}
+- name: check presence of the LUKS keys (must be manually transferred)
+  stat:
+    path: /root/keys/{{ item }}
   with_items:
   - disk-backups.key
   - disk-backups2.key
-  ignore_errors: yes
+  register: key
+  failed_when: not key.stat.exists
   tags: [install]
 
 - name: create crypttab entries
@@ -48,8 +56,8 @@
     dest: /etc/fstab
     line: "{{ item }}"
   with_items:
-  - LABEL=backups  /var/backups ext3 rw,noexec,nouser,async,nodev,noauto,nosuid,nofail,x-systemd.automount 0   2
-  - LABEL=backups2 /var/backups ext3 rw,noexec,nouser,async,nodev,noauto,nosuid,nofail,x-systemd.automount 0   2
+  - LABEL=backups  /var/lib/backup ext3 rw,noexec,nouser,async,nodev,noauto,nosuid,nofail,x-systemd.automount 0   2
+  - LABEL=backups2 /var/lib/backup ext3 rw,noexec,nouser,async,nodev,noauto,nosuid,nofail,x-systemd.automount 0   2
   notify: reload systemd
   tags: [install]
 
@@ -59,18 +67,18 @@
     creates: /root/.ssh/id_rsa.pub
   tags: [configure]
 
-- name: start and enable backup.timer
-  service: name=backup.timer state=started enabled=yes
-  tags: [serve]
-
-- name: install Munin plugins if Munin is installed
-  file:
-    src: /usr/lib/backup/backup_
-    dest: /etc/munin/plugins/{{ item }}
-    state: link
-  with_items:
-  - backup_age
-  - backup_duration
-  notify: restart munin-node
-  ignore_errors: yes
-  tags: [install]
+#- name: start and enable backup.timer
+#  service: name=backup.timer state=started enabled=yes
+#  tags: [serve]
+#
+#- name: install Munin plugins if Munin is installed
+#  file:
+#    src: /usr/lib/backup/backup_
+#    dest: /etc/munin/plugins/{{ item }}
+#    state: link
+#  with_items:
+#  - backup_age
+#  - backup_duration
+#  notify: restart munin-node
+#  ignore_errors: yes
+#  tags: [install]
