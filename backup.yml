@@ -1,0 +1,8 @@
+---
+- hosts: backup
+  roles:
+  - {role: backup-server, tags: [backup-server]}
+
+- hosts: home_network
+  roles:
+  - {role: backup-client, tags: [backup-client]}

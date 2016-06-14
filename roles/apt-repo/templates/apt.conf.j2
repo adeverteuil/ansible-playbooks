@@ -1,0 +1,12 @@
+# {{ ansible_managed }}
+<VirtualHost *:80>
+        ServerName {{ ansible_fqdn }}
+
+        ServerAdmin alexandre@deverteuil.net
+        DocumentRoot /var/www/debian
+
+        ErrorLog ${APACHE_LOG_DIR}/apt_error.log
+        CustomLog ${APACHE_LOG_DIR}/apt_access.log combined
+</VirtualHost>
+
+# vim: syntax=apache ts=4 sw=4 sts=4 et
