@@ -3,11 +3,23 @@
   apt_repository:
     repo: "{{ item }}"
     state: "{{ common_deb_src_repos }}"
-    mode: 0644
+    mode: 644
   with_items:
   - deb-src http://debian.mirror.iweb.ca/debian/ jessie main
   - deb-src http://security.debian.org/ jessie/updates main
   - deb-src http://debian.mirror.iweb.ca/debian/ jessie-updates main
+  tags: [configure]
+
+- name: set package repository mirror
+  apt_repository:
+    repo: "{{ item.repo }}"
+    state: "{{ item.state }}"
+    mode: 644
+  with_items:
+  - {repo: "deb http://httpredir.debian.org/debian/ jessie main",          state: present}
+  - {repo: "deb http://httpredir.debian.org/debian/ jessie-updates main",  state: present}
+  - {repo: "deb http://debian.mirror.iweb.ca/debian/ jessie main",         state: absent}
+  - {repo: "deb http://debian.mirror.iweb.ca/debian/ jessie-updates main", state: absent}
   tags: [configure]
 
 - name: install packages
@@ -23,6 +35,7 @@
   - rsync
   - strace
   - tree
+  - curl
   #- sysdig
   #- linux-headers
   tags: [install]
