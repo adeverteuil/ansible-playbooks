@@ -123,3 +123,8 @@
   - prompt_command.sh
   - less.sh
   tags: [configure]
+
+- name: remove motd
+  file:
+    path: /etc/motd
+    state: absent
