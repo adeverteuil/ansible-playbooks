@@ -1,8 +1,30 @@
 ---
-# usage: ansible-playbook --ask-vault-pass discard-vm.yml --extra-vars "name=<vm_name>"
+# Requires python2-netaddr to be installed on the Controller host.
+# python-netaddr on OSes where Python2 is the default.
+# This is for the ipaddr jinja filter.
 
-- hosts: "{{ name }}"
+- hosts: fixion
+
+  vars_prompt:
+
+  - name: name
+    prompt: "Name of the host to eliminate"
+    private: no
+
+  - name: delete_storage
+    prompt: "Delete the storage file? [yes/no]"
+    private: no
+
+  - name: delete_backup
+    prompt: "Delete backups? [yes/no]"
+    private: no
+
   tasks:
+
+  - name: gather facts
+    delegate_to: "{{ name }}"
+    setup:
+    delegate_facts: yes
 
   - name: Remove host from FreeIPA server.
     delegate_to: freeipa
@@ -14,10 +36,7 @@
     failed_when: host_del.rc not in [0, 2]
     tags: [freeipa]
 
-- hosts: localhost
-  tasks:
-
-  - name: grap VM XML
+  - name: grab VM XML
     virt:
       command: get_xml
       name: "{{ name }}"
@@ -25,37 +44,49 @@
     # <source file='/var/lib/libvirt/images/{{ name }}.qcow2'/>
 
   - name: hard shutdown the VM
-    become: no
     virt:
       name: "{{ name }}"
       state: destroyed
-      uri: qemu+ssh://fixion/system
-
-  #TODO
-  #- name: delete the storage
-  #  delegate_to: fixion
-  #  file:
-  #    path: "{{ xml.stdout }}"
-  #    state: absent
+      uri: qemu:///system
 
   - name: undefine the VM
-    become: no
     virt:
       name: "{{ name }}"
       command: undefine
-      uri: qemu+ssh://fixion/system
-    #XXX This does not delete any volumes.
+      uri: qemu:///system
   
+  - name: delete the storage
+    file:
+      path: /var/lib/libvirt/images/{{ name }}.qcow2
+      state: absent
+    when: delete_storage|bool
+
   - name: remove forward and reverse DNS entries
+    delegate_to: localhost
+    become: no
     shell: |
-      nsupdate -k ~/lib/dnssec/dhcp_updater.conf << EOF
+      nsupdate -k ~/lib/dnssec/dhcp_updater.conf << " EOF"
+      key DHCP_UPDATER {{ dhcp_update_key }}
+      server 192.168.13.8
       del {{ hostvars[name]['ansible_fqdn'] }}
+      send
       del {{ hostvars[name]['ansible_default_ipv4']['address']|ipaddr('revdns') }}
       send
+      EOF
 
   - name: remove host from the inventory
+    delegate_to: localhost
+    become: no
     command: sed -i "/^[# ]*{{ name }}\>/d" {{ inventory_file }}
 
-# Remove SSH known_hosts keys from local system.
-# Remove forward and backward DNS entries.
-# Remove the host from the inventory
+  - name: delete backup
+    delegate_to: backup
+    file:
+      path: /var/lib/backup/{{ name }}
+      state: absent
+    when: delete_backup|bool
+
+  - name: remove known_hosts entry
+    delegate_to: localhost
+    become: no
+    command: ssh-keygen -R {{ name }}
