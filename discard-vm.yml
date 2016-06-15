@@ -1,0 +1,92 @@
+---
+# Requires python2-netaddr to be installed on the Controller host.
+# python-netaddr on OSes where Python2 is the default.
+# This is for the ipaddr jinja filter.
+
+- hosts: fixion
+
+  vars_prompt:
+
+  - name: name
+    prompt: "Name of the host to eliminate"
+    private: no
+
+  - name: delete_storage
+    prompt: "Delete the storage file? [yes/no]"
+    private: no
+
+  - name: delete_backup
+    prompt: "Delete backups? [yes/no]"
+    private: no
+
+  tasks:
+
+  - name: gather facts
+    delegate_to: "{{ name }}"
+    setup:
+    delegate_facts: yes
+
+  - name: Remove host from FreeIPA server.
+    delegate_to: freeipa
+    vars: {ansible_user: ""}
+    become: no
+    command: flock /tmp/ansible-lock ipa host-del {{ hostvars[name]['ansible_fqdn'] }}
+    register: host_del
+    changed_when: host_del.rc == 0
+    failed_when: host_del.rc not in [0, 2]
+    tags: [freeipa]
+
+  - name: grab VM XML
+    virt:
+      command: get_xml
+      name: "{{ name }}"
+    register: xml
+    # <source file='/var/lib/libvirt/images/{{ name }}.qcow2'/>
+
+  - name: hard shutdown the VM
+    virt:
+      name: "{{ name }}"
+      state: destroyed
+      uri: qemu:///system
+
+  - name: undefine the VM
+    virt:
+      name: "{{ name }}"
+      command: undefine
+      uri: qemu:///system
+  
+  - name: delete the storage
+    file:
+      path: /var/lib/libvirt/images/{{ name }}.qcow2
+      state: absent
+    when: delete_storage|bool
+
+  - name: remove forward and reverse DNS entries
+    delegate_to: localhost
+    become: no
+    shell: |
+      nsupdate -k ~/lib/dnssec/dhcp_updater.conf << " EOF"
+      key DHCP_UPDATER {{ dhcp_update_key }}
+      server 192.168.13.8
+      del {{ hostvars[name]['ansible_fqdn'] }}
+      send
+      del {{ hostvars[name]['ansible_default_ipv4']['address']|ipaddr('revdns') }}
+      send
+      EOF
+
+  - name: remove host from the inventory
+    delegate_to: localhost
+    become: no
+    command: sed -i "/^[# ]*{{ name }}\>/d" {{ inventory_file }}
+
+  - name: delete backup
+    delegate_to: backup
+    file:
+      path: /var/lib/backup/{{ name }}
+      state: absent
+    when: delete_backup|bool
+
+  - name: remove known_hosts entry
+    delegate_to: localhost
+    become: no
+    command: ssh-keygen -R {{ name }}
