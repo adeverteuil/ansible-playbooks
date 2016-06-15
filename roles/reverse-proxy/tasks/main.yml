@@ -1,4 +1,26 @@
 ---
-- install nginx
-  apt: name=nginx state=present
+- name: install nginx
+  apt: name=nginx-full state=present
   tags: [install]
+
+- name: remove default server
+  file:
+    path: /etc/nginx/sites-enabled/defauilt
+    state: absent
+  notify: reload nginx
+  tags: [configure]
+
+- name: proxy all undefined hosts to webserver
+  copy:
+    src: default_proxy
+    dest: /etc/nginx/sites-available/default_proxy
+  notify: reload nginx
+  tags: [configure]
+
+- name: enable the default proxy
+  file:
+    src: ../sites-available/default_proxy
+    dest: /etc/nginx/sites-enabled/default_proxy
+    state: link
+  notify: reload nginx
+  tags: [serve]
