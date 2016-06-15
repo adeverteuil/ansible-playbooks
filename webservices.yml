@@ -1,6 +1,14 @@
 ---
 - hosts: web
-  roles: [webserver, letsencrypt]
+  roles: [webserver]
+  # Hosts all web services on the secure interface (secure VLAN)
+  # over http only.
 
 - hosts: nginx
-  roles: [reverse-proxy]
+  roles: [reverse-proxy, letsencrypt]
+  # acquires all the SSL certificates
+  # Does SSL offloading.
+  # Proxies everything except /.well-known/acme-challenge/
+  # certbot acquires SSL certificates using webroot
+  # Eventually should also proxy SMTP and IMAP.
+  # Needs ports 80, 443 and eventually SMTPS and IMAPS ports open.

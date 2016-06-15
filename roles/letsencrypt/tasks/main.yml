@@ -20,19 +20,25 @@
     recurse: yes
   tags: [install]
 
-- name: configure the Alias directive in apache2 config
-  template:
-    src: letsencrypt.conf.j2
-    dest: /etc/apache2/conf-available/letsencrypt.conf
-  notify: restart apache2
-  tags: [configure]
+#- name: configure the Alias directive in apache2 config
+#  template:
+#    src: letsencrypt.conf.j2
+#    dest: /etc/apache2/conf-available/letsencrypt.conf
+#  notify: restart apache2
+#  tags: [configure]
 
-- name: enable letsencrypt.conf for apache2
-  command: a2enconf letsencrypt
-  args:
-    creates: /etc/apache2/conf-enabled/letsencrypt.conf
-  notify: restart apache2
-  tags: [configure]
+#- name: enable letsencrypt.conf for apache2
+#  command: a2enconf letsencrypt
+#  args:
+#    creates: /etc/apache2/conf-enabled/letsencrypt.conf
+#  notify: restart apache2
+#  tags: [configure]
+
+- name: create /etc/letsencrypt
+  file:
+    path: /etc/letsencrypt
+    state: directory
+  tags: [install]
 
 - name: configure letsencrypt
   template:
