@@ -118,6 +118,13 @@
   - prompt.sh
   tags: [configure]
 
+- name: force color prompt in skel/.bashrc
+  lineinfile:
+    dest: /etc/skel/.bashrc
+    line: force_color_prompt=yes
+    regexp: ^#force_color_prompt=yes
+  tags: [configure]
+
 - name: remove motd
   file:
     path: /etc/motd
