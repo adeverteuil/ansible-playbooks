@@ -30,7 +30,7 @@
     delegate_to: freeipa
     vars: {ansible_user: ""}
     become: no
-    command: flock /tmp/ansible-lock ipa host-del {{ ansible_fqdn }}
+    command: flock /tmp/ansible-lock ipa host-del {{ hostvars[name]['ansible_fqdn'] }}
     register: host_del
     changed_when: host_del.rc == 0
     failed_when: host_del.rc not in [0, 2]
