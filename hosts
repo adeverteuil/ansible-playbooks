@@ -15,6 +15,8 @@ tor
 smtp
 apt
 backup
+nginx
+letsencrypt
 
 # Datacenter bootstrapping
 # 
