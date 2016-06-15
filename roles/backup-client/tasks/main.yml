@@ -1,13 +1,13 @@
 ---
 - name: install packages
-  pacman: name={{ item }} state=present
+  apt: name={{ item }} state=present
   with_items:
   - rsync
   - perl
   tags: [install]
 
 - name: read the public ssh key from the backup server
-  delegate_to: borg
+  delegate_to: backup
   command: cat /root/.ssh/id_rsa.pub
   register: pubkey
   changed_when: false
@@ -18,20 +18,27 @@
   authorized_key:
     user: root
     key: "{{ pubkey.stdout }}"
-    key_options: 'command="/usr/lib/rsync/rrsync -ro /",no-port-forwarding,no-X11-forwarding,no-pty,no-agent-forwarding,no-user-rc'
+    key_options: 'command="/usr/local/bin/rrsync -ro /",no-port-forwarding,no-X11-forwarding,no-pty,no-agent-forwarding,no-user-rc'
   tags: [configure]
 
+- name: install rrsync
+  copy:
+    src: rrsync
+    dest: /usr/local/bin/rrsync
+    mode: 755
+  tags: [install]
+
 - name: create the repository directory
-  delegate_to: borg
+  delegate_to: backup
   file:
-    path: /var/backups/{{ ansible_hostname }}
+    path: /var/lib/backup/{{ ansible_hostname }}
     state: directory
     owner: root
     group: root
   tags: [install]
 
 - name: add an entry in the backup configuration
-  delegate_to: borg
+  delegate_to: backup
   ini_file:
     dest: /etc/backup
     section: "{{ ansible_hostname }}"
@@ -40,10 +47,12 @@
   with_dict:
     sourcehost: "{{ ansible_hostname }}"
     sourcedirs: /
+    dailies: 7
+    hourlies: 6
   tags: [configure]
 
 - name: install filter file
-  delegate_to: borg
+  delegate_to: backup
   copy:
     src: filter
     dest: /etc/backup.d/{{ ansible_hostname }}.filter

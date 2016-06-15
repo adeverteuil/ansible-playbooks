@@ -1,13 +1,18 @@
 ---
-- name: remove or add source package repositories
+- name: configure package repository mirrors
   apt_repository:
-    repo: "{{ item }}"
-    state: "{{ common_deb_src_repos }}"
-    mode: 0644
+    repo: "{{ item.repo }}"
+    state: "{{ item.state }}"
+    update_cache: "{{ item.update_cache }}"
+    mode: 644
   with_items:
-  - deb-src http://debian.mirror.iweb.ca/debian/ jessie main
-  - deb-src http://security.debian.org/ jessie/updates main
-  - deb-src http://debian.mirror.iweb.ca/debian/ jessie-updates main
+  - {repo: "deb-src http://debian.mirror.iweb.ca/debian/ jessie main",         state: "{{ common_deb_src_repos }}", update_cache: no}
+  - {repo: "deb-src http://security.debian.org/ jessie/updates main",          state: "{{ common_deb_src_repos }}", update_cache: no}
+  - {repo: "deb-src http://debian.mirror.iweb.ca/debian/ jessie-updates main", state: "{{ common_deb_src_repos }}", update_cache: no}
+  - {repo: "deb http://httpredir.debian.org/debian/ jessie main",              state: present, update_cache: no}
+  - {repo: "deb http://httpredir.debian.org/debian/ jessie-updates main",      state: present, update_cache: no}
+  - {repo: "deb http://debian.mirror.iweb.ca/debian/ jessie main",             state: absent, update_cache: no}
+  - {repo: "deb http://debian.mirror.iweb.ca/debian/ jessie-updates main",     state: absent, update_cache: yes}
   tags: [configure]
 
 - name: install packages
@@ -22,6 +27,8 @@
   - haveged
   - rsync
   - strace
+  - tree
+  - curl
   #- sysdig
   #- linux-headers
   tags: [install]
@@ -99,4 +106,34 @@
   - en_US.UTF-8 UTF-8
   - fr_CA.UTF-8 UTF-8
   notify: run locale-gen
+  tags: [configure]
+
+- name: customize bash prompt
+  copy:
+    src: "{{ item }}"
+    dest: /etc/profile.d/{{ item }}
+  with_items:
+  - prompt_command.sh
+  - less.sh
+  - prompt.sh
+  tags: [configure]
+
+- name: force color prompt in skel/.bashrc
+  lineinfile:
+    dest: /etc/skel/.bashrc
+    line: force_color_prompt=yes
+    regexp: ^#force_color_prompt=yes
+  tags: [configure]
+
+- name: remove motd
+  file:
+    path: /etc/motd
+    state: absent
+  tags: [configure]
+
+- name: force colour prompt
+  lineinfile:
+    dest: /etc/skel/.bashrc
+    line: force_color_prompt=yes
+    regexp: ^#force_color_prompt
   tags: [configure]
