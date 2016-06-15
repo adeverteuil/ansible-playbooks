@@ -114,3 +114,12 @@
   - fr_CA.UTF-8 UTF-8
   notify: run locale-gen
   tags: [configure]
+
+- name: customize bash prompt
+  copy:
+    src: "{{ item }}"
+    dest: /etc/profile.d/{{ item }}
+  with_items:
+  - prompt_command.sh
+  - less.sh
+  tags: [configure]
