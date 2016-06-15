@@ -1,25 +1,18 @@
 ---
-- name: remove or add source package repositories
-  apt_repository:
-    repo: "{{ item }}"
-    state: "{{ common_deb_src_repos }}"
-    mode: 644
-  with_items:
-  - deb-src http://debian.mirror.iweb.ca/debian/ jessie main
-  - deb-src http://security.debian.org/ jessie/updates main
-  - deb-src http://debian.mirror.iweb.ca/debian/ jessie-updates main
-  tags: [configure]
-
-- name: set package repository mirror
+- name: configure package repository mirrors
   apt_repository:
     repo: "{{ item.repo }}"
     state: "{{ item.state }}"
+    update_cache: "{{ item.update_cache }}"
     mode: 644
   with_items:
-  - {repo: "deb http://httpredir.debian.org/debian/ jessie main",          state: present}
-  - {repo: "deb http://httpredir.debian.org/debian/ jessie-updates main",  state: present}
-  - {repo: "deb http://debian.mirror.iweb.ca/debian/ jessie main",         state: absent}
-  - {repo: "deb http://debian.mirror.iweb.ca/debian/ jessie-updates main", state: absent}
+  - {repo: "deb-src http://debian.mirror.iweb.ca/debian/ jessie main",         state: "{{ common_deb_src_repos }}", update_cache: no}
+  - {repo: "deb-src http://security.debian.org/ jessie/updates main",          state: "{{ common_deb_src_repos }}", update_cache: no}
+  - {repo: "deb-src http://debian.mirror.iweb.ca/debian/ jessie-updates main", state: "{{ common_deb_src_repos }}", update_cache: no}
+  - {repo: "deb http://httpredir.debian.org/debian/ jessie main",              state: present, update_cache: no}
+  - {repo: "deb http://httpredir.debian.org/debian/ jessie-updates main",      state: present, update_cache: no}
+  - {repo: "deb http://debian.mirror.iweb.ca/debian/ jessie main",             state: absent, update_cache: no}
+  - {repo: "deb http://debian.mirror.iweb.ca/debian/ jessie-updates main",     state: absent, update_cache: yes}
   tags: [configure]
 
 - name: install packages
