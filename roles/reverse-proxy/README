@@ -1,0 +1,7 @@
+nginx_proxy_servers expected structure
+--------------------------------------
+
+list of dicts with the following keys:
+ - name
+ - proxy_pass
+ - ssl (boolean)

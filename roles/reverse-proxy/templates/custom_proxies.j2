@@ -1,0 +1,41 @@
+# {{ ansible_managed }}
+{% for server in nginx_proxy_servers %}
+
+###
+###   {{ server.name }}
+###
+server {
+    listen 80;
+    server_name {{ server.name }};
+    root /var/www/html;
+
+    location /.well-known/acme-challenge {
+    }
+
+    location / {
+        proxy_pass http://{{ server.proxy_pass }}/;
+{% include "_proxy_config.j2" %}
+    }
+}
+{% if server.ssl %}
+
+server {
+    listen 443 ssl;
+    server_name {{ server.name }};
+    root /var/www/html;
+
+    location /.well-known/acme-challenge {
+    }
+
+    ssl on;
+    ssl_certificate /etc/letsencrypt/live/{{ server.name }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ server.name }}/privkey.pem;
+
+    location / {
+        proxy_pass          http://{{ server.proxy_pass }}/;
+        proxy_set_header    X-Forwarded-Proto  https;
+{% include "_proxy_config.j2" %}
+    }
+}
+{% endif %}
+{% endfor %}

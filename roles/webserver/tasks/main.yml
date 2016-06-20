@@ -29,8 +29,27 @@
   notify: restart apache2
   tags: [configure]
 
-- name: enable mod_ssl
-  apache2_module: name=ssl state=present
+- name: enable apache2 modules
+  apache2_module: name={{ item }} state=present
+  with_items:
+  - ssl
+  - remoteip
+  notify: restart apache2
+  tags: [configure]
+
+- name: configure mod_remoteip
+  copy:
+    src: remoteip.conf
+    dest: /etc/apache2/mods-enabled/remoteip.conf
+  notify: restart apache2
+  tags: [configure]
+
+- name: log remote client's IP address
+  lineinfile:
+    dest: /etc/apache2/apache2.conf
+    # Change %h for %a
+    line: 'LogFormat "%a %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" combined'
+    regexp: '^LogFormat ".*" combined$'
   notify: restart apache2
   tags: [configure]
 

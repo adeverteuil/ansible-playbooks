@@ -1,0 +1,38 @@
+# https://botleg.com/stories/https-with-lets-encrypt-and-nginx/
+# https://github.com/certbot/certbot/issues/2164
+
+server {
+    listen 80 default_server;
+    server_name _;
+    root /var/www/html;
+    index index.html index.htm index.nginx-debian.html;
+
+    location /.well-known/acme-challenge {
+    }
+
+    location / {
+        proxy_pass http://192.168.14.2;
+{% include "_proxy_config.j2" %}
+    }
+}
+{#
+server {
+    listen 443 default_server ssl;
+    server_name _;
+    root /var/www/html;
+
+    location /.well-known/acme-challenge {
+    }
+
+    ssl on;
+    ssl_certificate /etc/letsencrypt/live/<domain-name>/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/<domain-name>/privkey.pem;
+
+    # Copié de
+    # https://botleg.com/stories/https-with-lets-encrypt-and-nginx/
+    location / {
+      proxy_pass          http://192.168.14.2/;
+{% include "_proxy_config.j2" %}
+    }
+}
+#}

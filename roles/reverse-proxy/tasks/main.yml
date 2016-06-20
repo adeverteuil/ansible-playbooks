@@ -1,0 +1,36 @@
+---
+- name: install nginx
+  apt: name=nginx-full state=present
+  tags: [install]
+
+- name: remove default server
+  file:
+    path: /etc/nginx/sites-enabled/defauilt
+    state: absent
+  notify: reload nginx
+  tags: [configure]
+
+- name: configure default and custom proxies
+  template:
+    src: "{{ item }}.j2"
+    dest: /etc/nginx/sites-available/{{ item }}
+  with_items:
+  - default_proxy
+  - custom_proxies
+  notify: reload nginx
+  tags: [configure]
+
+- name: enable the default and custom proxies
+  file:
+    src: ../sites-available/{{ item }}
+    dest: /etc/nginx/sites-enabled/{{ item }}
+    state: link
+  with_items:
+  - default_proxy
+  - custom_proxies
+  notify: reload nginx
+  tags: [serve]
+
+- name: start and enable nginx
+  service: name=nginx state=started enabled=yes
+  tags: [serve]
