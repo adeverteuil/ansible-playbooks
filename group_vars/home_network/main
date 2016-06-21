@@ -75,3 +75,14 @@ letsencrypt_domains:
   - tt-rss.private.deverteuil.net
 webserver_certificate_file: /etc/letsencrypt/live/smtp.deverteuil.net/cert.pem
 webserver_certificate_keyfile: /etc/letsencrypt/live/smtp.deverteuil.net/privkey.pem
+
+nginx_proxy_servers:
+  - name: wp-yves.deverteuil.net
+    proxy_pass: "{{ hostvars['web']['ansible_eth1']['ipv4']['address'] }}"
+    ssl: yes
+  - name: benjamin-wp-test.deverteuil.net
+    proxy_pass: "{{ hostvars['web']['ansible_eth1']['ipv4']['address'] }}"
+    ssl: yes
+  - name: tt-rss.deverteuil.net
+    proxy_pass: "{{ hostvars['web']['ansible_eth1']['ipv4']['address'] }}"
+    ssl: yes
