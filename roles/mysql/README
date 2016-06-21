@@ -1,0 +1,2 @@
+The mysql_root_password variable must be defined
+and there is no default value for it.
