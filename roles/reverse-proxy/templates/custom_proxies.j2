@@ -1,9 +1,9 @@
 # {{ ansible_managed }}
 {% for server in nginx_proxy_servers %}
 
-###
-###   {{ server.name }}
-###
+###                                                            ###
+###{{ server.name|center(60) }}###
+###                                                            ###
 server {
     listen 80;
     server_name {{ server.name }};
@@ -16,6 +16,9 @@ server {
         proxy_pass http://{{ server.proxy_pass }}/;
 {% include "_proxy_config.j2" %}
     }
+{% for line in server.additional_lines|default([]) %}
+    {{ line }}
+{% endfor %}
 }
 {% if server.ssl %}
 
@@ -36,6 +39,9 @@ server {
         proxy_set_header    X-Forwarded-Proto  https;
 {% include "_proxy_config.j2" %}
     }
+{% for line in server.additional_lines|default([]) %}
+    {{ line }}
+{% endfor %}
 }
 {% endif %}
 {% endfor %}

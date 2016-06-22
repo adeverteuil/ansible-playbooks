@@ -89,6 +89,9 @@ nginx_proxy_servers:
   - name: nextcloud.deverteuil.net
     proxy_pass: 192.168.14.4
     ssl: yes
+    additional_lines:
+    - proxy_buffering off;
+    - client_max_body_size 0;
 
 mysql_root_password: "{{ vault_mysql_root_password }}"
 nextcloud_db_password: "{{ vault_nextcloud_db_password }}"

@@ -10,6 +10,16 @@
   - php5-imagick
   tags: [install]
 
+#- name: configure PHP5
+#  lineinfile:
+#    dest: /var/www/nextcloud/something here
+#    line: "{{ item.key }} = {{ item.value }}"
+#    regexp: ^{{ item.key }} *=
+#  with_items:
+#  - {key: post_max_size, value: 1G}
+#  - {key: upload_max_filesize, value: 1G}
+#  tags: [configure]
+
 - name: download and install Nextcloud
   unarchive:
     copy: no
