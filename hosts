@@ -17,6 +17,7 @@ apt
 backup
 nginx
 letsencrypt
+nextcloud
 
 # Datacenter bootstrapping
 # 

@@ -1,0 +1,123 @@
+---
+- name: install packages
+  apt: name={{ item }} state=present
+  with_items:
+  - php5-intl
+  - php5-mcrypt
+  - php5-ldap
+  - php5-gmp
+  - php5-memcached
+  - php5-imagick
+  tags: [install]
+
+- name: download and install Nextcloud
+  unarchive:
+    copy: no
+    src: 'https://download.nextcloud.com/server/releases/nextcloud-9.0.51.tar.bz2'
+    dest: /var/www
+    creates: /var/www/nextcloud
+    owner: root
+    group: www-data
+  notify: apache2
+  tags: [install]
+
+- name: set directory ownerships
+  file:
+    path: /var/www/nextcloud/{{ item }}
+    state: directory
+    owner: www-data
+    group: www-data
+  with_items: [apps, assets, config, data, themes, updater]
+  tags: [install]
+
+- name: set file permissions
+  file:
+    path: /var/www/nextcloud
+    state: directory
+    mode: u=rwX,g=rX,o=
+    recurse: yes
+  tags: [install]
+
+- name: set .htacess file ownership
+  file:
+    path: /var/www/nextcloud/.htaccess
+    state: file
+    owner: www-data
+  tags: [install]
+
+- name: create the virtualhost
+  template:
+    src: virtualhost.conf
+    dest: /etc/apache2/sites-available/nextcloud.conf
+  notify: restart apache2
+  tags: [install]
+
+- name: enable the virtualhost
+  file:
+    src: "../sites-available/nextcloud.conf"
+    dest: /etc/apache2/sites-enabled/nextcloud.conf
+    state: link
+  notify: restart apache2
+  tags: [serve]
+
+- name: disable the default virtualhosts
+  file:
+    path: /etc/apache2/sites-enabled/{{ item }}
+    state: absent
+  with_items: [000-default.conf, default-ssl.conf]
+  notify: restart apache2
+  tags: [serve]
+
+- name: enable apache2 modules
+  apache2_module:
+    name: "{{ item }}"
+    state: present
+  with_items:
+  - rewrite
+  - headers
+  - env
+  - dir
+  - mime
+  - setenvif
+  tags: [install]
+
+- name: configure Nextcloud
+  command: php occ  maintenance:install
+            --database "mysql"
+            --database-host "192.168.14.3"
+            --database-name "nextcloud"
+            --database-user "nextcloud"
+            --database-pass "{{ nextcloud_db_password }}"
+            --admin-user "admin"
+            --admin-pass "{{ nextcloud_admin_password }}"
+            --no-interaction
+  args:
+    chdir: /var/www/nextcloud
+    creates: /var/www/nextcloud/config/config.php
+  become_user: www-data
+  tags: [configure]
+
+- name: configure the trusted domain
+  command: php occ config:system:set trusted_domains 1 --value nextcloud.deverteuil.net
+  args:
+    chdir: /var/www/nextcloud
+  become_user: www-data
+  tags: [configure]
+
+- name: check if user_ldap is enabled
+  command: php occ list ldap --raw
+  args:
+    chdir: /var/www/nextcloud
+  become_user: www-data
+  register: ldap
+  ignore_errors: yes
+  changed_when: false
+  tags: [configure]
+
+- name: enable user_ldap
+  command: php occ app:enable user_ldap
+  args:
+    chdir: /var/www/nextcloud
+  become_user: www-data
+  when: ldap.rc != 0
+  tags: [configure]
