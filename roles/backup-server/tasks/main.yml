@@ -38,6 +38,7 @@
   with_items:
   - disk-backups.key
   - disk-backups2.key
+  - disk-backups3.key
   register: key
   failed_when: not key.stat.exists
   tags: [install]
@@ -49,6 +50,7 @@
   with_items:
   - backups        /dev/disk/by-uuid/83b124a4-826e-4aa5-8e72-a540631cfea3   /root/keys/disk-backups.key    nofail
   - backups2       /dev/disk/by-uuid/e0bd582e-b64f-45c8-9c79-b4539bcb0039   /root/keys/disk-backups2.key   nofail
+  - backups3       /dev/disk/by-uuid/fd244f88-97cb-4252-8c01-733179d06b87   /root/keys/disk-backups3.key   nofail
   notify: reload systemd
   tags: [install]
 
@@ -59,6 +61,7 @@
   with_items:
   - LABEL=backups  /var/lib/backup ext3 rw,noexec,nouser,async,nodev,noauto,nosuid,nofail,x-systemd.automount 0   2
   - LABEL=backups2 /var/lib/backup ext3 rw,noexec,nouser,async,nodev,noauto,nosuid,nofail,x-systemd.automount 0   2
+  - LABEL=backups3 /var/lib/backup ext3 rw,noexec,nouser,async,nodev,noauto,nosuid,nofail,x-systemd.automount 0   2
   notify: reload systemd
   tags: [install]
 
