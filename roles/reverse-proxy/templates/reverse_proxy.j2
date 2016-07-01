@@ -1,9 +1,6 @@
 # {{ ansible_managed }}
-{% for server in nginx_proxy_servers %}
+# Virtual host for {{ server.name }}
 
-###
-###   {{ server.name }}
-###
 server {
     listen 80;
     server_name {{ server.name }};
@@ -38,4 +35,3 @@ server {
     }
 }
 {% endif %}
-{% endfor %}
