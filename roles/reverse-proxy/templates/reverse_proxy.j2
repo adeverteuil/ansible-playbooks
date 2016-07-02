@@ -1,9 +1,9 @@
 # {{ ansible_managed }}
-{% for server in nginx_proxy_servers %}
 
 ###                                                            ###
 ###{{ server.name|center(60) }}###
 ###                                                            ###
+
 server {
     listen 80;
     server_name {{ server.name }};
@@ -44,4 +44,3 @@ server {
 {% endfor %}
 }
 {% endif %}
-{% endfor %}

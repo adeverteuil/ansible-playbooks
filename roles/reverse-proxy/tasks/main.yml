@@ -10,24 +10,37 @@
   notify: reload nginx
   tags: [configure]
 
-- name: configure default and custom proxies
+- name: configure the default proxy
   template:
-    src: "{{ item }}.j2"
-    dest: /etc/nginx/sites-available/{{ item }}
-  with_items:
-  - default_proxy
-  - custom_proxies
+    src: default_proxy.j2
+    dest: /etc/nginx/sites-available/default_proxy
   notify: reload nginx
   tags: [configure]
 
-- name: enable the default and custom proxies
+- name: configure the custom proxies
+  template:
+    src: reverse_proxy.j2
+    dest: /etc/nginx/sites-available/{{ server.name }}
+  with_items: "{{ nginx_proxy_servers }}"
+  loop_control: {loop_var: server}
+  notify: reload nginx
+  tags: [configure]
+
+- name: enable the default proxy
   file:
-    src: ../sites-available/{{ item }}
-    dest: /etc/nginx/sites-enabled/{{ item }}
+    src: ../sites-available/default_proxy
+    dest: /etc/nginx/sites-enabled/default_proxy
     state: link
-  with_items:
-  - default_proxy
-  - custom_proxies
+  notify: reload nginx
+  tags: [serve]
+
+- name: enable the custom proxies
+  file:
+    src: ../sites-available/{{ server.name }}
+    dest: /etc/nginx/sites-enabled/{{ server.name }}
+    state: link
+  with_items: "{{ nginx_proxy_servers }}"
+  loop_control: {loop_var: server}
   notify: reload nginx
   tags: [serve]
 

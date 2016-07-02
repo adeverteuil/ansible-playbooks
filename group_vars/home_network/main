@@ -92,6 +92,9 @@ nginx_proxy_servers:
     additional_lines:
     - proxy_buffering off;
     - client_max_body_size 0;
+  - name: osticket.deverteuil.net
+    proxy_pass: "{{ hostvars['web']['ansible_eth1']['ipv4']['address'] }}"
+    ssl: yes
 
 mysql_root_password: "{{ vault_mysql_root_password }}"
 nextcloud_db_password: "{{ vault_nextcloud_db_password }}"

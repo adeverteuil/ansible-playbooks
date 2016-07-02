@@ -17,6 +17,15 @@
 #  notify: run newaliases
 #  tags: [configure]
 
+- name: add Debian-exim to the mail group
+  # to access /var/run/dovecot/auth-client
+  user:
+    name: Debian-exim
+    groups: mail
+    append: yes
+  notify: reload exim4
+  tags: [install]
+
 - name: enable service smtp in firewalld
   firewalld: service=smtp state=enabled permanent=yes immediate=yes
   tags: [serve]
