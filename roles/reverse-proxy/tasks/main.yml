@@ -13,7 +13,7 @@
 - name: configure the default proxy
   template:
     src: default_proxy.j2
-    dest: /etc/nginx/sites-available/default_proxy.j2
+    dest: /etc/nginx/sites-available/default_proxy
   notify: reload nginx
   tags: [configure]
 
