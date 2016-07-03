@@ -1,0 +1,6 @@
+---
+kanboard_vhost_name: localhost
+kanboard_server_admin: '{{ webserver_serveradmin|default("root@localhost") }}'
+kanboard_vhost_path: /var/www/kanboard
+kanboard_database_name: kanboard
+kanboard_database_user: kanboard
