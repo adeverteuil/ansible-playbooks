@@ -97,3 +97,20 @@ mysql_root_password: "{{ vault_mysql_root_password }}"
 
 kanboard_vhost_name: kanban.deverteuil.net
 kanboard_database_password: "{{ vault_kanboard_database_password }}"
+kanboard_mail_from: kanban@deverteuil.net
+kanboard_ldap_starttls: true
+kanboard_ldap_ssl_verify: false
+kanboard_ldap_server: freeipa.private.deverteuil.net
+kanboard_ldap_user_base_dn: cn=users,cn=accounts,dc=private,dc=deverteuil,dc=net
+kanboard_ldap_bind_type: proxy
+kanboard_ldap_username: uid=kanboard,cn=users,cn=accounts,dc=private,dc=deverteuil,dc=net
+kanboard_ldap_password: "{{ vault_kanboard_ldap_password }}"
+kanboard_ldap_user_filter: (&(uid=%s)(memberOf=cn=kanban_users,cn=groups,cn=accounts,dc=private,dc=deverteuil,dc=net))
+kanboard_ldap_user_creation: true
+kanboard_ldap_group_admin_dn: cn=kanban_admins,cn=groups,cn=accounts,dc=private,dc=deverteuil,dc=net
+kanboard_ldap_group_manager_dn: ""
+kanboard_ldap_group_provider: false
+kanboard_ldap_group_base_dn: cn=groups,cn=accounts,dc=private,dc=deverteuil,dc=net
+kanboard_ldap_group_filter: (&(objectClass=posixGroup)(cn=%s))
+kanboard_ldap_group_user_filter: (&(objectClass=posixGroup)(member=%s,cn=users,cn=accounts,dc=private,dc=deverteuil,dc=net))
+kanboard_ldap_group_attribute_name: uid

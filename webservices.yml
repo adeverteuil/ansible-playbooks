@@ -1,4 +1,10 @@
 ---
+- hosts: mysql,postgresql
+  tasks:
+  - name: gather database servers IP addresses
+    setup:
+      filter: ansible_eth1
+
 - hosts: web
   roles:
   - {role: webserver, tags: [webserver]}

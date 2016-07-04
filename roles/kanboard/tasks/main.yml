@@ -38,6 +38,15 @@
     creates: /var/www/kanboard/index.php
   tags: [install]
 
+- name: configure kanboard
+  template:
+    src: config.php.j2
+    dest: "{{ kanboard_vhost_path }}/config.php"
+    owner: www-data
+    group: www-data
+    mode: 0640
+  tags: [configure]
+
 - name: create the apache2 virtualhost
   template:
     src: virtualhost.conf.j2
@@ -66,4 +75,13 @@
   args:
     creates: /etc/apache2/sites-enabled/kanboard.conf
   notify: restart apache2
+  tags: [serve]
+
+- name: add the cron job
+  cron:
+    name: Kanboard background job
+    user: www-data
+    job: "{{ kanboard_vhost_path }}/kanboard"
+    minute: 0
+    hour: 3
   tags: [serve]
