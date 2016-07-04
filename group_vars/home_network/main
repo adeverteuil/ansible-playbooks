@@ -112,5 +112,5 @@ kanboard_ldap_group_manager_dn: ""
 kanboard_ldap_group_provider: false
 kanboard_ldap_group_base_dn: cn=groups,cn=accounts,dc=private,dc=deverteuil,dc=net
 kanboard_ldap_group_filter: (&(objectClass=posixGroup)(cn=%s))
-kanboard_ldap_group_user_filter: (&(objectClass=posixGroup)(member=%s,cn=users,cn=accounts,dc=private,dc=deverteuil,dc=net))
+kanboard_ldap_group_user_filter: (&(objectClass=posixGroup)(member=uid=%s,cn=users,cn=accounts,dc=private,dc=deverteuil,dc=net))
 kanboard_ldap_group_attribute_name: uid
