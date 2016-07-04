@@ -5,10 +5,10 @@
 /*******************************************************************/
 
 // Enable/Disable debug
-define('DEBUG', true);
+define('DEBUG', {% if kanboard_debug %}true{% else %}false{% endif %});
 
 // Available log drivers: syslog, stderr, stdout or file
-define('LOG_DRIVER', 'file');
+define('LOG_DRIVER', '{{ kanboard_log_driver }}');
 
 // Log filename if the log driver is "file"
 define('LOG_FILE', __DIR__.DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'debug.log');

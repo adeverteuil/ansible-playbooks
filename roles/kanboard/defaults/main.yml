@@ -1,4 +1,6 @@
 ---
+kanboard_debug: false
+kanboard_log_driver: file
 kanboard_vhost_name: localhost
 kanboard_server_admin: '{{ webserver_serveradmin|default("root@localhost") }}'
 kanboard_vhost_path: /var/www/kanboard
