@@ -1,7 +1,14 @@
 ---
+- hosts: mysql,postgresql
+  tasks:
+  - name: gather database servers IP addresses
+    setup:
+      filter: ansible_eth1
+
 - hosts: web
   roles:
   - {role: webserver, tags: [webserver]}
+  - {role: kanboard, tags: [kanboard]}
   # Hosts all web services on the secure interface (secure VLAN)
   # over http only.
 

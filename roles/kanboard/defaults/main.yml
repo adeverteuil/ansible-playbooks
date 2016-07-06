@@ -1,0 +1,31 @@
+---
+kanboard_debug: false
+kanboard_log_driver: file
+kanboard_vhost_name: localhost
+kanboard_server_admin: '{{ webserver_serveradmin|default("root@localhost") }}'
+kanboard_vhost_path: /var/www/kanboard
+kanboard_database_name: kanboard
+kanboard_database_user: kanboard
+kanboard_mail_from: notifications@kanboard.local
+kanboard_ldap_starttls: false
+kanboard_ldap_ssl_verify: true
+kanboard_ldap_server: ""
+kanboard_ldap_bind_type: "anonymous"
+kanboard_ldap_user_base_dn: ""
+kanboard_ldap_username: ""
+kanboard_ldap_password: ""
+kanboard_ldap_user_filter: ""
+kanboard_ldap_user_attribute_username: uid
+kanboard_ldap_user_attribute_fullname: cn
+kanboard_ldap_user_attribute_email: mail
+kanboard_ldap_user_attribute_groups: memberof
+kanboard_ldap_user_attribute_photo: ""
+kanboard_ldap_user_attribute_language: ""
+kanboard_ldap_user_creation: true
+kanboard_ldap_group_admin_dn: ""
+kanboard_ldap_group_manager_dn: ""
+kanboard_ldap_group_provider: false
+kanboard_ldap_group_base_dn: ""
+kanboard_ldap_group_filter: ""
+kanboard_ldap_group_user_filter: ""
+kanboard_ldap_group_attribute_name: ""

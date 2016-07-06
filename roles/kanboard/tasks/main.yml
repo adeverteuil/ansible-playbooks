@@ -1,0 +1,87 @@
+---
+- name: install dependencies
+  apt: name={{ item }} state=present
+  with_items:
+  - php5-sqlite
+  notify: restart apache2
+  tags: [install]
+
+- name: download the source
+  get_url:
+    url: https://kanboard.net/kanboard-1.0.30.zip
+    dest: /root/kanboard-1.0.30.zip
+  tags: [install]
+
+- name: extract the source
+  unarchive:
+    copy: no
+    src: /root/kanboard-1.0.30.zip
+    dest: /root/
+    creates: /root/kanboard/index.php
+  tags: [install]
+
+- name: create the document root
+  file:
+    path: /var/www/kanboard
+    state: directory
+    owner: www-data
+    group: www-data
+  tags: [install]
+
+- name: copy files into document root
+  command: rsync /root/kanboard/ /var/www/kanboard
+                 --recursive
+                 --chown=www-data:www-data
+                 --chmod=ug=rwX,o=
+                 --owner --group
+  args:
+    creates: /var/www/kanboard/index.php
+  tags: [install]
+
+- name: configure kanboard
+  template:
+    src: config.php.j2
+    dest: "{{ kanboard_vhost_path }}/config.php"
+    owner: www-data
+    group: www-data
+    mode: 0640
+  tags: [configure]
+
+- name: create the apache2 virtualhost
+  template:
+    src: virtualhost.conf.j2
+    dest: /etc/apache2/sites-available/kanboard.conf
+  tags: [install]
+
+- name: create the database
+  delegate_to: mysql
+  mysql_db:
+    name: "{{ kanboard_database_name }}"
+    state: present
+  tags: [install]
+
+- name: create the database user
+  delegate_to: mysql
+  mysql_user:
+    name: "{{ kanboard_database_user }}"
+    priv: "{{ kanboard_database_name }}.*:ALL"
+    host: "{{ hostvars['web']['ansible_eth1']['ipv4']['address'] }}"
+    state: present
+    password: "{{ kanboard_database_password }}"
+  tags: [install]
+
+- name: enable the virtualhost
+  command: a2ensite kanboard
+  args:
+    creates: /etc/apache2/sites-enabled/kanboard.conf
+  notify: restart apache2
+  tags: [serve]
+
+- name: add the cron job
+  cron:
+    name: Kanboard background job
+    user: www-data
+    job: "{{ kanboard_vhost_path }}/kanboard"
+    minute: 0
+    hour: 3
+  tags: [serve]
