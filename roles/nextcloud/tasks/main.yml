@@ -131,3 +131,11 @@
   become_user: www-data
   when: ldap.rc != 0
   tags: [configure]
+
+- name: enable the cron job
+  cron:
+    name: Nextcloud maintenance jobs
+    job: /usr/bin/php /var/www/nextcloud/cron.php
+    minute: "*/15"
+    user: www-data
+  tags: [serve]
