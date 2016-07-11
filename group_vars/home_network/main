@@ -24,7 +24,7 @@ common_resolvers: [192.168.13.8, 192.168.13.88]
 #named_forwarders: [206.123.6.230, 199.84.54.230]
 named_forwarders: [8.8.8.8, 8.8.4.4]
 
-named_allowed_recursion_ips: [127.0.0.1, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16]
+named_allow_recursion_ips: [127.0.0.1, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16]
 named_zones: |
   zone "iweb.com" IN {
       type forward;

@@ -1,5 +1,20 @@
 ---
 named_forwarders: []
-named_allowed_recursion_ips: [127.0.0.1]
+named_allow_recursion_ips: [127.0.0.1]
+named_allow_transfer_ips: [none]
+named_allow_notify_ips: [none]
+named_masters: []
 named_logging: no
 named_master: yes
+named_static_zones: []
+_named_static_zones:
+  - origin: host.example.com
+    ttl: 3600
+    records:
+    - {name: "@", type: A, ttl: 600, rdata: 192.168.0.1}
+named_dynamic_zones: []
+_named_dynamic_zones:
+  - origin: host.example.com
+    ttl: 3600
+    records:
+    - {name: "@", type: A, ttl: 600, rdata: 192.168.0.1}
