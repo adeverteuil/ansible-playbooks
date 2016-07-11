@@ -7,6 +7,22 @@
 // organization
 //include "/etc/bind/zones.rfc1918";
 
+// Static zones
+
+{% for zone in named_static_zones %}
+zone "{{ zone.origin }}" IN {
+{% if named_master %}
+    type master;
+{% else %}
+    type slave;
+    masters { 192.168.13.8; };
+{% endif %}
+    file "/etc/bind/db.{{ zone.origin }}";
+};
+{% endfor %}
+
+// Dynamic zones
+
 zone "{{ bind_localdomain }}" IN {
 {% if named_master %}
     type master;

@@ -6,20 +6,3 @@
   with_items: "{{ named_static_zones }}"
   notify: reload bind
   tags: [configure]
-
-- name: include the zone in named.conf.local
-  blockinfile:
-    dest: /etc/bind/named.conf.local
-    marker: // {mark} ANSIBLE MANAGED BLOCK {{ item.origin }}
-    block: |
-      zone "{{ item.origin }}" {
-      {% if named_master %}
-          type master;
-      {% else %}
-          type slave;
-      {% endif %}
-          file "/etc/bind/db.{{ item.origin }}";
-      };
-  with_items: "{{ named_static_zones }}"
-  notify: reload bind
-  tags: [configure]

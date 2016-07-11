@@ -13,7 +13,7 @@ options {
         // the all-0's placeholder.
 
 {% if named_forwarders %}
-        forwarders { {% for f in named_forwarders %}{{f}}; {% endfor %}};
+        forwarders { {% for ip in named_forwarders %}{{ ip }}; {% endfor %}};
 {% else %}
         // forwarders {
         //      0.0.0.0;
@@ -29,12 +29,9 @@ options {
         auth-nxdomain no;    # conform to RFC1035
         //listen-on-v6 { any; };
 
-        allow-recursion { {% for f in named_allow_recursion_ips %}{{f}}; {% endfor %}};
-{% if named_master %}
-        allow-transfer { 192.168.13.88; };
-{% else %}
-        allow-notify { 192.168.13.8; };
-{% endif %}
+        allow-recursion { {% for ip in named_allow_recursion_ips %}{{ ip }}; {% endfor %}};
+        allow-transfer { {% for ip in named_allow_transfer_ips %}{{ ip }}; {% endfor %}};
+        allow-notify { {% for ip in named_allow_notify_ips %}{{ ip }}; {% endfor %}};
         allow-update { none; };
 
         version none;

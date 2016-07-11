@@ -1,6 +1,8 @@
 ---
 named_forwarders: []
 named_allow_recursion_ips: [127.0.0.1]
+named_allow_transfer_ips: [none]
+named_allow_notify_ips: [none]
 named_logging: no
 named_master: yes
 named_static_zones: []
