@@ -17,44 +17,30 @@
   notify: reload bind
   tags: [install]
 
-#- name: sync journal file changes for dynamic zones to the master files
-#  command: rndc sync
-#  when: "{{ named_master }}"
-#
-#- name: check if dynamic resource records exist
-#  command: grep '"^{{ item.1.name }} " /var/lib/bind/db.{{ item.0.origin }}'
-#  register: grep
-#  when: "{{ named_master }}"
-#  failed_when: no
-#  changed_when: no
-#  with_subelements:
-#  - "{{ named_dynamic_zones }}"
-#  - records
+- name: sync journal file changes for dynamic zones to the master files
+  command: rndc sync
+  when: "{{ named_master }}"
 
-#- name: add dynamic RRs
-#  dnsupdate:
-#    mname: "127.0.0.1"
-#    keyname: DHCP_UPDATER
-#    secret: "{{ dhcp_update_key }}"
-#    zone: private.deverteuil.net
-#    domain: test
-#    ttl: 600
-#    rtype: A
-#    rdata: 192.168.13.240
-#    op: add
-#  when: "{{ named_master }} and {{ grep.rc"
+- name: check if dynamic resource records exist
+  command: grep "^{{ item.1.name }}\s.*\s{{ item.1.type }}\s*{{ item.1.rdata }}" /var/lib/bind/db.{{ item.0.origin }}
+  register: grep_zones
+  when: "{{ named_master }}"
+  failed_when: no
+  changed_when: no
+  with_subelements:
+  - "{{ named_dynamic_zones }}"
+  - records
 
 - name: add dynamic RRs
   dnsupdate:
     mname: "127.0.0.1"
     keyname: DHCP_UPDATER
     secret: "{{ dhcp_update_key }}"
-    zone: "{{ item.0.origin }}"
-    domain: "{{ item.1.name }}"
+    zone: "{{ item.item.0.origin }}"
+    domain: "{{ item.item.1.name }}"
     ttl: 600
-    rtype: "{{ item.1.type }}"
-    rdata: "{{ item.1.rdata }}"
+    rtype: "{{ item.item.1.type }}"
+    rdata: "{{ item.item.1.rdata }}"
     op: add
-  with_subelements:
-  - "{{ named_dynamic_zones }}"
-  - records
+  with_items: "{{ grep_zones.results }}"
+  when: "{{ item.rc }} != 0"
