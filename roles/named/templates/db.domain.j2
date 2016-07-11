@@ -6,10 +6,6 @@ $TTL    {{ item.ttl|default("600") }}
                                         1800       ; Retry
                                         604800     ; Expire - 1 week
                                         86400 )    ; Minimum
-                IN      NS      ns1
-                IN      NS      ns2
-ns1             IN      A       192.168.13.8
-ns2             IN      A       192.168.13.88
 {% for rr in item.records %}
 {{ rr }}
 {% endfor %}

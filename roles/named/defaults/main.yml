@@ -3,12 +3,20 @@ named_forwarders: []
 named_allow_recursion_ips: [127.0.0.1]
 named_allow_transfer_ips: [none]
 named_allow_notify_ips: [none]
+named_masters: []
 named_logging: no
 named_master: yes
 named_static_zones: []
 _named_static_zones:
   - origin: host.example.com
     ttl: 3600
+    records:
+    - "@ IN A 600 192.168.13.1"
+    - "@ IN A     host2.localnet.example.com"
+named_dynamic_zones: []
+_named_dynamic_zones:
+  - origin: host.example.com
+    ttl: 600
     records:
     - "@ IN A 600 192.168.13.1"
     - "@ IN A     host2.localnet.example.com"

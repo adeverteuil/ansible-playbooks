@@ -1,8 +1,18 @@
 ---
-- name: create the zone file
+- name: create static zone files
   template:
     src: db.domain.j2
     dest: /etc/bind/db.{{ item.origin }}
   with_items: "{{ named_static_zones }}"
   notify: reload bind
   tags: [configure]
+
+- name: create dynamic zone files
+  template:
+    src: db.domain.j2
+    dest: /var/lib/bind/db.{{ item.origin }}
+    force: no
+  when: named_master
+  with_items: "{{ named_dynamic_zones }}"
+  notify: reload bind
+  tags: [install]
