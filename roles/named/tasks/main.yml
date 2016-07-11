@@ -43,6 +43,8 @@
   notify: reload bind
   tags: [install]
 
+- include: zones.yml
+
 - name: create a directory to extend bind9.service
   file:
     path: /etc/systemd/system/bind9.service.d
