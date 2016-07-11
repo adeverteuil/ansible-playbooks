@@ -1,3 +1,5 @@
+; {{ ansible_managed }}
+
 $ORIGIN {{ item.origin }}.
 $TTL    {{ item.ttl|default("600") }}
 @       IN      SOA     {{ ansible_hostname }}.{{ bind_localdomain }}. {{ bind_domainadmin }}. (
