@@ -7,5 +7,5 @@ $TTL    {{ item.ttl|default("600") }}
                                         604800     ; Expire - 1 week
                                         86400 )    ; Minimum
 {% for rr in item.records %}
-{{ rr }}
+{{ rr.name }}  {{ rr.ttl|default("") }}  {{ rr.type }}  {{ rr.rdata }}
 {% endfor %}

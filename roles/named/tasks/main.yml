@@ -1,7 +1,7 @@
 ---
-- name: install bind9 and bind9-doc
+- name: install required packages
   apt: name={{ item }} state=present
-  with_items: [bind9, bind9-doc]
+  with_items: [bind9, bind9-doc, python-dnspython]
   tags: [install]
 
 - name: write the rndc key file

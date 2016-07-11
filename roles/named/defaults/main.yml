@@ -11,12 +11,10 @@ _named_static_zones:
   - origin: host.example.com
     ttl: 3600
     records:
-    - "@ IN A 600 192.168.13.1"
-    - "@ IN A     host2.localnet.example.com"
+    - {name: "@", type: A, ttl: 600, rdata: 192.168.0.1}
 named_dynamic_zones: []
 _named_dynamic_zones:
   - origin: host.example.com
-    ttl: 600
+    ttl: 3600
     records:
-    - "@ IN A 600 192.168.13.1"
-    - "@ IN A     host2.localnet.example.com"
+    - {name: "@", type: A, ttl: 600, rdata: 192.168.0.1}

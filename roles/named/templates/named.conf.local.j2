@@ -29,11 +29,11 @@ zone "{{ zone.origin }}" IN {
 zone "{{ zone.origin }}" IN {
 {% if named_master %}
     type master;
-    file "/var/lib/bind/{{ zone.origin }}.db";
+    file "/var/lib/bind/db.{{ zone.origin }}";
     allow-update { key DHCP_UPDATER; };
 {% else %}
     type slave;
-    file "/var/cache/bind/{{ zone.origin }}.db";
+    file "/var/cache/bind/db.{{ zone.origin }}";
     masters { {% for ip in named_masters %}{{ ip }}; {% endfor %}};
 {% endif %}
 };
