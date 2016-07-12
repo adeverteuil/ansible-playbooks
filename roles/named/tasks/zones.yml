@@ -3,6 +3,7 @@
   template:
     src: db.domain.j2
     dest: /etc/bind/db.{{ item.origin }}
+  when: named_master
   with_items: "{{ named_static_zones }}"
   notify: reload bind
   tags: [configure]
@@ -15,11 +16,12 @@
   when: named_master
   with_items: "{{ named_dynamic_zones }}"
   notify: reload bind
-  tags: [install]
+  tags: [configure]
 
 - name: sync journal file changes for dynamic zones to the master files
   command: rndc sync
   when: "{{ named_master }}"
+  tags: [configure]
 
 - name: check if dynamic resource records exist
   command: grep "^{{ item.1.name }}\s.*\s{{ item.1.type }}\s*{{ item.1.rdata }}" /var/lib/bind/db.{{ item.0.origin }}
@@ -30,6 +32,7 @@
   with_subelements:
   - "{{ named_dynamic_zones }}"
   - records
+  tags: [configure]
 
 - name: add dynamic RRs
   dnsupdate:
@@ -43,4 +46,5 @@
     rdata: "{{ item.item.1.rdata }}"
     op: add
   with_items: "{{ grep_zones.results }}"
-  when: "{{ item.rc }} != 0"
+  when: "named_master and item.rc != 0"
+  tags: [configure]
