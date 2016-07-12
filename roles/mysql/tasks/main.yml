@@ -23,3 +23,16 @@
     dest: /root/.my.cnf
     mode: 0600
   tags: [install]
+
+- name: create a backup directory for database dumps
+  file:
+    path: /var/backups/mysql
+    state: directory
+  tags: [install]
+
+- name: perform a daily database dump
+  copy:
+    src: mysqldump_cronjob.sh
+    dest: /etc/cron.daily/mysqldump
+    mode: 0755
+  tags: [serve]

@@ -1,15 +1,13 @@
-$ORIGIN 13.168.192.in-addr.arpa.
-$TTL 1h
+; {{ ansible_managed }}
+
+$ORIGIN {{ item.origin }}.
+$TTL    {{ item.ttl|default("600") }}
 @       IN      SOA     {{ ansible_hostname }}.{{ bind_localdomain }}. {{ bind_domainadmin }}. (
                                         {{ ansible_date_time.epoch }} ; Serial
                                         28800      ; Refresh
                                         1800       ; Retry
                                         604800     ; Expire - 1 week
                                         86400 )    ; Minimum
-                IN      NS      ns1
-                IN      NS      ns2
-ns1             IN      A       192.168.13.8
-ns2             IN      A       192.168.13.88
-3               IN      PTR     dhcp.priavte.deverteuil.net.
-8               IN      PTR     ns1.private.deverteuil.net.
-88              IN      PTR     ns2.private.deverteuil.net.
+{% for rr in item.records %}
+{{ rr.name }}  {{ rr.ttl|default("") }}  {{ rr.type }}  {{ rr.rdata }}
+{% endfor %}

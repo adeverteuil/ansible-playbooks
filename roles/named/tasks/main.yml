@@ -1,7 +1,7 @@
 ---
-- name: install bind9 and bind9-doc
+- name: install required packages
   apt: name={{ item }} state=present
-  with_items: [bind9, bind9-doc]
+  with_items: [bind9, bind9-doc, python-dnspython]
   tags: [install]
 
 - name: write the rndc key file
@@ -21,27 +21,11 @@
     mode: 0640
     owner: root
     group: bind
-  with_items: ["", .options, .local]
+  with_items: [.options, .local]
   notify: reload bind
   tags: [configure]
 
-- name: install minimal localdomain zone file
-  template:
-    src: localdomain.db.j2
-    dest: /var/lib/bind/{{ bind_localdomain }}.db
-    force: no
-  when: named_master
-  notify: reload bind
-  tags: [install]
-
-- name: install minimal localdomain rDNS zone file
-  template:
-    src: rdns.db.j2
-    dest: /var/lib/bind/13.168.192.in-addr.arpa.db
-    force: no
-  when: named_master
-  notify: reload bind
-  tags: [install]
+- include: zones.yml
 
 - name: create a directory to extend bind9.service
   file:

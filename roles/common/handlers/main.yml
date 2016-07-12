@@ -7,3 +7,6 @@
 
 - name: run locale-gen
   command: locale-gen
+
+- name: update grub configuration
+  command: update-grub

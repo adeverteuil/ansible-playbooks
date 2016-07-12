@@ -1,0 +1,12 @@
+<VirtualHost 192.168.14.2:80>
+    ServerName {{ kanboard_vhost_name }}
+
+    ServerAdmin {{ kanboard_server_admin }}
+
+    DocumentRoot {{ kanboard_vhost_path }}
+
+    ErrorLog ${APACHE_LOG_DIR}/kanboard.error.log
+    CustomLog ${APACHE_LOG_DIR}/kanboard.access.log combined
+</VirtualHost>
+
+# vim: syntax=apache ts=4 sw=4 sts=4 sr et

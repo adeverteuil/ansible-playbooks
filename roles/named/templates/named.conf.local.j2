@@ -7,36 +7,37 @@
 // organization
 //include "/etc/bind/zones.rfc1918";
 
-zone "{{ bind_localdomain }}" IN {
+// Static zones
+
+{% for zone in named_static_zones %}
+zone "{{ zone.origin }}" IN {
 {% if named_master %}
     type master;
-    file "/var/lib/bind/{{ bind_localdomain }}.db";
-    allow-update { key DHCP_UPDATER; };
+    file "/etc/bind/db.{{ zone.origin }}";
 {% else %}
     type slave;
-    file "/var/cache/bind/{{ bind_localdomain }}.db";
+    file "/var/cache/bind/db.{{ zone.origin }}";
     masters { 192.168.13.8; };
 {% endif %}
 };
-zone "13.168.192.in-addr.arpa" IN {
+{% else %}
+// (no static zones defined)
+{% endfor %}
+
+// Dynamic zones
+
+{% for zone in named_dynamic_zones %}
+zone "{{ zone.origin }}" IN {
 {% if named_master %}
     type master;
-    file "/var/lib/bind/13.168.192.in-addr.arpa.db";
+    file "/var/lib/bind/db.{{ zone.origin }}";
     allow-update { key DHCP_UPDATER; };
 {% else %}
     type slave;
-    file "/var/cache/bind/13.168.192.in-addr.arpa.db";
-    masters { 192.168.13.8; };
+    file "/var/cache/bind/db.{{ zone.origin }}";
+    masters { {% for ip in named_masters %}{{ ip }}; {% endfor %}};
 {% endif %}
 };
-zone "42.168.192.in-addr.arpa" IN {
-{% if named_master %}
-    type master;
-    file "/var/lib/bind/42.168.192.in-addr.arpa.db";
-    allow-update { key DHCP_UPDATER; };
 {% else %}
-    type slave;
-    file "/var/cache/bind/42.168.192.in-addr.arpa.db";
-    masters { 192.168.13.8; };
-{% endif %}
-};
+// (no dynamic zones defined)
+{% endfor %}

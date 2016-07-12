@@ -130,3 +130,19 @@
     path: /etc/motd
     state: absent
   tags: [configure]
+
+- name: enable the serial port in grub
+  lineinfile:
+    dest: /etc/default/grub
+    line: '{{ item.param }}="{{ item.val }}"'
+    regexp: ^#?{{ item.param }}=
+  with_items:
+  - {param: GRUB_CMDLINE_LINUX, val: "console=tty0 console=ttyS0,{{ common_serial_console_speed }}n8"}
+  - {param: GRUB_TERMINAL, val: serial}
+  - {param: GRUB_SERIAL_COMMAND, val: "serial --speed={{ common_serial_console_speed }} --unit=0 --word=8 --parity=no --stop=1"}
+  notify: update grub configuration
+  tags: [configure]
+
+- name: start a terminal on the serial port
+  service: name=serial-getty@ttyS0 state=started
+  tags: [serve]
