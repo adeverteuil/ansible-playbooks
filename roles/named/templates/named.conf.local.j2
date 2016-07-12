@@ -13,11 +13,12 @@
 zone "{{ zone.origin }}" IN {
 {% if named_master %}
     type master;
+    file "/etc/bind/db.{{ zone.origin }}";
 {% else %}
     type slave;
+    file "/var/cache/bind/db.{{ zone.origin }}";
     masters { 192.168.13.8; };
 {% endif %}
-    file "/etc/bind/db.{{ zone.origin }}";
 };
 {% else %}
 // (no static zones defined)
