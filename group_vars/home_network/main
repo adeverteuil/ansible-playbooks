@@ -118,10 +118,8 @@ kanboard_ldap_group_attribute_name: uid
 named_static_zones:
 - origin: nextcloud.deverteuil.net
   records: &my_reverse_proxy
-  - {name: "",  type: NS, rdata: ns1}
-  - {name: "",  type: NS, rdata: ns2}
-  - {name: ns1, type: A,  rdata: 192.168.13.8}
-  - {name: ns2, type: A,  rdata: 192.168.13.88}
+  - {name: "",  type: NS, rdata: ns1.private.deverteuil.net.}
+  - {name: "",  type: NS, rdata: ns2.private.deverteuil.net.}
   - {name: "@", type: A,  rdata: 192.168.13.11}
 - origin: kanban.deverteuil.net
   records: *my_reverse_proxy
@@ -131,10 +129,8 @@ named_static_zones:
   records: *my_reverse_proxy
 - origin: smtp.deverteuil.net
   records:
-  - {name: "",  type: NS, rdata: ns2}
-  - {name: "",  type: NS, rdata: ns2}
-  - {name: ns1, type: A,  rdata: 192.168.13.8}
-  - {name: ns2, type: A,  rdata: 192.168.13.88}
+  - {name: "",  type: NS, rdata: ns1.private.deverteuil.net.}
+  - {name: "",  type: NS, rdata: ns2.private.deverteuil.net.}
   - {name: "@", type: A,  rdata: 192.168.13.9}
 named_dynamic_zones:
 - origin: private.deverteuil.net
@@ -151,10 +147,8 @@ named_dynamic_zones:
   - {name: proton,  type: A,  rdata: 192.168.42.20}
 - origin: 13.168.192.in-addr.arpa
   records:
-  - {name: "",  type: NS,  rdata: ns1}
-  - {name: "",  type: NS,  rdata: ns2}
-  - {name: ns1, type: A,   rdata: 192.168.13.8}
-  - {name: ns2, type: A,   rdata: 192.168.13.88}
+  - {name: "",  type: NS,  rdata: ns1.private.deverteuil.net.}
+  - {name: "",  type: NS,  rdata: ns2.private.deverteuil.net.}
   - {name: 8,   type: PTR, rdata: ns1.private.deverteuil.net.}
   - {name: 88,  type: PTR, rdata: ns2.private.deverteuil.net.}
   - {name: 3,   type: PTR, rdata: dhcp.private.deverteuil.net.}
@@ -164,8 +158,6 @@ named_dynamic_zones:
   - {name: 10,  type: PTR, rdata: tor.private.deverteuil.net.}
 - origin: 42.168.192.in-addr.arpa
   records:
-  - {name: "",  type: NS,  rdata: ns1}
-  - {name: "",  type: NS,  rdata: ns2}
-  - {name: ns1, type: A,   rdata: 192.168.13.8}
-  - {name: ns2, type: A,   rdata: 192.168.13.88}
+  - {name: "",  type: NS,  rdata: ns1.private.deverteuil.net.}
+  - {name: "",  type: NS,  rdata: ns2.private.deverteuil.net.}
   - {name: 20,   type: PTR, rdata: proton.private.deverteuil.net.}
