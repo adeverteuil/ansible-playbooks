@@ -10,8 +10,12 @@ server {
     }
 
     location / {
+{% if server.ssl %}
+        return 301 https://$server_name$request_uri;
+{% else %}
         proxy_pass http://{{ server.proxy_pass }}/;
 {% include "_proxy_config.j2" %}
+{% endif %}
     }
 }
 {% if server.ssl %}
