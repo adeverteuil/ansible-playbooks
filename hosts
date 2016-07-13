@@ -1,4 +1,4 @@
-freeipa
+freeipa  # Isolated because not Debian 8
 
 [home_network]
 fixion
@@ -16,15 +16,14 @@ smtp
 apt
 backup
 nginx
-letsencrypt
 
 # Datacenter bootstrapping
+# Create and configure hosts in this order
 # 
-# 1. fixion
-# 2. ns1 (ns2 whenever later)
+# 1. fixion   -- the hypervisor host
+# 2. ns1      -- and ns2 whenever later
 # 3. dhcp
-# 4. unifi
-# 5. freeipa
-#
-# 6. web (eventually for letsencrypt dependency)
+# 4. unifi    -- Wi-Fi AP controller software
+# 5. freeipa  -- Can be done later but simplifies life
+# 6. reverse-proxy
 # 7. the rest
