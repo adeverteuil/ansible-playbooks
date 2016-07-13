@@ -1,5 +1,0 @@
----
-exim_local_domains: [deverteuil.net]
-exim_postmaster: alex
-exim_local_aliases: ["alexandre: alex"]
-exim_no_sender_verify_domains: [acs-agiledash.corp.internap.com]
