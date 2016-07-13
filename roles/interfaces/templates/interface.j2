@@ -1,0 +1,16 @@
+{% if item.method == "dhcp" %}
+allow-hotplug {{ item.name }}
+iface {{ item.name }} inet dhcp
+{% elif item.method == "static" %}
+allow-hotplug {{ item.name }}
+iface {{ item.name }} inet static
+    address {{ item.address }}
+    netmask {{ item.netmask }}
+    network {{ item.network }}
+    broadcast {{ item.broadcast }}
+{% if item.gateway is defined %}
+    gateway {{ item.gateway }}
+{% endif %}
+{% else %}
+iface {{ item.name }} inet manual
+{% endif %}

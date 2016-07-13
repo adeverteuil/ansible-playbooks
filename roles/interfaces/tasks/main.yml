@@ -1,0 +1,16 @@
+---
+- name: configure the interface
+  template:
+    src: interface.j2
+    dest: /etc/network/interfaces.d/{{ item.name }}
+  with_items: "{{ interfaces }}"
+  notify: restart networking
+  tags: [configure]
+
+- name: overwrite /etc/network/interfaces
+  template:
+    src: interfaces.j2
+    dest: /etc/network/interfaces
+  when: "{{ interfaces_overwrite_e_n_i }}"
+  notify: restart networking
+  tags: [configure]

@@ -1,3 +1,5 @@
 ---
 - hosts: home_network
-  roles: [common]
+  roles:
+  - {role: common, tags: [common]}
+  - {role: interfaces, tags: [interfaces]}
