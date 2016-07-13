@@ -10,20 +10,6 @@ timeserver_upstream_servers:
 
 common_resolvers: [192.168.13.8, 192.168.13.88]
 
-#named_forwarders: [206.123.6.230, 199.84.54.230]
-named_forwarders: [8.8.8.8, 8.8.4.4]
-named_allow_recursion_ips: [127.0.0.1, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16]
-named_zones: |
-  zone "iweb.com" IN {
-      type forward;
-      forwarders { 172.17.131.34; 172.16.131.34; };
-  };
-
-  zone "iw.ca" IN {
-      type forward;
-      forwarders { 172.17.131.34; 172.16.131.34; };
-  };
-
 munin_managed_switch_ip: 192.168.13.2
 munin_managed_switch_community: "{{ vault_munin_managed_switch_community}}"
 munin_ssh_private_key: "{{ vault_munin_ssh_private_key }}"
@@ -93,6 +79,9 @@ kanboard_ldap_group_filter: (&(objectClass=posixGroup)(cn=%s))
 kanboard_ldap_group_user_filter: (&(objectClass=posixGroup)(member=uid=%s,cn=users,cn=accounts,dc=private,dc=deverteuil,dc=net))
 kanboard_ldap_group_attribute_name: uid
 
+#named_forwarders: [206.123.6.230, 199.84.54.230]
+named_forwarders: [8.8.8.8, 8.8.4.4]
+named_allow_recursion_ips: [127.0.0.1, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16]
 named_static_zones:
 - origin: nextcloud.deverteuil.net
   records: &my_reverse_proxy
