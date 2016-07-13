@@ -25,5 +25,7 @@ nginx
 # 3. dhcp
 # 4. unifi    -- Wi-Fi AP controller software
 # 5. freeipa  -- Can be done later but simplifies life
-# 6. reverse-proxy
-# 7. the rest
+# 6. nginx    -- reverse-proxy
+# 7. mysql and postgresql
+# 8. web
+# 9. the rest
