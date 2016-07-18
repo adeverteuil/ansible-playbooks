@@ -1,5 +1,5 @@
 ---
-- hosts: mysql,postgresql
+- hosts: mysql,postgresql,zabbix
   tasks:
   - name: gather database servers IP addresses
     setup:
