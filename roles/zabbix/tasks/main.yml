@@ -47,8 +47,27 @@
   - data
   tags: [install]
 
-- name: configure Zabbix
+- name: configure Zabbix frontend
   template:
     src: zabbix.conf.php.j2
     dest: /etc/zabbix/zabbix.conf.php
   tags: [configure]
+
+- name: configure zabbix-server
+  template:
+    src: zabbix_server.conf.j2
+    dest: /etc/zabbix/zabbix_server.conf
+  notify: restart zabbix-server
+  tags: [configure]
+
+- name: enable zabbix-server
+  lineinfile:
+    dest: /etc/default/zabbix-server
+    line: START=yes
+    regexp: ^START
+  notify: restart zabbix-server
+  tags: [serve]
+
+- name: start and enable zabbix-server
+  service: name=zabbix-server state=started enabled=yes
+  tags: [serve]
