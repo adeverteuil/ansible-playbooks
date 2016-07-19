@@ -22,4 +22,8 @@
 - hosts: zabbix
   roles:
   - {role: webserver, tags: [webserver]}
-  - {role: zabbix, tags: [zabbix]}
+  - {role: zabbix-server, tags: [zabbix-server]}
+
+- hosts: home_network
+  roles:
+  - {role: zabbix-agent, tags: [zabbix-agent]}
