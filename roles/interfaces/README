@@ -1,0 +1,27 @@
+Configures a secondary NIC which is connected to a trusted, private
+network. It is used for services to communicate with eachother in
+plaintext.
+
+Examples:
+    reverse-proxy and web services
+    web services and database
+
+
+The {{ interfaces }} variable must be define for each host which has the
+interface role. It is a list of interfaces to configure.
+
+If {{ interfaces_overwrite_e_n_i }} is true, then
+/etc/network/interfaces will be overwritten to remove all interface
+configurations except the loopback interface and the inclusion of
+interface.d/* files.
+
+interfaces:
+- name: eth1
+  method: static
+  address: 192.168.14.2
+  network: 192.168.14.0
+  broadcast: 192.168.14.255
+  netmask: 255.255.255.0
+- name: eth0
+  method: dhcp
+interfaces_overwrite_e_n_i: <boolean>

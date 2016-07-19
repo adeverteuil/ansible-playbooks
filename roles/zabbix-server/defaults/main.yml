@@ -1,0 +1,3 @@
+---
+zabbix_database_name: zabbix_server
+zabbix_database_user: zabbix_server

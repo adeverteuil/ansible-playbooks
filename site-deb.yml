@@ -1,5 +1,0 @@
----
-- hosts: dhcp
-  roles: [dhcp]
-- hosts: ns2,ns1
-  roles: [named]

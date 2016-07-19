@@ -1,0 +1,38 @@
+---
+- name: install packages
+  apt: name={{ item }} state=present
+  with_items:
+  - zabbix-agent
+  tags: [install]
+
+- name: configure zabbix-agentd
+  template:
+    src: zabbix_agentd.conf.j2
+    dest: /etc/zabbix/zabbix_agentd.conf
+  notify: restart zabbix-agent
+  tags: [configure]
+
+- name: open the TCP port
+  firewalld:
+    port: 10050/tcp
+    state: enabled
+    permanent: yes
+    immediate: yes
+  tags: [serve]
+
+#- name: add the host in zabbix server
+#  local_action:
+#    module: zabbix_host
+#    server_url: https://monitoring.deverteuil.net/
+#    login_user: "{{ zabbix_login_user }}"
+#    login_password: "{{ zabbix_login_password }}"
+#    host_name: "{{ ansible_fqdn }}"
+#    host_groups:
+#    - Linux servers
+#    interfaces:
+#    - type: 1
+#      main: 1
+#      useip: 0
+#      ip:
+#      dns: "{{ ansible_fqdn }}"
+#      port: 0

@@ -1,0 +1,8 @@
+---
+interfaces:
+- name: eth1
+  method: static
+  address: 192.168.14.1
+  netmask: 255.255.255.0
+  network: 192.168.14.0
+  broadcast: 192.168.14.255
