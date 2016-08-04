@@ -1,2 +1,4 @@
 ---
 ansible_python_interpreter: /usr/bin/python2
+
+exim_root_alias: alexandre@deverteuil.net
