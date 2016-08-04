@@ -1,0 +1,62 @@
+---
+- name: configure PHP for Piwik
+  lineinfile:
+    dest: /etc/php5/apache2/php.ini
+    regexp: ^;?always_populate_raw_post_data =
+    line: always_populate_raw_post_data = -1
+  notify: restart apache2
+  tags: [configure]
+
+- name: download the source
+  get_url:
+    url: https://builds.piwik.org/piwik.zip
+    dest: /root/piwik.zip
+  tags: [install]
+
+- name: extract the source
+  unarchive:
+    copy: no
+    src: /root/piwik.zip
+    dest: /root/
+    creates: /root/piwik/index.php
+  tags: [install]
+
+- name: create the document root
+  file:
+    path: /var/www/piwik
+    state: directory
+    owner: www-data
+    group: www-data
+  tags: [install]
+
+- name: copy files into document root
+  command: rsync /root/piwik/ /var/www/piwik
+                 --recursive
+                 --chown=www-data:www-data
+                 --chmod=ug=rwX,o=
+                 --owner --group
+  args:
+    creates: /var/www/piwik/index.php
+  tags: [install]
+
+#- name: configure X
+#  template:
+#    src: config.php.j2
+#    dest: /var/www/piwik/config.php
+#    owner: www-data
+#    group: www-data
+#    mode: 0640
+#  tags: [configure]
+
+- name: create the virtual host
+  template:
+    src: virtualhost.conf.j2
+    dest: /etc/apache2/sites-available/piwik.conf
+  tags: [install]
+
+- name: enable the virtualhost
+  command: a2ensite piwik
+  args:
+    creates: /etc/apache2/sites-enabled/piwik.conf
+  notify: restart apache2
+  tags: [serve]

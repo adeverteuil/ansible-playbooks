@@ -56,6 +56,9 @@ nginx_proxy_servers:
   - name: kanban.deverteuil.net
     proxy_pass: "{{ hostvars['web']['ansible_eth1']['ipv4']['address'] }}"
     ssl: yes
+  - name: piwik.deverteuil.net
+    proxy_pass: "{{ hostvars['web']['ansible_eth1']['ipv4']['address'] }}"
+    ssl: yes
 
 mysql_root_password: "{{ vault_mysql_root_password }}"
 
@@ -79,6 +82,8 @@ kanboard_ldap_group_filter: (&(objectClass=posixGroup)(cn=%s))
 kanboard_ldap_group_user_filter: (&(objectClass=posixGroup)(member=uid=%s,cn=users,cn=accounts,dc=private,dc=deverteuil,dc=net))
 kanboard_ldap_group_attribute_name: uid
 
+piwik_database_password: "{{ vault_piwik_database_password }}"
+
 #named_forwarders: [206.123.6.230, 199.84.54.230]
 named_forwarders: [8.8.8.8, 8.8.4.4]
 named_allow_recursion_ips: [127.0.0.1, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16]
@@ -93,6 +98,8 @@ named_static_zones:
 - origin: tt-rss.deverteuil.net
   records: *my_reverse_proxy
 - origin: osticket.deverteuil.net
+  records: *my_reverse_proxy
+- origin: piwik.deverteuil.net
   records: *my_reverse_proxy
 - origin: smtp.deverteuil.net
   records:
