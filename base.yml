@@ -1,5 +1,5 @@
 ---
-- hosts: home_network
+- hosts: home_network,nyj004
   roles:
   - {role: common, tags: [common]}
   - {role: interfaces, tags: [interfaces]}

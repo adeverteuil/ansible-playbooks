@@ -1,5 +1,8 @@
 freeipa  # Isolated because not Debian 8
 
+[nyj004]
+node01.nyj004.deverteuil.net
+
 [home_network]
 fixion
 dhcp
