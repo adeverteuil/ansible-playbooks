@@ -7,6 +7,7 @@
   - virt-what
   - virt-top
   - virt-manager
+  - libguestfs-tools
   tags: [install]
 
 - name: start and enable hypervisor
