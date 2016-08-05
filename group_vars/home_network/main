@@ -58,6 +58,9 @@ nginx_proxy_servers:
   - name: piwik.deverteuil.net
     proxy_pass: "{{ hostvars['web']['ansible_eth1']['ipv4']['address'] }}"
     ssl: yes
+  - name: alexandre.deverteuil.net
+    proxy_pass: "{{ hostvars['web']['ansible_eth1']['ipv4']['address'] }}"
+    ssl: yes
 
 mysql_root_password: "{{ vault_mysql_root_password }}"
 
@@ -99,6 +102,8 @@ named_static_zones:
 - origin: osticket.deverteuil.net
   records: *my_reverse_proxy
 - origin: piwik.deverteuil.net
+  records: *my_reverse_proxy
+- origin: alexandre.deverteuil.net
   records: *my_reverse_proxy
 - origin: smtp.deverteuil.net
   records:

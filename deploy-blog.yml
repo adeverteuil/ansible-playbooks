@@ -1,0 +1,22 @@
+---
+- hosts: 127.0.0.1
+  connection: local
+  tasks:
+
+  - name: generate the site
+    become: no
+    shell: source /home/alex/.virtualenvs/sitepelican/bin/activate ;
+           LC_ALL=en_CA.UTF-8 pelican -qs publishconf.py
+    args:
+      chdir: "{{ staticsite_project_dir }}"
+    tags: [serve]
+  vars:
+    staticsite_project_dir: /home/alex/src/sitepelican
+
+- hosts: web
+  roles: [staticsite]
+  vars:
+    staticsite_project_dir: /home/alex/src/sitepelican
+    staticsite_site_name: blogue_alex
+    staticsite_server_admin: alexandre@deverteuil.net
+    staticsite_host_name: alexandre.deverteuil.net
