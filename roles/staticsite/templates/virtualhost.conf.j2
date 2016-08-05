@@ -1,0 +1,12 @@
+<VirtualHost 192.168.14.2:80>
+    ServerName {{ staticsite_host_name }}
+
+    ServerAdmin {{ staticsite_server_admin }}
+
+    DocumentRoot /var/www/{{ staticsite_site_name }}
+
+    ErrorLog ${APACHE_LOG_DIR}/{{ staticsite_site_name }}.error.log
+    CustomLog ${APACHE_LOG_DIR}/{{ staticsite_site_name }}.access.log combined
+</VirtualHost>
+
+# vim: syntax=apache ts=4 sw=4 sts=4 sr et
