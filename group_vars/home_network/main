@@ -123,6 +123,7 @@ named_dynamic_zones:
   - {name: smtp,    type: A,  rdata: 192.168.13.9}
   - {name: tor,     type: A,  rdata: 192.168.13.10}
   - {name: proton,  type: A,  rdata: 192.168.42.20}
+  - {name: home,    type: A,  rdata: 192.168.13.5}
 - origin: 13.168.192.in-addr.arpa
   records:
   - {name: "",  type: NS,  rdata: ns1.private.deverteuil.net.}
@@ -131,6 +132,7 @@ named_dynamic_zones:
   - {name: 88,  type: PTR, rdata: ns2.private.deverteuil.net.}
   - {name: 3,   type: PTR, rdata: dhcp.private.deverteuil.net.}
   - {name: 4,   type: PTR, rdata: fixion.private.deverteuil.net.}
+  - {name: 5,   type: PTR, rdata: home.private.deverteuil.net.}
   - {name: 6,   type: PTR, rdata: openvpn.private.deverteuil.net.}
   - {name: 9,   type: PTR, rdata: smtp.private.deverteuil.net.}
   - {name: 10,  type: PTR, rdata: tor.private.deverteuil.net.}
