@@ -1,0 +1,14 @@
+---
+- name: install the updater script
+  template:
+    src: checkdyndns.py.j2
+    dest: /usr/local/bin/checkdyndns.py
+    mode: 0740
+  tags: [install]
+
+- name: create the cron job
+  cron:
+    name: Update dynamic DNS
+    minute: "*/5"
+    job: /usr/local/bin/checkdyndns.py
+  tags: [serve]

@@ -141,3 +141,5 @@ named_dynamic_zones:
   - {name: "",  type: NS,  rdata: ns1.private.deverteuil.net.}
   - {name: "",  type: NS,  rdata: ns2.private.deverteuil.net.}
   - {name: 20,   type: PTR, rdata: proton.private.deverteuil.net.}
+dyndns_client_fqdn: alexdev.chickenkiller.com
+dyndns_client_key: "{{ vault_dyndns_client_key }}"
