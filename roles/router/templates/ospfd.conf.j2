@@ -9,3 +9,4 @@ interface tun0
 router ospf
   log-adjacency-changes detail
   network 192.168.66.0/24 area 0.0.0.0
+  timers throttle spf 0 50 5000

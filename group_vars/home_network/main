@@ -10,6 +10,8 @@ timeserver_upstream_servers:
 
 common_resolvers: [192.168.13.8, 192.168.13.88]
 
+router_zebra_password: "{{ vault_router_zebra_password }}"
+
 munin_managed_switch_ip: 192.168.13.2
 munin_managed_switch_community: "{{ vault_munin_managed_switch_community}}"
 munin_ssh_private_key: "{{ vault_munin_ssh_private_key }}"

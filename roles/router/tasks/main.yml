@@ -4,6 +4,7 @@
   with_items:
   - quagga
   - quagga-doc
+  tags: [install]
 
 - name: enable IPv4 packet forwarding
   sysctl: name=net.ipv4.ip_forward value=1 state=present sysctl_file=/etc/sysctl.d/routing.conf
@@ -35,6 +36,7 @@
     dest: /etc/quagga/{{ item }}.conf
   with_items: [zebra, ospfd]
   notify: restart quagga
+  tags: [configure]
 
 - name: enable quagga daemons
   lineinfile:
@@ -45,3 +47,15 @@
   - zebra
   - ospfd
   notify: restart quagga
+  tags: [configure]
+
+- name: allow ospf packets
+  command: firewall-cmd {{ item }} --direct --add-rule ipv4 filter INPUT 0 -p 89 -j ACCEPT
+  register: direct
+  changed_when: '"ALREADY_ENABLED" not in direct.stdout'
+  with_items: ["", --permanent]
+  tags: [serve]
+
+- name: start and enable quagga
+  service: name=quagga state=started enabled=yes
+  tags: [serve]
