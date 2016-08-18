@@ -5,8 +5,10 @@
 dev tun
 proto tcp
 topology subnet
+client-to-client
 server 192.168.66.0 255.255.255.0
 ifconfig-pool-persist ipp.txt
+client-config-dir ccd
 ca /root/openvpn/keys/ca.crt
 cert /root/openvpn/keys/openvpn-server.crt
 key /root/openvpn/keys/openvpn-server.key
