@@ -27,6 +27,27 @@ openvpn_key_params:
   ou: ""
   size: 2048
   expire: 3650
+openvpn_configs:
+  - name: server
+    mode: server
+    proto: tcp-server
+    dev: tun0
+    topology: subnet
+    ifconfig: 192.168.66.1 255.255.255.0
+    ifconfig_pool: 192.168.66.2 192.168.66.254 255.255.255.0
+    client_to_client: yes
+    push_rules:
+    - route 192.168.13.0 255.255.255.0 192.168.66.1
+    - route 172.27.115.176 255.255.255.240 192.168.66.2
+    - dhcp-option DNS 192.168.13.8
+    - dhcp-option DNS 192.168.13.88
+    - dhcp-option DOMAIN private.deverteuil.net
+  - name: nyj004
+    port: 1195
+    dev: tun1
+    proto: tcp-server
+    topology: net30
+    ifconfig: 192.168.69.1 192.168.69.2
 
 exim_postmaster: alex
 exim_no_sender_verify_domains: [acs-agiledash.corp.internap.com]

@@ -30,6 +30,13 @@
   - "{{ router_forward_ports }}"
   tags: [serve]
 
+- name: allow forwarding of internal traffic
+  command: firewall-cmd {{ item }} --direct --add-rule ipv4 filter FORWARD 0 -s 192.168.0.0/16 -j ACCEPT
+  register: forwarding
+  changed_when: forwarding.stdout == "success"
+  with_items: ["", "--permanent"]
+  tags: [serve]
+
 - name: configure quagga
   template:
     src: "{{ item }}.conf.j2"

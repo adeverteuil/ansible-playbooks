@@ -1,27 +1,32 @@
 # {{ ansible_managed }}
-#
-# /usr/share/doc/openvpn/examples/sample-config-files/server.conf.gz
 
-dev tun
-proto tcp
-topology subnet
-client-to-client
-server 192.168.66.0 255.255.255.0
-ifconfig-pool-persist ipp.txt
+dev {{ item.dev|default(openvpn_dev) }}
+proto {{ item.proto|default(openvpn_proto) }}
+port {{ item.port|default(openvpn_port) }}
+topology {{ item.topology|default(openvpn_topology) }}
+mode {{ item.mode|default(openvpn_mode) }}
+ifconfig {{ item.ifconfig }}
+{% if item.topology|default(openvpn_topology) == "subnet" %}
+ifconfig-pool {{ item.ifconfig_pool }}
+ifconfig-pool-persist ipp-{{ item.name }}.txt
 client-config-dir ccd
+{% if item.client_to_client|default(openvpn_client_to_client) %}
+client-to-client
+{% endif %}
+{% endif %}
+tls-server
 ca /root/openvpn/keys/ca.crt
 cert /root/openvpn/keys/openvpn-server.crt
 key /root/openvpn/keys/openvpn-server.key
 dh /root/openvpn/keys/dh2048.pem
 user nobody
 group nogroup
-;persist-key
-;persist-tun
-push "route 192.168.13.0 255.255.255.0"
-push "dhcp-option DNS 192.168.13.8"
-push "dhcp-option DNS 192.168.13.88"
-push "dhcp-option DOMAIN private.deverteuil.net"
+persist-key
+persist-tun
+{% for push in item.push_rules|default([]) %}
+push "{{ push }}"
+{% endfor %}
 keepalive 10 120
 comp-lzo
-status openvpn-status.log
-verb 3
+status status-{{ item.name }}.log
+verb {{ item.verb|default(openvpn_verb) }}

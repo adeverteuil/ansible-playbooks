@@ -19,7 +19,8 @@
 - name: configure openvpn
   template:
     src: server.conf.j2
-    dest: /etc/openvpn/server.conf
+    dest: /etc/openvpn/{{ item.name }}.conf
+  with_items: "{{ openvpn_configs }}"
   notify: restart openvpn
   tags: [configure]
 
@@ -29,8 +30,8 @@
     dest: /root/client.conf.sample
   tags: [configure]
 
-- name: enable openvpn@server
-  service: name=openvpn@server enabled=yes
+- name: enable openvpn
+  service: name=openvpn enabled=yes
   tags: [serve]
 
 - name: check if the server certificate exists
@@ -39,7 +40,7 @@
   tags: [serve]
 
 - name: start openvpn server
-  service: name=openvpn@server state=started
+  service: name=openvpn state=started
   when: crt.stat.exists
   tags: [serve]
 
