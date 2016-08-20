@@ -3,3 +3,4 @@ router_forward_ports: []
 # Syntax of a forward_port:
 #    portid[-portid]:proto=protocol[:toport=portid[-portid]][:toaddr=address[/mask]]
 router_routes: []  # list of {destination, source, gateway} hashes
+router_ospfd_password: "{{ router_zebra_password }}"
