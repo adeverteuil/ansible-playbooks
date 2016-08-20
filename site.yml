@@ -1,5 +1,5 @@
 ---
 - hosts: dhcp
   roles: [dhcp, dyndns-client]
-- hosts: ns2,ns1
+- hosts: ns*
   roles: [named]
