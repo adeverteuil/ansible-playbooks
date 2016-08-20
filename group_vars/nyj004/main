@@ -2,6 +2,11 @@ common_resolvers: [172.27.115.182]
 named_forwarders: [69.9.191.4, 69.9.160.191]
 bind_localdomain: nyj004.deverteuil.net
 named_allow_recursion_ips: [127.0.0.1, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16]
+named_forward_zones:
+- origin: private.deverteuil.net
+  forwarders: [192.168.13.8, 192.168.13.88]
+- origin: 13.168.192.in-addr.arpa
+  forwarders: [192.168.13.8, 192.168.13.88]
 named_static_zones:
 - origin: nyj004.deverteuil.net
   records:

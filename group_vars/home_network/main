@@ -111,6 +111,11 @@ piwik_database_password: "{{ vault_piwik_database_password }}"
 #named_forwarders: [206.123.6.230, 199.84.54.230]
 named_forwarders: [8.8.8.8, 8.8.4.4]
 named_allow_recursion_ips: [127.0.0.1, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16]
+named_forward_zones:
+- origin: nyj004.deverteuil.net
+  forwarders: [172.27.115.182]
+- origin: 115.27.172.in-addr.arpa
+  forwarders: [172.27.115.182]
 named_static_zones:
 - origin: nextcloud.deverteuil.net
   records: &my_reverse_proxy
