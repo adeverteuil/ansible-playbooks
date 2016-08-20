@@ -1,5 +1,4 @@
 ---
-bind_domainadmin: postmaster.deverteuil.net
 bind_localdomain: private.deverteuil.net
 dhcp_static_hosts:
 - {mac: "50:67:ae:f0:2d:01", ip: "192.168.13.31", name: "voip"}

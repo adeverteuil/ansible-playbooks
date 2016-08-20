@@ -1,0 +1,21 @@
+common_resolvers: [172.27.115.182]
+named_forwarders: [69.9.191.4, 69.9.160.191]
+bind_localdomain: nyj004.deverteuil.net
+named_allow_recursion_ips: [127.0.0.1, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16]
+named_static_zones:
+- origin: nyj004.deverteuil.net
+  records:
+  - {name: "", type: NS, rdata: ns1}
+  - {name: node01, type: A, rdata: 172.27.115.178}
+  - {name: pfsense, type: A, rdata: 172.27.115.179}
+  - {name: freeipa, type: A, rdata: 172.27.115.180}
+  - {name: zabbix, type: A, rdata: 172.27.115.181}
+  - {name: ns1, type: A, rdata: 172.27.115.182}
+- origin: 115.27.172.in-addr.arpa
+  records:
+  - {name: "", type: NS, rdata: ns1.nyj004.deverteuil.net.}
+  - {name: 178, type: PTR, rdata: node01.nyj004.deverteuil.net.}
+  - {name: 179, type: PTR, rdata: pfsense.nyj004.deverteuil.net.}
+  - {name: 180, type: PTR, rdata: freeipa.nyj004.deverteuil.net.}
+  - {name: 181, type: PTR, rdata: zabbix.nyj004.deverteuil.net.}
+  - {name: 182, type: PTR, rdata: ns1.nyj004.deverteuil.net.}
