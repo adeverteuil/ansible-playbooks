@@ -77,6 +77,8 @@ nginx_proxy_servers:
   - name: kanban.deverteuil.net
     proxy_pass: "{{ hostvars['web']['ansible_eth1']['ipv4']['address'] }}"
     ssl: yes
+  - name: monitoring.deverteuil.net
+    proxy_pass: "{{ hostvars['zabbix']['ansible_eth1']['ipv4']['address'] }}"
   - name: piwik.deverteuil.net
     proxy_pass: "{{ hostvars['web']['ansible_eth1']['ipv4']['address'] }}"
     ssl: yes
@@ -85,6 +87,10 @@ nginx_proxy_servers:
     ssl: yes
 
 mysql_root_password: "{{ vault_mysql_root_password }}"
+
+zabbix_database_password: "{{ vault_zabbix_database_password }}"
+zabbix_login_password: "{{ vault_zabbix_login_password }}"
+zabbix_server: zabbix.private.deverteuil.net
 
 kanboard_vhost_name: kanban.deverteuil.net
 kanboard_database_password: "{{ vault_kanboard_database_password }}"
@@ -127,6 +133,8 @@ named_static_zones:
 - origin: tt-rss.deverteuil.net
   records: *my_reverse_proxy
 - origin: osticket.deverteuil.net
+  records: *my_reverse_proxy
+- origin: monitoring.deverteuil.net
   records: *my_reverse_proxy
 - origin: piwik.deverteuil.net
   records: *my_reverse_proxy

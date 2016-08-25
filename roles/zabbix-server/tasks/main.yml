@@ -1,0 +1,73 @@
+---
+- name: install packages
+  apt: name={{ item }} state=present
+  with_items:
+  - php5-pgsql
+  - zabbix-server-pgsql
+  - zabbix-frontend-php
+  tags: [install]
+
+- name: create the virtual host
+  template:
+    src: virtualhost.j2
+    dest: /etc/apache2/sites-available/zabbix.conf
+  notify: restart apache2
+  tags: [install]
+
+- name: enable the virtual host
+  file:
+    src: /etc/apache2/sites-available/zabbix.conf
+    dest: /etc/apache2/sites-enabled/zabbix.conf
+    state: link
+  notify: restart apache2
+  tags: [serve]
+
+- name: configure php
+  lineinfile:
+    dest: /etc/php5/apache2/php.ini
+    line: "{{ item.key }} = {{ item.value }}"
+    regexp: "^;?{{ item.key }}"
+  with_items:
+  - {key: post_max_size, value: 16M}
+  - {key: max_execution_time, value: 300}
+  - {key: max_input_time, value: 300}
+  - {key: date.timezone, value: America/New_York}
+  notify: restart apache2
+  tags: [configure]
+
+- name: create the database schema and import initial data
+  shell: cd /usr/share/zabbix-server-pgsql && if [ -f {{ item }}.sql.gz ]; then gunzip {{ item }}.sql.gz ; fi && psql -h {{ hostvars['postgresql']['ansible_eth1']['ipv4']['address'] }} -U zabbix_server -d zabbix_server -f {{ item }}.sql && touch /etc/zabbix/{{ item }}.done
+  args:
+    creates: /etc/zabbix/{{ item }}.done
+  environment:
+    PGPASSWORD: "{{ zabbix_database_password }}"
+  with_items:
+  - schema
+  - images
+  - data
+  tags: [install]
+
+- name: configure Zabbix frontend
+  template:
+    src: zabbix.conf.php.j2
+    dest: /etc/zabbix/zabbix.conf.php
+  tags: [configure]
+
+- name: configure zabbix-server
+  template:
+    src: zabbix_server.conf.j2
+    dest: /etc/zabbix/zabbix_server.conf
+  notify: restart zabbix-server
+  tags: [configure]
+
+- name: enable zabbix-server
+  lineinfile:
+    dest: /etc/default/zabbix-server
+    line: START=yes
+    regexp: ^START
+  notify: restart zabbix-server
+  tags: [serve]
+
+- name: start and enable zabbix-server
+  service: name=zabbix-server state=started enabled=yes
+  tags: [serve]
