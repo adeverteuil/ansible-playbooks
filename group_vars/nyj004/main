@@ -16,6 +16,23 @@ named_static_zones:
   - {name: freeipa, type: A, rdata: 172.27.115.180}
   - {name: zabbix, type: A, rdata: 172.27.115.181}
   - {name: ns1, type: A, rdata: 172.27.115.182}
+  - {name: _kerberos,             type: TXT, rdata: "PRIVATE.DEVERTEUIL.NET"}
+  - {name: _kerberos._tcp,        type: SRV, rdata: 0 100 88 freeipa.nyj004.deverteuil.net.}
+  - {name: _kerberos-master._tcp, type: SRV, rdata: 0 100 88 freeipa.nyj004.deverteuil.net.}
+  - {name: _kpasswd._tcp,         type: SRV, rdata: 0 100 464 freeipa.nyj004.deverteuil.net.}
+  - {name: _ldap._tcp,            type: SRV, rdata: 0 100 389 freeipa.nyj004.deverteuil.net.}
+  - {name: _kerberos._udp,        type: SRV, rdata: 0 100 88 freeipa.nyj004.deverteuil.net.}
+  - {name: _kerberos-master._udp, type: SRV, rdata: 0 100 88 freeipa.nyj004.deverteuil.net.}
+  - {name: _kpasswd._udp,         type: SRV, rdata: 0 100 464 freeipa.nyj004.deverteuil.net.}
+  - {name: _ntp._udp,             type: SRV, rdata: 0 100 123 freeipa.nyj004.deverteuil.net.}
+  - {name: _kerberos._tcp,        type: SRV, rdata: 10 100 88 freeipa.private.deverteuil.net.}
+  - {name: _kerberos-master._tcp, type: SRV, rdata: 10 100 88 freeipa.private.deverteuil.net.}
+  - {name: _kpasswd._tcp,         type: SRV, rdata: 10 100 464 freeipa.private.deverteuil.net.}
+  - {name: _ldap._tcp,            type: SRV, rdata: 10 100 389 freeipa.private.deverteuil.net.}
+  - {name: _kerberos._udp,        type: SRV, rdata: 10 100 88 freeipa.private.deverteuil.net.}
+  - {name: _kerberos-master._udp, type: SRV, rdata: 10 100 88 freeipa.private.deverteuil.net.}
+  - {name: _kpasswd._udp,         type: SRV, rdata: 10 100 464 freeipa.private.deverteuil.net.}
+  - {name: _ntp._udp,             type: SRV, rdata: 10 100 123 freeipa.private.deverteuil.net.}
 - origin: 115.27.172.in-addr.arpa
   records:
   - {name: "", type: NS, rdata: ns1.nyj004.deverteuil.net.}
