@@ -1,3 +1,11 @@
+---
+- name: install packages
+  apt: name={{ item }} state=present
+  with_items:
+  - quagga
+  - quagga-doc
+  tags: [install]
+
 - name: enable IPv4 packet forwarding
   sysctl: name=net.ipv4.ip_forward value=1 state=present sysctl_file=/etc/sysctl.d/routing.conf
   tags: [serve]
@@ -20,4 +28,41 @@
   with_nested:
   - ["", --permanent]
   - "{{ router_forward_ports }}"
+  tags: [serve]
+
+- name: allow forwarding of internal traffic
+  command: firewall-cmd {{ item }} --direct --add-rule ipv4 filter FORWARD 0 -s 192.168.0.0/16 -j ACCEPT
+  register: forwarding
+  changed_when: forwarding.stdout == "success"
+  with_items: ["", "--permanent"]
+  tags: [serve]
+
+- name: configure quagga
+  template:
+    src: "{{ item }}.conf.j2"
+    dest: /etc/quagga/{{ item }}.conf
+  with_items: [zebra, ospfd]
+  notify: restart quagga
+  tags: [configure]
+
+- name: enable quagga daemons
+  lineinfile:
+    dest: /etc/quagga/daemons
+    line: "{{ item }}=yes"
+    regexp: "^{{ item }}="
+  with_items:
+  - zebra
+  - ospfd
+  notify: restart quagga
+  tags: [configure]
+
+- name: allow ospf packets
+  command: firewall-cmd {{ item }} --direct --add-rule ipv4 filter INPUT 0 -p 89 -j ACCEPT
+  register: direct
+  changed_when: '"ALREADY_ENABLED" not in direct.stdout'
+  with_items: ["", --permanent]
+  tags: [serve]
+
+- name: start and enable quagga
+  service: name=quagga state=started enabled=yes
   tags: [serve]

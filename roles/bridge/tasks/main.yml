@@ -1,7 +1,14 @@
 ---
+- name: install packages
+  apt: name={{ item }} state=present
+  with_items:
+  - bridge-utils
+  tags: [install]
+
 - name: Don't filter bridged packets
   sysctl: name={{ item }} value=0
   with_items:
   - net.bridge.bridge-nf-call-ip6tables
   - net.bridge.bridge-nf-call-iptables
   - net.bridge.bridge-nf-call-arptables
+  tags: [configure]

@@ -7,6 +7,18 @@
 // organization
 //include "/etc/bind/zones.rfc1918";
 
+// Forwarding zones
+
+{% for zone in named_forward_zones %}
+zone "{{ zone.origin }}" IN {
+  type forward;
+  forward only;
+  forwarders { {% for ip in zone.forwarders %}{{ ip }}; {% endfor %}};
+};
+{% else %}
+// (no static zones defined)
+{% endfor %}
+
 // Static zones
 
 {% for zone in named_static_zones %}

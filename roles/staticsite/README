@@ -1,0 +1,6 @@
+The following variables must be defined:
+
+staticsite_site_name
+staticsite_host_name
+staticsite_server_admin
+staticsite_project_dir

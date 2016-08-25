@@ -9,6 +9,6 @@ umask 177
 sudo -u postgres pg_dumpall > "$backup_path/dump.$date.sql"
 
 # Delete files older than 30 days, making sure at least 10 backups would remain.
-if [ $(find "$backup_path" -mindepth 1 -name "dump.*.sql" -mtime -30 | wc -l) -gt 10 ]; then
-    find "$backup_path" -mindepth 1 -mtime "dump.*.sql" +30 -exec rm '{}' \;
+if [ $(find "$backup_path" -name "dump.*.sql" -mtime -30 | wc -l) -gt 10 ]; then
+    find "$backup_path" -name "dump.*.sql" -mtime +30 -exec rm '{}' \;
 fi

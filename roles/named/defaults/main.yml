@@ -6,6 +6,10 @@ named_allow_notify_ips: [none]
 named_masters: []
 named_logging: no
 named_master: yes
+named_forward_zones: []
+_named_forward_zones:
+  - origin: subdomain.example.com
+    forwarders: [192.168.0.5]
 named_static_zones: []
 _named_static_zones:
   - origin: host.example.com

@@ -1,0 +1,16 @@
+# {{ ansible_managed }}
+
+{% if router_ospfd_password is defined or router_zebra_password is defined %}
+password {{ router_ospfd_password|default(router_zebra_password) }}
+{% endif %}
+log syslog
+interface eth0
+interface tun0
+interface tun1
+
+router ospf
+  log-adjacency-changes detail
+  network 192.168.13.0/24 area 0.0.0.0
+  network 192.168.66.0/24 area 0.0.0.0
+  network 192.168.69.0/30 area 0.0.0.0
+  timers throttle spf 0 50 5000
