@@ -1,8 +1,10 @@
 freeipa  # Isolated because not Debian 8
+freeipa.nyj004.deverteuil.net
 
 [nyj004]
 node01.nyj004.deverteuil.net ansible_host=173.231.179.196
 ns1.nyj004.deverteuil.net ansible_host=172.27.115.182
+zabbix.nyj004.deverteuil.net
 
 [home_network]
 fixion

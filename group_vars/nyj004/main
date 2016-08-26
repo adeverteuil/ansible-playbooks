@@ -1,3 +1,6 @@
+---
+timeserver_upstream_servers:
+- ntp.private.deverteuil.net
 common_resolvers: [172.27.115.182]
 named_forwarders: [69.9.191.4, 69.9.160.191]
 bind_localdomain: nyj004.deverteuil.net
