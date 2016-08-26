@@ -57,6 +57,7 @@
   template:
     src: zabbix_server.conf.j2
     dest: /etc/zabbix/zabbix_server.conf
+    mode: 0660
   notify: restart zabbix-server
   tags: [configure]
 
