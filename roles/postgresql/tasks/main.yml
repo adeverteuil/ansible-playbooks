@@ -22,7 +22,10 @@
 - name: allow connections from webserver
   lineinfile:
     dest: /etc/postgresql/9.4/main/pg_hba.conf
-    line: host all all web.private.deverteuil.net md5
+    line: "{{ item }}"
+  with_items: "{{ postgresql_pg_hba_lines }}"
+  notify: restart postgresql
+  tags: [configure]
 
 #- name: create a munin user
 #  postgresql_user:

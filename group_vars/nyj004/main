@@ -57,5 +57,6 @@ zabbix_database_password: "{{ vault_zabbix_database_password }}"
 zabbix_login_password: "{{ vault_zabbix_login_password }}"
 zabbix_database_server: "{{ hostvars['postgresql.nyj004.deverteuil.net']['ansible_eth0']['ipv4']['address'] }}"
 zabbix_server: zabbix.nyj004.deverteuil.net
+zabbix_proxy_server: zabbix.private.deverteuil.net
 postgresql_pg_hba_lines:
 - host all all zabbix.nyj004.deverteuil.net md5

@@ -36,7 +36,7 @@
   tags: [configure]
 
 - name: create the database schema and import initial data
-  shell: cd /usr/share/zabbix-server-pgsql && if [ -f {{ item }}.sql.gz ]; then gunzip {{ item }}.sql.gz ; fi && psql -h {{ hostvars['postgresql']['ansible_eth1']['ipv4']['address'] }} -U zabbix_server -d zabbix_server -f {{ item }}.sql && touch /etc/zabbix/{{ item }}.done
+  shell: cd /usr/share/zabbix-server-pgsql && if [ -f {{ item }}.sql.gz ]; then gunzip {{ item }}.sql.gz ; fi && psql -h {{ zabbix_database_server }} -U zabbix_server -d zabbix_server -f {{ item }}.sql && touch /etc/zabbix/{{ item }}.done
   args:
     creates: /etc/zabbix/{{ item }}.done
   environment:

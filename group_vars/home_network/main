@@ -90,6 +90,7 @@ mysql_root_password: "{{ vault_mysql_root_password }}"
 
 zabbix_database_password: "{{ vault_zabbix_database_password }}"
 zabbix_login_password: "{{ vault_zabbix_login_password }}"
+zabbix_database_server: "{{ hostvars['postgresql']['ansible_eth1']['ipv4']['address'] }}"
 zabbix_server: zabbix.private.deverteuil.net
 
 kanboard_vhost_name: kanban.deverteuil.net
