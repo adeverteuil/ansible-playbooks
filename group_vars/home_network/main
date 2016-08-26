@@ -60,6 +60,8 @@ webserver_serveradmin: alexandre@deverteuil.net
 letsencrypt_email: alexandre@deverteuil.net
 webserver_certificate_file: /etc/letsencrypt/live/smtp.deverteuil.net/cert.pem
 webserver_certificate_keyfile: /etc/letsencrypt/live/smtp.deverteuil.net/privkey.pem
+postgresql_pg_hba_lines:
+- host all all web.private.deverteuil.net md5
 
 nginx_proxy_servers:
   - name: wp-yves.deverteuil.net
