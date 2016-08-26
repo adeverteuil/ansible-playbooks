@@ -72,3 +72,11 @@
 - name: start and enable zabbix-server
   service: name=zabbix-server state=started enabled=yes
   tags: [serve]
+
+- name: open the TCP port
+  firewalld:
+    port: 10051/tcp
+    state: enabled
+    permanent: yes
+    immediate: yes
+  tags: [serve]
