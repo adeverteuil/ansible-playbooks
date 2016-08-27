@@ -47,6 +47,8 @@ openvpn_configs:
     proto: tcp-server
     topology: net30
     ifconfig: 192.168.69.1 192.168.69.2
+    additional_options:
+    - 'verify-x509-name "C=CA, ST=QC, L=Verdun, O=deVerteuil.net, CN=pfsense.nyj004.deverteuil.net, name=EasyRSA, emailAddress=alexandre@deverteuil.net"'
 
 exim_postmaster: alex
 exim_no_sender_verify_domains: [acs-agiledash.corp.internap.com]
