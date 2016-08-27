@@ -19,10 +19,13 @@
 - name: open port 5432 in the firewall
   firewalld: service=postgresql state=enabled immediate=yes permanent=yes
 
-- name: allow connections from webserver
+- name: add allowed connections in pg_hba.conf
   lineinfile:
     dest: /etc/postgresql/9.4/main/pg_hba.conf
-    line: host all all web.private.deverteuil.net md5
+    line: "{{ item }}"
+  with_items: "{{ postgresql_pg_hba_lines }}"
+  notify: restart postgresql
+  tags: [configure]
 
 #- name: create a munin user
 #  postgresql_user:

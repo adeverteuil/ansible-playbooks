@@ -1,2 +1,6 @@
 ---
+ipa_realm: PRIVATE.DEVERTEUIL.NET
 ansible_python_interpreter: /usr/bin/python2
+bind_domainadmin: postmaster.deverteuil.net
+
+exim_root_alias: alexandre@deverteuil.net

@@ -1,0 +1,36 @@
+---
+- name: create the document root
+  file:
+    path: /var/www/{{ staticsite_site_name }}
+    state: directory
+    owner: www-data
+    group: www-data
+  tags: [install]
+
+- name: create the virtual host
+  template:
+    src: virtualhost.conf.j2
+    dest: /etc/apache2/sites-available/{{ staticsite_site_name }}.conf
+  tags: [install]
+
+- name: copy files into document root
+  synchronize:
+    src: "{{ staticsite_project_dir }}/output/"
+    dest: /var/www/{{ staticsite_site_name }}/
+    delete: yes
+    archive: no
+    recursive: yes
+    owner: yes
+    group: yes
+    times: yes
+    rsync_opts:
+    - "--chown=www-data:www-data"
+    - "--chmod=ug=rwX,o="
+  tags: [serve]
+
+- name: enable the virtualhost
+  command: a2ensite {{ staticsite_site_name }}
+  args:
+    creates: /etc/apache2/sites-enabled/{{ staticsite_site_name }}.conf
+  notify: restart apache2
+  tags: [serve]

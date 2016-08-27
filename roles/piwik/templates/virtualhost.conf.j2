@@ -1,0 +1,13 @@
+<VirtualHost 192.168.14.2:80>
+    ServerName piwik.deverteuil.net
+    ServerAlias piwik.private.deverteuil.net
+
+    ServerAdmin alexandre@deverteuil.net
+
+    DocumentRoot /var/www/piwik
+
+    ErrorLog ${APACHE_LOG_DIR}/piwik.error.log
+    CustomLog ${APACHE_LOG_DIR}/piwik.access.log combined
+</VirtualHost>
+
+# vim: syntax=apache ts=4 sw=4 sts=4 sr et

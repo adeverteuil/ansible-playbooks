@@ -8,3 +8,13 @@ openvpn_key_params:
   ou: MyOrganizationalUnit
   size: 2048
   expire: 3650
+openvpn_mode: p2p
+openvpn_dev: tun
+openvpn_proto: udp
+openvpn_port: 1194
+openvpn_topology: subnet
+openvpn_client_to_client: true
+openvpn_server_push: []
+openvpn_status: openvpn-status.log
+openvpn_verb: 3
+openvpn_additional_options: []

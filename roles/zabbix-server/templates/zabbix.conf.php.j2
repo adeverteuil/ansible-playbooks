@@ -3,7 +3,7 @@
 global $DB;
 
 $DB['TYPE']     = 'POSTGRESQL';
-$DB['SERVER']   = '{{ hostvars['postgresql']['ansible_eth1']['ipv4']['address'] }}';
+$DB['SERVER']   = '{{ zabbix_database_server }}';
 $DB['PORT']     = '0';
 $DB['DATABASE'] = '{{ zabbix_database_name }}';
 $DB['USER']     = '{{ zabbix_database_user }}';

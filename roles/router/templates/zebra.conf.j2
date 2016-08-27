@@ -1,0 +1,6 @@
+# {{ ansible_managed }}
+
+{% if router_zebra_password is defined %}
+password {{ router_zebra_password }}
+{% endif %}
+log syslog

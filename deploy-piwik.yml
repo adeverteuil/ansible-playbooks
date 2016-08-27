@@ -1,0 +1,21 @@
+---
+- hosts: web
+  roles: [piwik]
+
+- hosts: mysql
+  tasks:
+
+  - name: create the database
+    mysql_db:
+      name: piwik
+      state: present
+    tags: [install]
+
+  - name: create the database user
+    mysql_user:
+      name: piwik
+      priv: piwik.*:ALL
+      host: "{{ hostvars['web']['ansible_eth1']['ipv4']['address'] }}"
+      state: present
+      password: "{{ piwik_database_password }}"
+    tags: [install]

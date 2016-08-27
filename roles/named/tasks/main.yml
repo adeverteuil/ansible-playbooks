@@ -11,6 +11,7 @@
     mode: 0640
     owner: bind
     group: bind
+  when: dhcp_update_key is defined
   notify: reload bind
   tags: [configure]
 
@@ -39,7 +40,7 @@
     dest: /etc/systemd/system/bind9.service.d/ipv4.conf
   notify:
   - reload systemd
-  - restart bind9
+  - restart bind
   tags: [configure]
 
 - name: start bind9 with ipv4 support only
@@ -47,7 +48,7 @@
     dest: /etc/default/bind9
     line: 'OPTIONS="-u bind -4"'
     regexp: ^OPTIONS
-  notify: restart bind9
+  notify: restart bind
   tags: [configure]
 
 - name: start and enable bind

@@ -78,7 +78,7 @@ PidFile=/var/run/zabbix/zabbix_server.pid
 # Default:
 # DBHost=localhost
 
-DBHost={{ hostvars['postgresql']['ansible_eth1']['ipv4']['address'] }}
+DBHost={{ zabbix_database_server }}
 
 ### Option: DBName
 #	Database name.

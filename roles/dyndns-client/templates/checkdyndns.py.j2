@@ -1,0 +1,27 @@
+#!/usr/bin/python2
+
+import socket
+import urllib2
+import re
+
+FQDN = "{{ dyndns_client_fqdn }}"
+CHECKIP = "http://ip.dnsexit.com/"
+KEY = "{{ dyndns_client_key }}"
+UPDATEURL = "http://freedns.afraid.org/dynamic/update.php?" + KEY
+REGEXIP = r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"
+
+def get_actual_ip():
+    reply = urllib2.urlopen(CHECKIP)
+    html = reply.read()
+    ipmatch = re.search(REGEXIP, html.decode())
+    actual_ip = ipmatch.group(0)
+    return actual_ip
+
+resolved_ip = socket.gethostbyname(FQDN)
+actual_ip = get_actual_ip()
+
+if resolved_ip != actual_ip:
+    response = urllib2.urlopen(UPDATEURL).read().decode()
+    print("Resolved IP: " + resolved_ip)
+    print("Actual IP: " + actual_ip)
+    print("Update result: " + response)

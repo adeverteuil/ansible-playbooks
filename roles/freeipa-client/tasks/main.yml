@@ -11,7 +11,7 @@
   delegate_to: "{{ ipa_server }}"
   vars: {ansible_user: ""}
   become: no
-  command: flock /tmp/ansible-lock ipa host-show {{ inventory_hostname }}
+  command: flock /tmp/ansible-lock ipa host-show {{ ansible_fqdn }}
   register: host_show
   failed_when: host_show.rc == 1
   changed_when: false

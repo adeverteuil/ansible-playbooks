@@ -1,0 +1,5 @@
+---
+zabbix_database_name: zabbix_proxy
+zabbix_database_user: zabbix_proxy
+zabbix_database_server: localhost
+zabbix_proxy_server: localhost
