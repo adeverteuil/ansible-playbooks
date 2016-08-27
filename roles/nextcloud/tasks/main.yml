@@ -28,7 +28,7 @@
     creates: /var/www/nextcloud
     owner: root
     group: www-data
-  notify: apache2
+  notify: restart apache2
   tags: [install]
 
 - name: set directory ownerships
@@ -94,7 +94,7 @@
 - name: configure Nextcloud
   command: php occ  maintenance:install
             --database "mysql"
-            --database-host "192.168.14.3"
+            --database-host "{{ nextcloud_db_host }}"
             --database-name "nextcloud"
             --database-user "nextcloud"
             --database-pass "{{ nextcloud_db_password }}"

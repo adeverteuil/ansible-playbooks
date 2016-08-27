@@ -1,0 +1,3 @@
+---
+nextcloud_db_host: localhost
+nextcloud_db_user_host: localhost
