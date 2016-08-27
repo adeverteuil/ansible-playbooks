@@ -17,3 +17,4 @@ openvpn_client_to_client: true
 openvpn_server_push: []
 openvpn_status: openvpn-status.log
 openvpn_verb: 3
+openvpn_additional_options: []

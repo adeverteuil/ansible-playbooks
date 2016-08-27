@@ -30,3 +30,6 @@ keepalive 10 120
 comp-lzo
 status status-{{ item.name }}.log
 verb {{ item.verb|default(openvpn_verb) }}
+{% for option in item.additional_options|default(openvpn_additional_options) %}
+{{ option }}
+{% endfor %}
