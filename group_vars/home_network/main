@@ -37,7 +37,7 @@ openvpn_configs:
     client_to_client: yes
     push_rules:
     - route 192.168.13.0 255.255.255.0 192.168.66.1
-    - route 172.27.115.176 255.255.255.240 192.168.66.2
+    - route 172.27.115.176 255.255.255.240 192.168.66.1
     - dhcp-option DNS 192.168.13.8
     - dhcp-option DNS 192.168.13.88
     - dhcp-option DOMAIN private.deverteuil.net
