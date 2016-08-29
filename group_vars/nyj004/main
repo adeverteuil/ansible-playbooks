@@ -14,8 +14,6 @@ named_static_zones:
 - origin: nyj004.deverteuil.net
   records:
   - {name: "", type: NS, rdata: ns1}
-  - {name: node01, type: A, rdata: 172.27.115.178}
-  - {name: pfsense, type: A, rdata: 172.27.115.179}
   - {name: freeipa, type: A, rdata: 172.27.115.180}
   - {name: zabbix, type: A, rdata: 172.27.115.181}
   - {name: ns1, type: A, rdata: 172.27.115.182}
@@ -23,6 +21,8 @@ named_static_zones:
   - {name: nginx, type: A, rdata: 172.27.115.184}
   - {name: nextcloud, type: A, rdata: 172.27.115.185}
   - {name: postgresql, type: A, rdata: 172.27.115.186}
+  - {name: node01, type: A, rdata: 172.27.115.187}
+  - {name: pfsense, type: A, rdata: 172.27.115.188}
   - {name: _kerberos,             type: TXT, rdata: "PRIVATE.DEVERTEUIL.NET"}
   - {name: _kerberos._tcp,        type: SRV, rdata: 0 100 88 freeipa.nyj004.deverteuil.net.}
   - {name: _kerberos-master._tcp, type: SRV, rdata: 0 100 88 freeipa.nyj004.deverteuil.net.}
@@ -43,8 +43,6 @@ named_static_zones:
 - origin: 115.27.172.in-addr.arpa
   records:
   - {name: "", type: NS, rdata: ns1.nyj004.deverteuil.net.}
-  - {name: 178, type: PTR, rdata: node01.nyj004.deverteuil.net.}
-  - {name: 179, type: PTR, rdata: pfsense.nyj004.deverteuil.net.}
   - {name: 180, type: PTR, rdata: freeipa.nyj004.deverteuil.net.}
   - {name: 181, type: PTR, rdata: zabbix.nyj004.deverteuil.net.}
   - {name: 182, type: PTR, rdata: ns1.nyj004.deverteuil.net.}
@@ -52,6 +50,8 @@ named_static_zones:
   - {name: 184, type: PTR, rdata: nginx.nyj004.deverteuil.net.}
   - {name: 185, type: PTR, rdata: nextcloud.nyj004.deverteuil.net.}
   - {name: 186, type: PTR, rdata: postgresql.nyj004.deverteuil.net.}
+  - {name: 187, type: PTR, rdata: node01.nyj004.deverteuil.net.}
+  - {name: 188, type: PTR, rdata: pfsense.nyj004.deverteuil.net.}
 
 zabbix_database_password: "{{ vault_zabbix_database_password }}"
 zabbix_login_password: "{{ vault_zabbix_login_password }}"
