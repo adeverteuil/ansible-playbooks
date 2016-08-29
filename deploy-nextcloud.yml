@@ -1,5 +1,7 @@
 ---
-- hosts: mysql
+- hosts: nextcloud*
+
+- hosts: mysql*
   tasks:
   - name: create the nextcloud database
     mysql_db:
@@ -8,12 +10,12 @@
   - name: create the nextcloud database user
     mysql_user:
       name: nextcloud
-      host: 192.168.14.4
+      host: "{{ nextcloud_db_user_host }}"
       password: "{{ nextcloud_db_password }}"
       priv: "nextcloud.*:ALL"
       state: present
 
-- hosts: nextcloud
+- hosts: nextcloud*
   roles:
   - {role: webserver, tags: [webserver]}
   - {role: nextcloud, tags: [nextcloud]}

@@ -65,3 +65,5 @@ mysql_root_password: "{{ vault_mysql_root_password }}"
 
 nextcloud_db_password: "{{ vault_nextcloud_db_password }}"
 nextcloud_admin_password: "{{ vault_nextcloud_admin_password }}"
+nextcloud_db_host: "{{ hostvars['mysql.nyj004.deverteuil.net']['ansible_eth0']['ipv4']['address'] }}"
+nextcloud_db_user_host: "{{ hostvars['nextcloud.nyj004.deverteuil.net']['ansible_eth0']['ipv4']['address'] }}"
