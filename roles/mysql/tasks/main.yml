@@ -17,12 +17,24 @@
     password: "{{ mysql_root_password }}"
   tags: [install]
 
+- name: set the bind address
+  lineinfile:
+    dest: /etc/mysql/my.cnf
+    line: bind-address            = {{ mysql_bind_address }}
+    regexp: "^bind-address"
+  notify: restart mysql
+  tags: [configure]
+
 - name: save the root MySQL password in .my.cnf
   template:
     src: my.cnf.j2
     dest: /root/.my.cnf
     mode: 0600
   tags: [install]
+
+- name: open the MySQL TCP port
+  firewalld: service=mysql state=enabled permanent=yes immediate=yes
+  tags: [serve]
 
 - name: create a backup directory for database dumps
   file:
