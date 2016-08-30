@@ -89,6 +89,7 @@ nginx_proxy_servers:
     ssl: yes
   - name: monitoring.deverteuil.net
     proxy_pass: "{{ hostvars['zabbix']['ansible_eth1']['ipv4']['address'] }}"
+    ssl: yes
   - name: piwik.deverteuil.net
     proxy_pass: "{{ hostvars['web']['ansible_eth1']['ipv4']['address'] }}"
     ssl: yes
