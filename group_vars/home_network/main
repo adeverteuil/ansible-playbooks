@@ -102,6 +102,7 @@ nextcloud_db_password: "{{ vault_nextcloud_db_password }}"
 nextcloud_admin_password: "{{ vault_nextcloud_admin_password }}"
 nextcloud_db_host: "{{ hostvars['mysql']['ansible_eth1']['ipv4']['address'] }}"
 nextcloud_db_user_host: "{{ hostvars['nextcloud']['ansible_eth1']['ipv4']['address'] }}"
+nextcloud_listen_address: "{{ hostvars['nextcloud']['ansible_eth1']['ipv4']['address'] }}"
 
 zabbix_database_password: "{{ vault_zabbix_database_password }}"
 zabbix_login_password: "{{ vault_zabbix_login_password }}"
