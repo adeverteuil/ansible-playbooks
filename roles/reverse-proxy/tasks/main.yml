@@ -3,19 +3,26 @@
   apt: name=nginx-full state=present
   tags: [install]
 
-- name: remove default server
-  file:
-    path: /etc/nginx/sites-enabled/defauilt
-    state: absent
-  notify: reload nginx
-  tags: [configure]
+- name: write the default html document
+  copy:
+    src: index.html
+    dest: /var/www/html/index.html
+    owner: www-data
+    group: www-data
 
-- name: configure the default proxy
-  template:
-    src: default_proxy.j2
-    dest: /etc/nginx/sites-available/default_proxy
-  notify: reload nginx
-  tags: [configure]
+#- name: remove default server
+#  file:
+#    path: /etc/nginx/sites-enabled/default
+#    state: absent
+#  notify: reload nginx
+#  tags: [configure]
+
+#- name: configure the default proxy
+#  template:
+#    src: default_proxy.j2
+#    dest: /etc/nginx/sites-available/default_proxy
+#  notify: reload nginx
+#  tags: [configure]
 
 - name: configure the custom proxies
   template:
@@ -26,13 +33,13 @@
   notify: reload nginx
   tags: [configure]
 
-- name: enable the default proxy
-  file:
-    src: ../sites-available/default_proxy
-    dest: /etc/nginx/sites-enabled/default_proxy
-    state: link
-  notify: reload nginx
-  tags: [serve]
+#- name: enable the default proxy
+#  file:
+#    src: ../sites-available/default_proxy
+#    dest: /etc/nginx/sites-enabled/default_proxy
+#    state: link
+#  notify: reload nginx
+#  tags: [serve]
 
 - name: enable the custom proxies
   file:
