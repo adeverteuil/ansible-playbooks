@@ -19,3 +19,12 @@
   roles:
   - {role: webserver, tags: [webserver]}
   - {role: nextcloud, tags: [nextcloud]}
+
+- hosts: nginx.nyj004.deverteuil.net
+  roles:
+  - {role: reverse-proxy, tags: [reverse-proxy]}
+  vars:
+    nginx_proxy_servers:
+    - name: nextcloud-test.deverteuil.net
+      proxy_pass: "{{ hostvars['nextcloud.nyj004.deverteuil.net']['ansible_eth0']['ipv4']['address'] }}"
+      ssl: yes
