@@ -25,6 +25,9 @@
   - {role: reverse-proxy, tags: [reverse-proxy]}
   vars:
     nginx_proxy_servers:
-    - name: nextcloud-test.deverteuil.net
+    - name: nextcloud.deverteuil.net
       proxy_pass: "{{ hostvars['nextcloud.nyj004.deverteuil.net']['ansible_eth0']['ipv4']['address'] }}"
       ssl: yes
+      additional_lines:
+      - proxy_buffering off;
+      - client_max_body_size 0;

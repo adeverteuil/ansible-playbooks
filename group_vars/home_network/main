@@ -140,13 +140,11 @@ named_forward_zones:
 - origin: 115.27.172.in-addr.arpa
   forwarders: [172.27.115.182]
 named_static_zones:
-- origin: nextcloud.deverteuil.net
+- origin: kanban.deverteuil.net
   records: &my_reverse_proxy
   - {name: "",  type: NS, rdata: ns1.private.deverteuil.net.}
   - {name: "",  type: NS, rdata: ns2.private.deverteuil.net.}
   - {name: "@", type: A,  rdata: 192.168.13.11}
-- origin: kanban.deverteuil.net
-  records: *my_reverse_proxy
 - origin: tt-rss.deverteuil.net
   records: *my_reverse_proxy
 - origin: osticket.deverteuil.net
