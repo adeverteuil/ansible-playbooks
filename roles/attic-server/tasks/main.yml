@@ -1,0 +1,70 @@
+---
+- name: install attic
+  apt: name=attic state=present
+
+- name: create the attic group
+  group: name=attic state=present
+
+- name: create the attic user
+  user:
+    name: attic
+    shell: /bin/bash
+    home: /home/attic
+    createhome: yes
+    group: attic
+    state: present
+
+- name: create the attic user's .ssh directory
+  file:
+    path: /home/attic/.sh
+    state: directory
+    owner: attic
+    group: attic
+    mode: 0700
+
+- name: create the repository directory
+  file:
+    path: /var/lib/attic
+    owner: attic
+    group: attic
+    mode: 0700
+    state: directory
+
+- name: exclude the backups from udpatedb
+  lineinfile:
+    dest: /etc/updatedb.conf
+    regexp: ^PRUNEPATHS
+    line: PRUNEPATHS="/tmp /var/spool /media /var/lib/attic"
+  tags: [configure]
+
+- name: create a directory for the LUKS keys
+  file:
+    path: /root/keys
+    mode: 0700
+    state: directory
+  tags: [install]
+
+- name: check presence of the LUKS keys (must be manually transferred)
+  stat:
+    path: /root/keys/disk-{{ item.label }}.key
+  with_items: "{{ attic_backup_disks }}"
+  register: key
+  failed_when: not key.stat.exists
+  tags: [install]
+
+- name: create crypttab entries
+  lineinfile:
+    dest: /etc/crypttab
+    line: "{{ item.label }}  /dev/disk/by-uuid/{{ item.uuid }}  /root/keys/disk-{{ item.label }}.key  nofail"
+    create: yes
+  with_items: "{{ attic_backup_disks }}"
+  notify: reload systemd
+  tags: [install]
+
+- name: create fstab entries
+  lineinfile:
+    dest: /etc/fstab
+    line: "LABEL={{ item.label }}  /var/lib/attic  ext3  rw,noexec,nouser,async,nodev,noauto,nosuid,nofail,x-systemd.automount 0   2"
+  with_items: "{{ attic_backup_disks }}"
+  notify: reload systemd
+  tags: [install]

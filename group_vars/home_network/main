@@ -211,3 +211,11 @@ named_dynamic_zones:
   - {name: 20,   type: PTR, rdata: proton.private.deverteuil.net.}
 dyndns_client_fqdn: alexdev.chickenkiller.com
 dyndns_client_key: "{{ vault_dyndns_client_key }}"
+
+attic_backup_disks:
+- label: backups
+  uuid: 83b124a4-826e-4aa5-8e72-a540631cfea3
+- label: backups2
+  uuid: e0bd582e-b64f-45c8-9c79-b4539bcb0039
+- label: backups3
+  uuid: fd244f88-97cb-4252-8c01-733179d06b87
