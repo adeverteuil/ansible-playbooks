@@ -1,0 +1,14 @@
+# {{ ansible_managed }}
+# attic help patterns
+/dev/
+/proc/
+/sys/
+/lost+found
+/var/log/lastlog
+/home/**/cache/
+/home/**/Cache/
+/home/**/.cache/
+/var/cache/
+{% for pattern in attic_extra_exclude_patterns %}
+{{ pattern }}
+{% endfor %}

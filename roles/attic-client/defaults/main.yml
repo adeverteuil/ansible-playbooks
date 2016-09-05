@@ -1,0 +1,4 @@
+---
+attic_extra_exclude_patterns: []
+attic_cron_create_minute: 0
+attic_cron_create_hour: "*"

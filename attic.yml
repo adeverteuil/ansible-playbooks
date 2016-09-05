@@ -3,6 +3,6 @@
   roles:
   - {role: attic-server, tags: [attic-server]}
 
-#- hosts: home_network
-#  roles:
-#  - {role: backup-client, tags: [backup-client]}
+- hosts: home_network
+  roles:
+  - {role: attic-client, tags: [attic-client]}
