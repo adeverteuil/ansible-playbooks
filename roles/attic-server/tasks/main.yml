@@ -68,3 +68,26 @@
   with_items: "{{ attic_backup_disks }}"
   notify: reload systemd
   tags: [install]
+
+- name: mount the backup disk
+  service: name=var-lib-attic.mount state=present
+
+- name: create the repository directory
+  file:
+    path: /var/lib/attic/repository
+    state: directory
+    owner: attic
+    group: attic
+    mode: 0700
+
+  # Unencrypted because backup partition is block-level encrypted
+- name: initialize the repository
+  command: attic init /var/lib/attic/repository
+  become: yes
+  become_user: attic
+  args:
+    creates: /var/lib/attic/repository/data
+
+#  ## This does not create an encrypted repo because the
+#  ## disk is block-level encrypted.
+#- name: prune archives
