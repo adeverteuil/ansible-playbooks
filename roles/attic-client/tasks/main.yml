@@ -14,7 +14,7 @@
   authorized_key:
     user: attic
     key: "{{ pubkey.stdout }}"
-    key_options: 'command="cd /var/lib/attic; flock repository.lock attic serve --restrict-to-path /var/lib/attic",no-port-forwarding,no-X11-forwarding,no-pty,no-agent-forwarding,no-user-rc'
+    key_options: 'command="/usr/local/bin/attic_serve.sh",no-port-forwarding,no-X11-forwarding,no-pty,no-agent-forwarding,no-user-rc'
 
 - name: install attic
   apt: name=attic state=present
@@ -31,4 +31,4 @@
     user: root
     minute: "{{ attic_cron_create_minute }}"
     hour: "{{ attic_cron_create_hour }}"
-    job: stdout=$(nice -n 19 ionice -c 2 -n 7 flock -n /run/attic.lock attic create "attic@attic:/var/lib/attic/repository::{{ ansible_fqdn }}-$(date -Iseconds)" --exclude-from /etc/attic.exclude --do-not-cross-mountpoints / 2>&1) || echo $stdout
+    job: stdout=$(nice -n 19 ionice -c 2 -n 7 flock -n /run/attic.lock attic create "attic@attic.private.deverteuil.net:/var/lib/attic/repository::{{ ansible_fqdn }}-$(date -Iseconds)" --exclude-from /etc/attic.exclude --do-not-cross-mountpoints {{ attic_backup_paths }} 2>&1) || echo $stdout

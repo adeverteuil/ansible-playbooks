@@ -16,7 +16,7 @@
 
 - name: create the attic user's .ssh directory
   file:
-    path: /home/attic/.sh
+    path: /home/attic/.ssh
     state: directory
     owner: attic
     group: attic
@@ -64,13 +64,14 @@
 - name: create fstab entries
   lineinfile:
     dest: /etc/fstab
-    line: "LABEL={{ item.label }}  /var/lib/attic  ext3  rw,noexec,nouser,async,nodev,noauto,nosuid,nofail,x-systemd.automount 0   2"
+    line: "#LABEL={{ item.label }}  /var/lib/attic  ext3  rw,noexec,nouser,async,nodev,noauto,nosuid,nofail,x-systemd.automount 0   2"
+    regexp: "LABEL={{ item.label }}\\b"
   with_items: "{{ attic_backup_disks }}"
   notify: reload systemd
   tags: [install]
 
 - name: mount the backup disk
-  service: name=var-lib-attic.mount state=present
+  service: name=var-lib-attic.mount state=started
 
 - name: create the repository directory
   file:
@@ -87,6 +88,21 @@
   become_user: attic
   args:
     creates: /var/lib/attic/repository/data
+
+- name: create the lock file
+  copy:
+    dest: /var/lib/attic/repository/lock
+    content: Presence of this file is checked before backups can occur.
+    owner: attic
+    group: attic
+
+- name: copy the attic_serve.sh ssh forced command
+  copy:
+    dest: /usr/local/bin/attic_serve.sh
+    src: attic_serve.sh
+    mode: 0744
+    owner: attic
+    group: attic
 
 #  ## This does not create an encrypted repo because the
 #  ## disk is block-level encrypted.
