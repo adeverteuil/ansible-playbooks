@@ -95,6 +95,7 @@
     content: Presence of this file is checked before backups can occur.
     owner: attic
     group: attic
+    mode: 0644
 
 - name: copy the attic_serve.sh ssh forced command
   copy:
