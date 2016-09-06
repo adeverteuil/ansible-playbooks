@@ -97,14 +97,21 @@
     group: attic
     mode: 0644
 
-- name: copy the attic_serve.sh ssh forced command
+- name: copy the attic_*.sh scripts
   copy:
-    dest: /usr/local/bin/attic_serve.sh
-    src: attic_serve.sh
+    dest: /usr/local/bin/{{ item }}
+    src: "{{ item }}"
     mode: 0744
     owner: attic
     group: attic
+  with_items: [attic_serve.sh, attic_prune.sh]
 
-#  ## This does not create an encrypted repo because the
-#  ## disk is block-level encrypted.
-#- name: prune archives
+- name: create a cron job to prune archives
+  cron:
+    name: attic prune
+    state: present
+    cron_file: /etc/crontab
+    user: attic
+    minute: "{{ attic_cron_prune_minute }}"
+    hour: "{{ attic_cron_prune_hour }}"
+    job: /usr/local/bin/attic_prune.sh

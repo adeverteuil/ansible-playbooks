@@ -1,4 +1,6 @@
 ---
+attic_cron_prune_minute: 40
+attic_cron_prune_hour: "*"
 attic_backup_disks: []
 _attic_backup_disks:
 - label: backups1
