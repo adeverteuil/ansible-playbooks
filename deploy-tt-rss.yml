@@ -55,6 +55,7 @@
     copy:
       src: files/ttrss_backend.service
       dest: /etc/systemd/system/ttrss_backend.service
+    notify: restart ttrss_backend
   
   - name: start and enable ttrss_backend
     service: name=ttrss_backend state=started enabled=yes
@@ -62,3 +63,6 @@
   handlers:
   - name: restart apache2
     service: name=apache2 state=restarted
+
+  - name: restart ttrss_backend
+    service: name=ttrss_backend state=restarted

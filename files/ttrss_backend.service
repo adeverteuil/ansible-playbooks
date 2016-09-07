@@ -5,6 +5,7 @@ After=network.target mysql.service postgresql.service
 [Service]
 User=www-data
 ExecStart=/var/www/tt-rss/update_daemon2.php
+Restart=on-success
 
 [Install]
 WantedBy=multi-user.target
