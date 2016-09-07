@@ -8,7 +8,6 @@ zabbix.nyj004.deverteuil.net
 postgresql.nyj004.deverteuil.net
 mysql.nyj004.deverteuil.net
 nginx.nyj004.deverteuil.net
-nextcloud.nyj004.deverteuil.net
 
 [home_network]
 fixion
@@ -26,7 +25,6 @@ smtp
 apt
 backup
 nginx
-nextcloud
 zabbix
 attic
 
