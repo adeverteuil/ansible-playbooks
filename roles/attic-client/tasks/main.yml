@@ -24,6 +24,12 @@
     src: attic.exclude.j2
     dest: /etc/attic.exclude
 
+- name: copy attic_create_archive.sh
+  template:
+    dest: /usr/local/bin/attic_create_archive.sh
+    src: attic_create_archive.sh
+    mode: 0744
+
 - name: create a cron job
   cron:
     name: attic create
@@ -31,4 +37,4 @@
     user: root
     minute: "{{ attic_cron_create_minute }}"
     hour: "{{ attic_cron_create_hour }}"
-    job: stdout=$(nice -n 19 ionice -c 2 -n 7 flock -n /run/attic.lock attic create "attic@attic.private.deverteuil.net:/var/lib/attic/repository::{{ ansible_fqdn }}-$(date -Iseconds)" --exclude-from /etc/attic.exclude --do-not-cross-mountpoints {{ attic_backup_paths }} 2>&1) || echo $stdout
+    job: /usr/local/bin/attic_create_archive.sh
