@@ -1,0 +1,117 @@
+---
+- name: install attic
+  apt: name=attic state=present
+
+- name: create the attic group
+  group: name=attic state=present
+
+- name: create the attic user
+  user:
+    name: attic
+    shell: /bin/bash
+    home: /home/attic
+    createhome: yes
+    group: attic
+    state: present
+
+- name: create the attic user's .ssh directory
+  file:
+    path: /home/attic/.ssh
+    state: directory
+    owner: attic
+    group: attic
+    mode: 0700
+
+- name: create the repository directory
+  file:
+    path: /var/lib/attic
+    owner: attic
+    group: attic
+    mode: 0700
+    state: directory
+
+- name: exclude the backups from udpatedb
+  lineinfile:
+    dest: /etc/updatedb.conf
+    regexp: ^PRUNEPATHS
+    line: PRUNEPATHS="/tmp /var/spool /media /var/lib/attic"
+  tags: [configure]
+
+- name: create a directory for the LUKS keys
+  file:
+    path: /root/keys
+    mode: 0700
+    state: directory
+  tags: [install]
+
+- name: check presence of the LUKS keys (must be manually transferred)
+  stat:
+    path: /root/keys/disk-{{ item.label }}.key
+  with_items: "{{ attic_backup_disks }}"
+  register: key
+  failed_when: not key.stat.exists
+  tags: [install]
+
+- name: create crypttab entries
+  lineinfile:
+    dest: /etc/crypttab
+    line: "{{ item.label }}  /dev/disk/by-uuid/{{ item.uuid }}  /root/keys/disk-{{ item.label }}.key  nofail"
+    create: yes
+  with_items: "{{ attic_backup_disks }}"
+  notify: reload systemd
+  tags: [install]
+
+- name: create fstab entries
+  lineinfile:
+    dest: /etc/fstab
+    line: "#LABEL={{ item.label }}  /var/lib/attic  ext3  rw,noexec,nouser,async,nodev,noauto,nosuid,nofail,x-systemd.automount 0   2"
+    regexp: "LABEL={{ item.label }}\\b"
+  with_items: "{{ attic_backup_disks }}"
+  notify: reload systemd
+  tags: [install]
+
+- name: mount the backup disk
+  service: name=var-lib-attic.mount state=started
+
+- name: create the repository directory
+  file:
+    path: /var/lib/attic/repository
+    state: directory
+    owner: attic
+    group: attic
+    mode: 0700
+
+  # Unencrypted because backup partition is block-level encrypted
+- name: initialize the repository
+  command: attic init /var/lib/attic/repository
+  become: yes
+  become_user: attic
+  args:
+    creates: /var/lib/attic/repository/data
+
+- name: create the lock file
+  copy:
+    dest: /var/lib/attic/repository/lock
+    content: Presence of this file is checked before backups can occur.
+    owner: attic
+    group: attic
+    mode: 0644
+
+- name: copy the attic_*.sh scripts
+  copy:
+    dest: /usr/local/bin/{{ item }}
+    src: "{{ item }}"
+    mode: 0744
+    owner: attic
+    group: attic
+  with_items: [attic_serve.sh, attic_prune.sh]
+
+- name: create a cron job to prune archives
+  cron:
+    name: attic prune
+    state: present
+    cron_file: /etc/crontab
+    user: attic
+    minute: "{{ attic_cron_prune_minute }}"
+    hour: "{{ attic_cron_prune_hour }}"
+    job: /usr/local/bin/attic_prune.sh

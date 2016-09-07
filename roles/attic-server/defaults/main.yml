@@ -1,0 +1,7 @@
+---
+attic_cron_prune_minute: 40
+attic_cron_prune_hour: "*"
+attic_backup_disks: []
+_attic_backup_disks:
+- label: backups1
+  uuid: 83b124a4-826e-4aa5-8e72-a540631cfea3
