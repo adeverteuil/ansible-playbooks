@@ -165,6 +165,7 @@ named_dynamic_zones:
   records:
   - {name: "",      type: NS, rdata: ns1}
   - {name: "",      type: NS, rdata: ns2}
+  - {name: pfsense, type: A,  rdata: 192.168.13.1}
   - {name: ns1,     type: A,  rdata: 192.168.13.8}
   - {name: ns2,     type: A,  rdata: 192.168.13.88}
   - {name: dhcp,    type: A,  rdata: 192.168.13.3}
@@ -196,6 +197,7 @@ named_dynamic_zones:
   records:
   - {name: "",  type: NS,  rdata: ns1.private.deverteuil.net.}
   - {name: "",  type: NS,  rdata: ns2.private.deverteuil.net.}
+  - {name: 1,   type: PTR, rdata: pfsense.private.deverteuil.net.}
   - {name: 8,   type: PTR, rdata: ns1.private.deverteuil.net.}
   - {name: 88,  type: PTR, rdata: ns2.private.deverteuil.net.}
   - {name: 3,   type: PTR, rdata: dhcp.private.deverteuil.net.}
