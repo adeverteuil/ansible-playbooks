@@ -22,8 +22,6 @@ unifi
 postgresql
 tor
 smtp
-apt
-backup
 nginx
 zabbix
 attic
