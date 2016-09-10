@@ -1,0 +1,45 @@
+---
+- name: generate ssh keys for root
+  command: ssh-keygen -N "" -f /root/.ssh/id_rsa
+  args:
+    creates: /root/.ssh/id_rsa.pub
+
+- name: read the public key
+  command: cat /root/.ssh/id_rsa.pub
+  register: pubkey
+  changed_when: false
+
+- name: install the public key on the borg server
+  delegate_to: attic
+  authorized_key:
+    user: borg
+    key: "{{ pubkey.stdout }}"
+    key_options: 'command="/usr/local/bin/borg_serve.sh",no-port-forwarding,no-X11-forwarding,no-pty,no-agent-forwarding,no-user-rc'
+
+- name: install borg
+  get_url:
+    dest: /usr/local/bin/borg
+    checksum: sha256:e1b5370bc55ce00eecbac459bc9751b540d48b7ba42168ad4e4505db175aa471
+    url: https://github.com/borgbackup/borg/releases/download/1.0.7/borg-linux64
+    mode: 0755
+
+- name: copy borg.exclude
+  template:
+    src: borg.exclude.j2
+    dest: /etc/borg.exclude
+
+- name: copy borg_create_archive.sh
+  template:
+    dest: /usr/local/bin/borg_create_archive.sh
+    src: borg_create_archive.sh
+    mode: 0744
+
+- name: create a cron job
+  cron:
+    name: borg create
+    state: present
+    cron_file: /etc/crontab
+    user: root
+    minute: "{{ borg_cron_create_minute }}"
+    hour: "{{ borg_cron_create_hour }}"
+    job: /usr/local/bin/borg_create_archive.sh

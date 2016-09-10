@@ -7,9 +7,8 @@ if ! flock -n 9; then
   echo "Couldn't acquire lock /$REPOSITORY/prune.lock"
   exit 1
 fi
-borg list $REPOSITORY | sed -r "s/^([a-zA-Z0-9\.-]*)[/-]([^ ]{24,25})(\.checkpoint)? .*/\1/" | sort -u | \
-while read prefix; do  #                                      ^^ Length of "yyyy-mm-ddThh:mm:ss-zzzz"
-                       #                                         ^^ "yyyy-mm-ddThh:mm:ss-zz:zz" on Fedora
+borg list $REPOSITORY | sed -r "s/^([a-zA-Z0-9\.-]*)_.*/\1/" | sort -u | \
+while read prefix; do
     flock $REPOSITORY/lock \
     borg prune $* $REPOSITORY \
         --keep-within 24H \

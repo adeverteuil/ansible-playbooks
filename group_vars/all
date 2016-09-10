@@ -4,4 +4,4 @@ ansible_python_interpreter: /usr/bin/python2
 bind_domainadmin: postmaster.deverteuil.net
 
 exim_root_alias: alexandre@deverteuil.net
-borg_repository: attic@attic.private.deverteuil.net:/var/lib/attic/repository
+borg_repository: borg@attic.private.deverteuil.net:/var/lib/attic/repository
