@@ -4,3 +4,5 @@ ansible_python_interpreter: /usr/bin/python2
 bind_domainadmin: postmaster.deverteuil.net
 
 exim_root_alias: alexandre@deverteuil.net
+attic_repository: attic@attic.private.deverteuil.net:/var/lib/attic/repository
+attic_cron_create_hour: "*/6"

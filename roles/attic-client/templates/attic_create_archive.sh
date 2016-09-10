@@ -5,8 +5,8 @@
 # You can pass the -v and -s parameters if you invoke the script from an
 # interactive terminal.
 
-NICE="nice -n 19 ionice -c 2 -n 7"
-REPOSITORY="attic@attic.private.deverteuil.net:/var/lib/attic/repository"
+NICE="nice -n 10 ionice -c 2 -n 3"
+REPOSITORY="{{ attic_repository }}"
 ARCHIVE="{{ ansible_fqdn }}/$(date -Iseconds)"
 ATTIC="attic create ${REPOSITORY}::${ARCHIVE}"
 OPTIONS="--exclude-from /etc/attic.exclude --do-not-cross-mountpoints $*"
