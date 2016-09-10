@@ -8,11 +8,11 @@ if ! flock -n 9; then
   exit 1
 fi
 attic list $REPOSITORY | sed -r "s/^([a-zA-Z0-9\.-]*)[/-]([^ ]{24,25})(\.checkpoint)? .*/\1/" | sort -u | \
-while read prefix; do  #                                    ^^ Length of "yyyy-mm-ddThh:mm:ss-zzzz"
-                       #                                       ^^ "yyyy-mm-ddThh:mm:ss-zz:zz" on Fedora
+while read prefix; do  #                                       ^^ Length of "yyyy-mm-ddThh:mm:ss-zzzz"
+                       #                                          ^^ "yyyy-mm-ddThh:mm:ss-zz:zz" on Fedora
     flock $REPOSITORY/lock \
     attic prune $* $REPOSITORY \
-        --keep-hourly 24 \
+        --keep-within 24H \
         --keep-daily 7 \
         --keep-weekly 4 \
         --keep-monthly 3 \
