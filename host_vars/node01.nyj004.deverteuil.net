@@ -5,3 +5,6 @@ timeserver_upstream_servers:
 - 2.debian.pool.ntp.org
 - 3.debian.pool.ntp.org
 timeserver_firewalld_service_state: enabled
+attic_extra_exclude_patterns:
+- /var/lib/libvirt/images/
+- /var/lib/libvirt/images_iso/
