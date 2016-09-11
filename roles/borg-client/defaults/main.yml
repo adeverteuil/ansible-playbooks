@@ -1,0 +1,6 @@
+---
+borg_extra_exclude_patterns: []
+borg_cron_create_minute: 0
+borg_cron_create_hour: "*"
+borg_backup_paths: /
+_borg_backup_paths: / /some/other/filesystem

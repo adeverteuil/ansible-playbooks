@@ -1,0 +1,8 @@
+---
+- hosts: attic
+  roles:
+  - {role: borg-server, tags: [borg-server]}
+
+- hosts: home_network,nyj004,!attic
+  roles:
+  - {role: borg-client, tags: [borg-client]}

@@ -33,6 +33,7 @@
 - name: create a cron job
   cron:
     name: attic create
+    state: absent
     cron_file: /etc/crontab
     user: root
     minute: "{{ attic_cron_create_minute }}"

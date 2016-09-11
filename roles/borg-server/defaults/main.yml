@@ -1,0 +1,7 @@
+---
+borg_cron_prune_minute: 40
+borg_cron_prune_hour: "*"
+borg_backup_disks: []
+_borg_backup_disks:
+- label: backups1
+  uuid: 83b124a4-826e-4aa5-8e72-a540631cfea3
