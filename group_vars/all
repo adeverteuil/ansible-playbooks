@@ -5,3 +5,4 @@ bind_domainadmin: postmaster.deverteuil.net
 
 exim_root_alias: alexandre@deverteuil.net
 borg_repository: borg@attic.private.deverteuil.net:/var/lib/attic/repository
+borg_backup_paths: / /boot

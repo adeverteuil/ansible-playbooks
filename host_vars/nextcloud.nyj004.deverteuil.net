@@ -1,2 +1,2 @@
 ---
-borg_backup_paths: / /var/www/nextcloud/data
+borg_backup_paths: / /boot /var/www/nextcloud/data
