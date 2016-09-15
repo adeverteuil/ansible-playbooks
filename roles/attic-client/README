@@ -1,5 +1,0 @@
-This variable must be defined in host_vars or group_vars:
-
-attic_repository
-
-and must be in the format user@host:/directory if the repository is remote.

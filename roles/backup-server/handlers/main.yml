@@ -1,6 +1,0 @@
----
-- name: reload systemd
-  command: systemctl daemon-reload
-
-- name: restart munin-node
-  service: name=munin-node state=restarted

@@ -1,8 +1,0 @@
----
-- hosts: attic
-  roles:
-  - {role: attic-server, tags: [attic-server]}
-
-- hosts: home_network,nyj004,!attic
-  roles:
-  - {role: attic-client, tags: [attic-client]}
