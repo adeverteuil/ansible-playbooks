@@ -7,6 +7,18 @@ Assumes archive names have the following format:
     fully.qualified.domain.name_yyyy-mm-ddThh:mm:ss
 
 Example output:
+
+    host1.example.com ┿┿││┿┿┿
+    host1.example.com ┿┿│┿┿┿│
+    host1.example.com ┿┿│┿┿┿┿
+    host1.example.com ┿┿┿┿┿┿┿
+                      ││││││└─ 2016-09-15 21:00
+                      │││││└── 2016-09-15 20:00
+                      ││││└─── 2016-09-15 19:00
+                      │││└──── 2016-09-15 18:00
+                      ││└───── 2016-09-15 17:00
+                      │└────── 2016-09-15 16:00
+                      └─────── 2016-09-15 15:00
 """
 
 from collections import defaultdict
