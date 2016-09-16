@@ -108,7 +108,11 @@
     mode: 0744
     owner: borg
     group: borg
-  with_items: [borg_serve.sh, borg_prune.sh]
+  with_items:
+  - borg_serve.sh
+  - borg_prune.sh
+  - borg_history.py
+  - borg_status.sh
 
 - name: create a cron job to prune archives
   cron:
