@@ -9,9 +9,9 @@ Assumes archive names have the following format:
 Example output:
 
     host1.example.com ┿┿││┿┿┿
-    host1.example.com ┿┿│┿┿┿│
-    host1.example.com ┿┿│┿┿┿┿
-    host1.example.com ┿┿┿┿┿┿┿
+    host2.example.com ┿┿│┿┿┿│
+    host3.example.com ┿┿│┿┿┿┿
+    host4.example.com ┿┿┿┿┿┿┿
                       ││││││└─ 2016-09-15 21:00
                       │││││└── 2016-09-15 20:00
                       ││││└─── 2016-09-15 19:00
