@@ -266,7 +266,9 @@ prdr_enable = true
 # detail than the default.  Adjust to suit.
 
 log_selector = +smtp_protocol_error +smtp_syntax_error \
-	+tls_certificate_verified
+        +tls_certificate_verified +address_rewrite +all_parents \
+        +received_recipients +received_sender +sender_on_delivery \
+        +smtp_connection +smtp_mailauth +subject +smtp_no_mail
 
 
 # If you want Exim to support the "percent hack" for certain domains,
@@ -448,7 +450,7 @@ acl_check_rcpt:
   # list, it is a mistake.
 
   accept  hosts         = +relay_from_hosts
-          control       = submission
+          control       = submission/sender_retain
           control       = dkim_disable_verify
 
   # Accept if the message arrived over an authenticated connection, from
@@ -457,7 +459,7 @@ acl_check_rcpt:
   # check before any black list tests.
 
   accept  authenticated = *
-          control       = submission
+          control       = submission/sender_retain
           control       = dkim_disable_verify
 
   # Insist that any other recipient address that we accept is either in one of
