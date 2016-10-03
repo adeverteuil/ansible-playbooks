@@ -1,2 +1,6 @@
+{% if server.set_header_xforwardedfor|default(nginx_set_header_xforwardedfor) %}
         proxy_set_header    X-Forwarded-For   $remote_addr;
+{% endif %}
+{% if server.set_header_host|default(nginx_set_header_host) %}
         proxy_set_header    Host              $http_host;
+{% endif %}

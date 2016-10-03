@@ -1,2 +1,4 @@
 ---
 nginx_proxy_servers: []
+nginx_set_header_xforwardedfor: yes
+nginx_set_header_host: yes
