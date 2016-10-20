@@ -50,14 +50,6 @@ openvpn_configs:
     additional_options:
     - 'verify-x509-name "C=CA, ST=QC, L=Verdun, O=deVerteuil.net, CN=pfsense.nyj004.deverteuil.net, name=EasyRSA, emailAddress=alexandre@deverteuil.net"'
 
-exim_postmaster: alex
-exim_no_sender_verify_domains: [acs-agiledash.corp.internap.com]
-exim_smarthost: mail.aei.ca
-exim_local_domains: [private.deverteuil.net, deverteuil.net, alexdev.chickenkiller.com]
-exim_relay_from_hosts: ["192.168.0.0/16"]
-exim_delivery_directory: /var/spool/mail/$local_part@$domain
-exim_vuser_home: /var/vmail/$local_part@$domain
-
 webserver_serveradmin: alexandre@deverteuil.net
 letsencrypt_email: alexandre@deverteuil.net
 webserver_certificate_file: /etc/letsencrypt/live/smtp.deverteuil.net/cert.pem
@@ -155,11 +147,6 @@ named_static_zones:
   records: *my_reverse_proxy
 - origin: alexandre.deverteuil.net
   records: *my_reverse_proxy
-- origin: smtp.deverteuil.net
-  records:
-  - {name: "",  type: NS, rdata: ns1.private.deverteuil.net.}
-  - {name: "",  type: NS, rdata: ns2.private.deverteuil.net.}
-  - {name: "@", type: A,  rdata: 192.168.13.9}
 named_dynamic_zones:
 - origin: private.deverteuil.net
   records:

@@ -734,6 +734,12 @@ begin transports
 
 remote_smtp:
   driver = smtp
+  hosts_try_auth = <; ${if exists{/etc/exim4/passwd.client} \
+        {\
+        ${lookup{$host}nwildlsearch{/etc/exim4/passwd.client}{$host_address}}\
+        }\
+        {} \
+      }
 
 
 # This transport is used for local delivery to user mailboxes in traditional

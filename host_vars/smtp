@@ -1,8 +1,11 @@
 ---
 exim_router: smarthost
-exim_smarthost: mail.aei.ca
+exim_smarthost: "smtp.deverteuil.net::587"
 exim_postmaster: alexandre
 exim_install_spamassassin: yes
+exim_no_sender_verify_domains: [acs-agiledash.corp.internap.com]
+exim_local_domains: [private.deverteuil.net, deverteuil.net, alexdev.chickenkiller.com]
+exim_relay_from_hosts: ["192.168.0.0/16"]
 
 dovecot_postmaster: alexandre@deverteuil.net
 dovecot_common_name: smtp.private.deverteuil.net

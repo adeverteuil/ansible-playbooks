@@ -1,3 +1,3 @@
 ---
-- hosts: smtp
+- hosts: smtp,smtp.deverteuil.net
   roles: [dovecot, spamassassin, mailserver]
