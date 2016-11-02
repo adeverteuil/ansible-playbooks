@@ -48,6 +48,6 @@
   roles:
   - {role: zabbix-proxy, tags: [zabbix-proxy]}
 
-- hosts: home_network,nyj004
+- hosts: home_network,nyj004,nyc3
   roles:
   - {role: zabbix-agent, tags: [zabbix-agent]}

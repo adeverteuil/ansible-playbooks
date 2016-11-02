@@ -149,6 +149,11 @@ named_static_zones:
   records: *my_reverse_proxy
 - origin: nextcloud.deverteuil.net
   records: *my_reverse_proxy
+- origin: smtp.deverteuil.net
+  records:
+  - {name: "",  type: NS, rdata: ns1.private.deverteuil.net.}
+  - {name: "",  type: NS, rdata: ns2.private.deverteuil.net.}
+  - {name: "@", type: A,  rdata: 192.168.66.6}
 named_dynamic_zones:
 - origin: private.deverteuil.net
   records:
