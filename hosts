@@ -29,6 +29,7 @@ smtp
 nginx
 zabbix
 attic
+nextcloud
 
 # Datacenter bootstrapping
 # Create and configure hosts in this order

@@ -31,3 +31,15 @@
       additional_lines:
       - proxy_buffering off;
       - client_max_body_size 0;
+
+- hosts: nginx.private.deverteuil.net
+  roles:
+  - {role: reverse-proxy, tags: [reverse-proxy]}
+  vars:
+    nginx_proxy_servers:
+    - name: nextcloud.deverteuil.net
+      proxy_pass: "{{ hostvars['nextcloud.private.deverteuil.net']['ansible_eth1']['ipv4']['address'] }}"
+      ssl: yes
+      additional_lines:
+      - proxy_buffering off;
+      - client_max_body_size 0;

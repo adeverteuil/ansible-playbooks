@@ -147,6 +147,8 @@ named_static_zones:
   records: *my_reverse_proxy
 - origin: alexandre.deverteuil.net
   records: *my_reverse_proxy
+- origin: nextcloud.deverteuil.net
+  records: *my_reverse_proxy
 named_dynamic_zones:
 - origin: private.deverteuil.net
   records:
