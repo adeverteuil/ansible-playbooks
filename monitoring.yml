@@ -19,35 +19,11 @@
       priv: ALL
     tags: [postgresql, install]
 
-- hosts: postgresql.nyj004.deverteuil.net
-  tasks:
-  - name: create the database
-    become: yes
-    become_user: postgres
-    postgresql_db:
-      name: zabbix_proxy
-      state: present
-    tags: [postgresql, install]
-
-  - name: create the database user
-    become: yes
-    become_user: postgres
-    postgresql_user:
-      name: zabbix_proxy
-      password: "{{ zabbix_database_password }}"
-      db: zabbix_proxy
-      priv: ALL
-    tags: [postgresql, install]
-
 - hosts: zabbix
   roles:
   - {role: webserver, tags: [webserver]}
   - {role: zabbix-server, tags: [zabbix-server]}
 
-- hosts: zabbix.nyj004.deverteuil.net
-  roles:
-  - {role: zabbix-proxy, tags: [zabbix-proxy]}
-
-- hosts: home_network,nyj004,nyc3
+- hosts: home_network,nyc3
   roles:
   - {role: zabbix-agent, tags: [zabbix-agent]}

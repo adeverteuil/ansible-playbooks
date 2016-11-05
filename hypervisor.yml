@@ -1,5 +1,5 @@
 ---
-- hosts: fixion,node01.nyj004.deverteuil.net
+- hosts: fixion
   roles:
   - bridge
   - hypervisor

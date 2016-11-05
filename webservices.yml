@@ -12,7 +12,7 @@
   # Hosts all web services on the secure interface (secure VLAN)
   # over http only.
 
-- hosts: nginx,nginx.nyj004.deverteuil.net
+- hosts: nginx
   roles:
   - {role: reverse-proxy, tags: [reverse-proxy]}
   - {role: letsencrypt, tags: [letsencrypt]}

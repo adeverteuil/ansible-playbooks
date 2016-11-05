@@ -3,7 +3,7 @@ exim_router: smarthost
 exim_smarthost: "smtp.deverteuil.net::587"
 exim_postmaster: alexandre@deverteuil.net
 exim_install_spamassassin: yes
-exim_no_sender_verify_domains: [acs-agiledash.corp.internap.com, private.deverteuil.net, nyj004.deverteuil.net]
+exim_no_sender_verify_domains: [acs-agiledash.corp.internap.com, private.deverteuil.net]
 #exim_local_domains: [private.deverteuil.net, deverteuil.net, alexdev.chickenkiller.com]
 exim_relay_from_hosts: ["192.168.0.0/16", "172.16.0.0/12"]
 

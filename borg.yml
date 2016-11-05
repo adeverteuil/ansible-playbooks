@@ -3,6 +3,6 @@
   roles:
   - {role: borg-server, tags: [borg-server]}
 
-- hosts: home_network,nyj004,!attic
+- hosts: home_network,!attic
   roles:
   - {role: borg-client, tags: [borg-client]}
