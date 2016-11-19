@@ -30,3 +30,9 @@
   - net.bridge.bridge-nf-call-ip6tables
   - net.bridge.bridge-nf-call-arptables
   - net.bridge.bridge-nf-call-iptables
+
+- name: enable nested KVM
+  lineinfile:
+    line: options kvm_intel nested=1
+    dest: /etc/modprobe.d/qemu-system-x86.conf
+    create: yes
