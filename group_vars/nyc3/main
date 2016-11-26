@@ -1,6 +1,6 @@
 ---
 exim_postmaster: alexandre@deverteuil.net
-exim_no_sender_verify_domains: [acs-agiledash.corp.internap.com, "*.*.deverteuil.net"]
+exim_no_sender_verify_domains: [acs-agiledash.corp.internap.com, "*.private.deverteuil.net"]
 exim_local_domains: [deverteuil.net]
 exim_delivery_directory: /var/spool/mail/$local_part@$domain
 exim_vuser_home: /var/vmail/$local_part@$domain

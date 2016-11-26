@@ -492,6 +492,11 @@ acl_check_rcpt:
   #         add_header    = X-Warning: $sender_host_address is in a black list at $dnslist_domain
   #         log_message   = found in $dnslist_domain
   #############################################################################
+{% if exim_dnslist %}
+
+  deny    message       = rejected because $sender_host_address is in a black list at $dnslist_domain\n$dnslist_text
+          dnslists      = {{ exim_dnslist }}
+{% endif %}
 
   #############################################################################
   # This check is commented out because it is recognized that not every

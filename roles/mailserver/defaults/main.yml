@@ -6,3 +6,4 @@ exim_postmaster: root
 exim_local_aliases: []
 exim_relay_from_hosts: []
 exim_no_sender_verify_domains: []
+exim_dnslist: zen.spamhaus.org
