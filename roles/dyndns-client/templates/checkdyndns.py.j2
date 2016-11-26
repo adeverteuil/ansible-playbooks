@@ -3,6 +3,7 @@
 import socket
 import urllib2
 import re
+import subprocess
 
 FQDN = "{{ dyndns_client_fqdn }}"
 CHECKIP = "http://ip.dnsexit.com/"
@@ -17,7 +18,8 @@ def get_actual_ip():
     actual_ip = ipmatch.group(0)
     return actual_ip
 
-resolved_ip = socket.gethostbyname(FQDN)
+#resolved_ip = socket.gethostbyname(FQDN)
+resolved_ip = subprocess.check_output(["dig", "@8.8.8.8", FQDN, "+short"])
 actual_ip = get_actual_ip()
 
 if resolved_ip != actual_ip:
