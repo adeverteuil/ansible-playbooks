@@ -6,7 +6,7 @@
   - php5-mcrypt
   - php5-ldap
   - php5-gmp
-  - php5-memcached
+  - php5-apcu
   - php5-imagick
   tags: [install]
 
@@ -139,3 +139,27 @@
     minute: "*/15"
     user: www-data
   tags: [serve]
+
+- name: check if asset-pipeline is enabled
+  command: php occ config:system:get asset-pipeline.enabled
+  args:
+    chdir: /var/www/nextcloud
+  become_user: www-data
+  register: asset_pipeline_enabled
+  changed_when: false
+  tags: [configure]
+
+- name: enable asset-pipeline
+  command: php occ config:system:set asset-pipeline.enabled --value true
+  args:
+    chdir: /var/www/nextcloud
+  become_user: www-data
+  when: "{{ asset_pipeline_enabled|bool }}"
+  tags: [configure]
+
+- name: enable the local cache
+  command: php occ config:system:set memcache.local --value '\OC\Memcache\APCu'
+  args:
+    chdir: /var/www/nextcloud
+  become_user: www-data
+  tags: [configure]
