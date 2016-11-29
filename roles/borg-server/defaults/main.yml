@@ -1,6 +1,9 @@
 ---
 borg_cron_prune_minute: 40
 borg_cron_prune_hour: "*"
+borg_cron_history_minute: 50
+borg_cron_history_hour: 3
+borg_cron_history_weekday: 4
 borg_backup_disks: []
 _borg_backup_disks:
 - label: backups1

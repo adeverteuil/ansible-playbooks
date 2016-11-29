@@ -124,3 +124,19 @@
     minute: "{{ borg_cron_prune_minute }}"
     hour: "{{ borg_cron_prune_hour }}"
     job: /usr/local/bin/borg_prune.sh
+
+- name: create a cron job to mail archive history report
+  cron:
+    name: borg history
+    state: present
+    cron_file: /etc/crontab
+    user: borg
+    minute: "{{ borg_cron_history_minute }}"
+    hour: "{{ borg_cron_history_hour }}"
+    weekday: "{{ borg_cron_history_weekday }}"
+    job: /usr/local/bin/borg_history.py
+
+- name: send borg's mail to whoever should receive root's mail
+  lineinfile:
+    dest: /etc/aliases
+    line: "borg: root"
