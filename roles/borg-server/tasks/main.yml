@@ -68,8 +68,9 @@
 - name: create fstab entries
   lineinfile:
     dest: /etc/fstab
-    line: "#LABEL={{ item.label }}  /var/lib/attic  ext3  rw,noexec,nouser,async,nodev,noauto,nosuid,nofail,x-systemd.automount 0   2"
-    regexp: "LABEL={{ item.label }}\\b"
+    line: "\\1LABEL={{ item.label }}  /var/lib/attic  ext3  rw,noexec,nouser,async,nodev,noauto,nosuid,nofail,x-systemd.automount 0   2"
+    regexp: "^(#?)LABEL={{ item.label }}\\b"
+    backrefs: yes
   with_items: "{{ borg_backup_disks }}"
   notify: reload systemd
   tags: [install]
