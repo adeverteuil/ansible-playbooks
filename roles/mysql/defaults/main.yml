@@ -1,2 +1,5 @@
 ---
 mysql_bind_address: 127.0.0.1
+mysql_options: []
+_mysql_options:
+- {option: tmp_table_size, value: 32M}
