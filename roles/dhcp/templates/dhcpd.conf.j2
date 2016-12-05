@@ -38,13 +38,11 @@ subnet 192.168.13.0 netmask 255.255.255.0 {
 
 zone {{ bind_localdomain }}. {
   primary 192.168.13.8;
-  secondary 192.168.13.88;
   key DHCP_UPDATER;
 }
 
 zone 13.168.192.in-addr.arpa. {
   primary 192.168.13.8;
-  secondary 192.168.13.88;
   key DHCP_UPDATER;
 }
 
