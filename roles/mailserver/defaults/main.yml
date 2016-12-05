@@ -7,3 +7,4 @@ exim_local_aliases: []
 exim_relay_from_hosts: []
 exim_no_sender_verify_domains: []
 exim_dnslist: zen.spamhaus.org
+exim_use_opendns: no

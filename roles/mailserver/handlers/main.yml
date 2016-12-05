@@ -7,3 +7,6 @@
 
 - name: run newaliases
   command: newaliases
+
+- name: restart networking
+  service: name=networking state=restarted
