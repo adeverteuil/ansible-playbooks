@@ -61,6 +61,20 @@
   notify: restart zabbix-server
   tags: [configure]
 
+# http://docs.grafana-zabbix.org/installation/configuration/#note-about-zabbix-22-or-less
+- name: fix cross-domain requests for grafana plugin
+  blockinfile:
+    dest: /usr/share/zabbix/api_jsonrpc.php
+    insertbefore: "^require_once dirname\\(__FILE__\\)\\.'/include/func\\.inc\\.php';$"
+    block: |
+      header('Access-Control-Allow-Origin: *');
+      header('Access-Control-Allow-Headers: Content-Type');
+      header('Access-Control-Allow-Methods: POST');
+      header('Access-Control-Max-Age: 1000');
+      if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+        return;
+      }
+
 - name: enable zabbix-server
   lineinfile:
     dest: /etc/default/zabbix-server

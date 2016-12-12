@@ -1,0 +1,55 @@
+---
+- name: install apt-transport-https
+  apt: name=apt-transport-https state=present
+
+- name: add the grafana repo key
+  apt_key:
+    url: https://packagecloud.io/gpg.key
+    state: present
+
+- name: add the grafana repo
+  apt_repository:
+    repo: deb https://packagecloud.io/grafana/stable/debian/ jessie main
+    update_cache: yes
+    state: present
+
+- name: install packages
+  apt:
+    name: grafana
+    state: present
+
+- name: configure grafana
+  template:
+    src: grafana.ini.j2
+    dest: /etc/grafana/grafana.ini
+    owner: root
+    group: grafana
+    mode: 0640
+  notify: restart grafana-server
+
+- name: configure ldap authentication
+  template:
+    src: ldap.toml.j2
+    dest: /etc/grafana/ldap.toml
+    owner: root
+    group: grafana
+    mode: 0640
+  notify: restart grafana-server
+
+- name: start and enable grafana-server
+  service: name=grafana-server state=started enabled=yes
+
+- name: open port 3000
+  firewalld:
+    port: 3000/tcp
+    state: enabled
+    permanent: yes
+    immediate: yes
+
+- name: install plugin for Zabbix data source
+  command: grafana-cli plugins install alexanderzobnin-zabbix-app
+  args:
+    creates: /var/lib/grafana/plugins/alexanderzobnin-zabbix-app
+  become: yes
+  become_user: grafana
+  notify: restart grafana-server
