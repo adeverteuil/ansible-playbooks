@@ -12,6 +12,12 @@
   # Hosts all web services on the secure interface (secure VLAN)
   # over http only.
 
+- hosts: grafana
+  tasks:
+  - name: gather facts
+    setup:
+      filter: "ansible_eth*"
+
 - hosts: nginx
   roles:
   - {role: reverse-proxy, tags: [reverse-proxy]}

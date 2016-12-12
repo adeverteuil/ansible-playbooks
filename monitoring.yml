@@ -27,3 +27,7 @@
 - hosts: home_network,nyc3
   roles:
   - {role: zabbix-agent, tags: [zabbix-agent]}
+
+- hosts: grafana
+  roles:
+  - {role: grafana, tags: [grafana]}
