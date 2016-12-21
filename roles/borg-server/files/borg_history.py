@@ -12,13 +12,19 @@ Example output:
     host2.example.com ┿┿│┿┿┿│
     host3.example.com ┿┿│┿┿┿┿
     host4.example.com ┿┿┿┿┿┿┿
-                      ││││││└─ 2016-09-15 21:00
-                      │││││└── 2016-09-15 20:00
-                      ││││└─── 2016-09-15 19:00
-                      │││└──── 2016-09-15 18:00
-                      ││└───── 2016-09-15 17:00
-                      │└────── 2016-09-15 16:00
-                      └─────── 2016-09-15 15:00
+                      2211111
+                      1098765
+
+                      1111111
+                      5555555
+
+                      0000000
+                      9999999
+
+                      2222222
+                      0000000
+                      1111111
+                      6666666
 """
 
 from collections import defaultdict
@@ -27,15 +33,14 @@ from subprocess import check_output, CalledProcessError
 import sys
 
 try:
-    list_output = check_output(["borg", "list", "/var/lib/attic/repository"])
+    list_output = check_output(["borg", "list", "--short", "/var/lib/attic/repository"])
 except CalledProcessError:
-    print("Failed to query the list of archive in the borg repository.")
+    print("Failed to query the list of archives in the borg repository.")
     sys.exit(1)
 times = defaultdict(set)
 hosts = set()
 for line in list_output.splitlines():
-    archive = line.split(maxsplit=1)[0].decode()
-    host, timestamp = archive.split("_", maxsplit=1)
+    host, timestamp = line.decode().split("_", maxsplit=1)
     t = datetime.strptime(timestamp[:13], "%Y-%m-%dT%H")
     times[t].add(host)
     hosts.add(host)
@@ -46,7 +51,7 @@ for host in sorted(hosts, key=lambda h: ".".join(reversed(h.split(".")))):
     for time in sorted(times):
         print("┿" if host in times[time] else "│", end="")
     print()
-for index, time in zip(range(len(times)), sorted(times, reverse=True)):
-    t = time.strftime("%Y-%m-%d %H:00")
-    asciiart = ("│" * (len(times) - (index + 1))) + "└─" + ("─" * index)
-    print("{} {} {}".format(" "*width1, asciiart, t))
+timestamps = [t.strftime("%H %d %m %Y") for t in sorted(times)]
+width2 = width1 - 2
+for line in map(''.join, zip(*["hh dd mm yyyy", "             "]+timestamps)):
+    print("{} {}".format(" "*width2, line))
