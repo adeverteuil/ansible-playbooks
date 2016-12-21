@@ -55,6 +55,13 @@
     owner: www-data
   tags: [install]
 
+- name: add zabbix to the www-data group
+  user:
+    name: zabbix
+    groups: www-data
+    append: yes
+  tags: [configure]
+
 - name: create the virtualhost
   template:
     src: virtualhost.conf
