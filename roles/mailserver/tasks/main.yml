@@ -10,13 +10,6 @@
   notify: reload exim4
   tags: [configure]
 
-#- name: update aliases
-#  template:
-#    src: aliases.j2
-#    dest: /etc/mail/aliases
-#  notify: run newaliases
-#  tags: [configure]
-
 - name: add Debian-exim to the mail group
   # to access /var/run/dovecot/auth-client
   user:
