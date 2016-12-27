@@ -52,3 +52,21 @@
   when: "{{ exim_use_opendns }}"
   notify: restart networking
   tags: [configure]
+
+- name: allow zabbix to run monitoring commands
+  template:
+    src: sudoers.j2
+    dest: /etc/sudoers.d/zabbix-exim
+  tags: [configure]
+
+- name: create the zabbix_agentd.conf.d directory
+  file:
+    state: directory
+    path: /etc/zabbix/zabbix_agentd.conf.d
+  tags: [configure]
+
+- name: create zabbix user parameters
+  template:
+    src: zabbix.conf.j2
+    dest: /etc/zabbix/zabbix_agentd.conf.d/exim.conf
+  tags: [configure]

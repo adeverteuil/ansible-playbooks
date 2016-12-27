@@ -1,0 +1,4 @@
+# {{ ansible_managed }}
+
+Cmnd_Alias EXIM = /usr/sbin/exim -bpc
+zabbix {{ ansible_fqdn }} = (Debian-exim) NOPASSWD: EXIM
