@@ -37,6 +37,5 @@
 #      dns: "{{ ansible_fqdn }}"
 #      port: 0
 
-- name: monitor MySQL
-  include: mysql.yml
+- include: mysql.yml
   when: zabbix_monitor_mysql
