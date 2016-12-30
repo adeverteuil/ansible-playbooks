@@ -1,3 +1,10 @@
 ---
 bind_localdomain: "localdomain"
 dhcp_static_hosts: []
+dhcp_subnets: []
+_dhcp_subnets:
+  - network: 192.168.0.0
+    netmask: 255.255.255.0
+    gateway: 192.168.0.1
+    zone: 0.168.192.in-addr.arpa.
+    pool: [192.168.0.100, 192.168.0.200]

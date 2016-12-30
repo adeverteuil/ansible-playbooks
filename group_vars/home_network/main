@@ -3,6 +3,27 @@ bind_localdomain: private.deverteuil.net
 dhcp_static_hosts:
 - {mac: "50:67:ae:f0:2d:01", ip: "192.168.13.31", name: "voip"}
 dhcp_update_key: "{{ vault_dhcp_update_key }}"
+dhcp_subnets:
+- network: 192.168.13.0
+  netmask: 255.255.255.0
+  gateway: 192.168.13.1
+  pool: [192.168.13.100, 192.168.13.250]
+  zone: 13.168.192.in-addr.arpa.
+- network: 192.168.14.0
+  netmask: 255.255.255.0
+  gateway: 192.168.14.1
+  pool: [192.168.14.100, 192.168.14.250]
+  zone: 14.168.192.in-addr.arpa.
+- network: 192.168.15.0
+  netmask: 255.255.255.0
+  gateway: 192.168.15.1
+  pool: [192.168.15.100, 192.168.15.250]
+  zone: 15.168.192.in-addr.arpa.
+- network: 192.168.16.0
+  netmask: 255.255.255.0
+  gateway: 192.168.16.1
+  pool: [192.168.16.100, 192.168.16.250]
+  zone: 16.168.192.in-addr.arpa.
 
 timeserver_upstream_servers:
 - ntp.private.deverteuil.net
@@ -158,7 +179,7 @@ named_dynamic_zones:
   - {name: pfsense, type: A,  rdata: 192.168.13.1}
   - {name: ns1,     type: A,  rdata: 192.168.13.8}
   - {name: ns2,     type: A,  rdata: 192.168.13.88}
-  - {name: dhcp,    type: A,  rdata: 192.168.13.3}
+  - {name: dhcp,    type: A,  rdata: 192.168.15.3}
   - {name: fixion,  type: A,  rdata: 192.168.13.4}
   - {name: openvpn, type: A,  rdata: 192.168.13.6}
   - {name: smtp,    type: A,  rdata: 192.168.13.9}
@@ -190,12 +211,24 @@ named_dynamic_zones:
   - {name: 1,   type: PTR, rdata: pfsense.private.deverteuil.net.}
   - {name: 8,   type: PTR, rdata: ns1.private.deverteuil.net.}
   - {name: 88,  type: PTR, rdata: ns2.private.deverteuil.net.}
-  - {name: 3,   type: PTR, rdata: dhcp.private.deverteuil.net.}
   - {name: 4,   type: PTR, rdata: fixion.private.deverteuil.net.}
   - {name: 5,   type: PTR, rdata: home.private.deverteuil.net.}
   - {name: 6,   type: PTR, rdata: openvpn.private.deverteuil.net.}
   - {name: 9,   type: PTR, rdata: smtp.private.deverteuil.net.}
   - {name: 10,  type: PTR, rdata: tor.private.deverteuil.net.}
+- origin: 14.168.192.in-addr.arpa
+  records:
+  - {name: "", type: NS, rdata: ns1.private.deverteuil.net.}
+  - {name: "", type: NS, rdata: ns2.private.deverteuil.net.}
+- origin: 15.168.192.in-addr.arpa
+  records:
+  - {name: "", type: NS, rdata: ns1.private.deverteuil.net.}
+  - {name: "", type: NS, rdata: ns2.private.deverteuil.net.}
+  - {name: 3,   type: PTR, rdata: dhcp.private.deverteuil.net.}
+- origin: 16.168.192.in-addr.arpa
+  records:
+  - {name: "", type: NS, rdata: ns1.private.deverteuil.net.}
+  - {name: "", type: NS, rdata: ns2.private.deverteuil.net.}
 - origin: 42.168.192.in-addr.arpa
   records:
   - {name: "",  type: NS,  rdata: ns1.private.deverteuil.net.}
