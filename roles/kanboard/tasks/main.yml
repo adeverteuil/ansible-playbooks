@@ -65,7 +65,7 @@
   mysql_user:
     name: "{{ kanboard_database_user }}"
     priv: "{{ kanboard_database_name }}.*:ALL"
-    host: "{{ hostvars['web']['ansible_eth1']['ipv4']['address'] }}"
+    host: "{{ hostvars['web']['ansible_eth0']['ipv4']['address'] }}"
     state: present
     password: "{{ kanboard_database_password }}"
   tags: [install]

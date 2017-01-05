@@ -47,7 +47,7 @@ define('DB_USERNAME', '{{ kanboard_database_user }}');
 define('DB_PASSWORD', '{{ kanboard_database_password }}');
 
 // Mysql/Postgres hostname
-define('DB_HOSTNAME', '{{ hostvars['mysql']['ansible_eth1']['ipv4']['address'] }}');
+define('DB_HOSTNAME', '{{ hostvars['mysql']['ansible_eth0']['ipv4']['address'] }}');
 
 // Mysql/Postgres database name
 define('DB_NAME', '{{ kanboard_database_name }}');

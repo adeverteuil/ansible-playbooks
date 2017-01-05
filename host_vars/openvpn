@@ -5,5 +5,5 @@ firewalld_forward_ports:
 #    portid[-portid]:proto=protocol[:toport=portid[-portid]][:toaddr=address[/mask]]
 router_routes:
 - {destination: "192.168.42.0/24", source: "{{ ansible_default_ipv4.address }}", gateway: "192.168.66.4"}
-router_static_ip: 192.168.13.6
-router_default_gateway: 192.168.13.1
+router_static_ip: 192.168.14.6
+router_default_gateway: 192.168.14.1

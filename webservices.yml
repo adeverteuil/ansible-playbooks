@@ -3,7 +3,7 @@
   tasks:
   - name: gather database servers IP addresses
     setup:
-      filter: ansible_eth1
+      filter: ansible_eth0
 
 - hosts: web
   roles:

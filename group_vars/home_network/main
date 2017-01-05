@@ -71,13 +71,13 @@ postgresql_pg_hba_lines:
 
 nginx_proxy_servers:
   - name: wp-yves.deverteuil.net
-    proxy_pass: "{{ hostvars['web']['ansible_eth1']['ipv4']['address'] }}"
+    proxy_pass: "{{ hostvars['web']['ansible_eth0']['ipv4']['address'] }}"
     ssl: yes
   - name: benjamin-wp-test.deverteuil.net
-    proxy_pass: "{{ hostvars['web']['ansible_eth1']['ipv4']['address'] }}"
+    proxy_pass: "{{ hostvars['web']['ansible_eth0']['ipv4']['address'] }}"
     ssl: yes
   - name: tt-rss.deverteuil.net
-    proxy_pass: "{{ hostvars['web']['ansible_eth1']['ipv4']['address'] }}"
+    proxy_pass: "{{ hostvars['web']['ansible_eth0']['ipv4']['address'] }}"
     ssl: yes
   - name: nextcloud.deverteuil.net
     proxy_pass: 192.168.14.4
@@ -86,19 +86,19 @@ nginx_proxy_servers:
     - proxy_buffering off;
     - client_max_body_size 0;
   - name: osticket.deverteuil.net
-    proxy_pass: "{{ hostvars['web']['ansible_eth1']['ipv4']['address'] }}"
+    proxy_pass: "{{ hostvars['web']['ansible_eth0']['ipv4']['address'] }}"
     ssl: yes
   - name: kanban.deverteuil.net
-    proxy_pass: "{{ hostvars['web']['ansible_eth1']['ipv4']['address'] }}"
+    proxy_pass: "{{ hostvars['web']['ansible_eth0']['ipv4']['address'] }}"
     ssl: yes
   - name: monitoring.deverteuil.net
-    proxy_pass: "{{ hostvars['zabbix']['ansible_eth1']['ipv4']['address'] }}"
+    proxy_pass: "{{ hostvars['zabbix']['ansible_eth0']['ipv4']['address'] }}"
     ssl: yes
   - name: piwik.deverteuil.net
-    proxy_pass: "{{ hostvars['web']['ansible_eth1']['ipv4']['address'] }}"
+    proxy_pass: "{{ hostvars['web']['ansible_eth0']['ipv4']['address'] }}"
     ssl: yes
   - name: alexandre.deverteuil.net
-    proxy_pass: "{{ hostvars['web']['ansible_eth1']['ipv4']['address'] }}"
+    proxy_pass: "{{ hostvars['web']['ansible_eth0']['ipv4']['address'] }}"
     ssl: yes
   - name: grafana.deverteuil.net
     proxy_pass: "{{ hostvars['grafana']['ansible_eth0']['ipv4']['address'] }}:3000"
@@ -107,13 +107,13 @@ nginx_proxy_servers:
 mysql_root_password: "{{ vault_mysql_root_password }}"
 nextcloud_db_password: "{{ vault_nextcloud_db_password }}"
 nextcloud_admin_password: "{{ vault_nextcloud_admin_password }}"
-nextcloud_db_host: "{{ hostvars['mysql']['ansible_eth1']['ipv4']['address'] }}"
-nextcloud_db_user_host: "{{ hostvars['nextcloud']['ansible_eth1']['ipv4']['address'] }}"
-nextcloud_listen_address: "{{ hostvars['nextcloud']['ansible_eth1']['ipv4']['address'] }}"
+nextcloud_db_host: "{{ hostvars['mysql']['ansible_eth0']['ipv4']['address'] }}"
+nextcloud_db_user_host: "{{ hostvars['nextcloud']['ansible_eth0']['ipv4']['address'] }}"
+nextcloud_listen_address: "{{ hostvars['nextcloud']['ansible_eth0']['ipv4']['address'] }}"
 
 zabbix_database_password: "{{ vault_zabbix_database_password }}"
 zabbix_login_password: "{{ vault_zabbix_login_password }}"
-zabbix_database_server: "{{ hostvars['postgresql']['ansible_eth1']['ipv4']['address'] }}"
+zabbix_database_server: "{{ hostvars['postgresql']['ansible_eth0']['ipv4']['address'] }}"
 zabbix_server: zabbix.private.deverteuil.net
 
 kanboard_vhost_name: kanban.deverteuil.net
@@ -146,7 +146,7 @@ named_static_zones:
   records: &my_reverse_proxy
   - {name: "",  type: NS, rdata: ns1.private.deverteuil.net.}
   - {name: "",  type: NS, rdata: ns2.private.deverteuil.net.}
-  - {name: "@", type: A,  rdata: 192.168.13.11}
+  - {name: "@", type: A,  rdata: 192.168.14.11}
 - origin: tt-rss.deverteuil.net
   records: *my_reverse_proxy
 - origin: osticket.deverteuil.net
@@ -168,24 +168,31 @@ named_static_zones:
   - {name: "@", type: A,  rdata: 192.168.66.6}
 - origin: alexdev.chickenkiller.com
   records:
-  - {name: "",  type: NS, rdata: ns1.private.deverteuil.net.}
-  - {name: "",  type: NS, rdata: ns2.private.deverteuil.net.}
-  - {name: "@", type: A,  rdata: 192.168.13.5}
+  - {name: "",  type: NS,     rdata: ns1.private.deverteuil.net.}
+  - {name: "",  type: NS,     rdata: ns2.private.deverteuil.net.}
+  - {name: "@", type: CNAME,  rdata: home.private.deverteuil.net.}
 named_dynamic_zones:
 - origin: private.deverteuil.net
   records:
-  - {name: "",      type: NS, rdata: ns1}
-  - {name: "",      type: NS, rdata: ns2}
-  - {name: pfsense, type: A,  rdata: 192.168.13.1}
-  - {name: ns1,     type: A,  rdata: 192.168.13.8}
-  - {name: ns2,     type: A,  rdata: 192.168.13.88}
-  - {name: dhcp,    type: A,  rdata: 192.168.15.3}
-  - {name: fixion,  type: A,  rdata: 192.168.13.4}
-  - {name: openvpn, type: A,  rdata: 192.168.14.6}
-  - {name: smtp,    type: A,  rdata: 192.168.13.9}
-  - {name: tor,     type: A,  rdata: 192.168.14.10}
-  - {name: proton,  type: A,  rdata: 192.168.42.20}
-  - {name: home,    type: A,  rdata: 192.168.13.5}
+  - {name: "",         type: NS, rdata: ns1}
+  - {name: "",         type: NS, rdata: ns2}
+  - {name: dhcp,       type: A,  rdata: 192.168.15.3}
+  - {name: fixion,     type: A,  rdata: 192.168.13.4}
+  - {name: grafana,    type: A,  rdata: 192.168.14.12}
+  - {name: home,       type: A,  rdata: 192.168.14.9}
+  - {name: mysql,      type: A,  rdata: 192.168.14.3}
+  - {name: nextcloud,  type: A,  rdata: 192.168.14.4}
+  - {name: nginx,      type: A,  rdata: 192.168.14.11}
+  - {name: ns1,        type: A,  rdata: 192.168.13.8}
+  - {name: ns2,        type: A,  rdata: 192.168.13.88}
+  - {name: openvpn,    type: A,  rdata: 192.168.14.6}
+  - {name: pfsense,    type: A,  rdata: 192.168.13.1}
+  - {name: postgresql, type: A,  rdata: 192.168.14.7}
+  - {name: proton,     type: A,  rdata: 192.168.42.20}
+  - {name: smtp,       type: A,  rdata: 192.168.14.13}
+  - {name: tor,        type: A,  rdata: 192.168.14.10}
+  - {name: web,        type: A,  rdata: 192.168.14.2}
+  - {name: zabbix,     type: A,  rdata: 192.168.14.5}
   - {name: _kerberos,             type: TXT, rdata: "PRIVATE.DEVERTEUIL.NET"}
   - {name: _kerberos._tcp,        type: SRV, rdata: 0 100 88 freeipa.private.deverteuil.net.}
   - {name: _kerberos-master._tcp, type: SRV, rdata: 0 100 88 freeipa.private.deverteuil.net.}
@@ -212,14 +219,21 @@ named_dynamic_zones:
   - {name: 8,   type: PTR, rdata: ns1.private.deverteuil.net.}
   - {name: 88,  type: PTR, rdata: ns2.private.deverteuil.net.}
   - {name: 4,   type: PTR, rdata: fixion.private.deverteuil.net.}
-  - {name: 5,   type: PTR, rdata: home.private.deverteuil.net.}
-  - {name: 9,   type: PTR, rdata: smtp.private.deverteuil.net.}
 - origin: 14.168.192.in-addr.arpa
   records:
-  - {name: "", type: NS, rdata: ns1.private.deverteuil.net.}
-  - {name: "", type: NS, rdata: ns2.private.deverteuil.net.}
+  - {name: "",  type: NS, rdata: ns1.private.deverteuil.net.}
+  - {name: "",  type: NS, rdata: ns2.private.deverteuil.net.}
+  - {name: 2,   type: PTR, rdata: web.private.deverteuil.net.}
+  - {name: 3,   type: PTR, rdata: mysql.private.deverteuil.net.}
+  - {name: 4,   type: PTR, rdata: nextcloud.private.deverteuil.net.}
+  - {name: 5,   type: PTR, rdata: zabbix.private.deverteuil.net.}
   - {name: 6,   type: PTR, rdata: openvpn.private.deverteuil.net.}
+  - {name: 7,   type: PTR, rdata: postgresql.private.deverteuil.net.}
+  - {name: 9,   type: PTR, rdata: home.private.deverteuil.net.}
   - {name: 10,  type: PTR, rdata: tor.private.deverteuil.net.}
+  - {name: 11,  type: PTR, rdata: nginx.private.deverteuil.net.}
+  - {name: 12,  type: PTR, rdata: grafana.private.deverteuil.net.}
+  - {name: 13,  type: PTR, rdata: smtp.private.deverteuil.net.}
 - origin: 15.168.192.in-addr.arpa
   records:
   - {name: "", type: NS, rdata: ns1.private.deverteuil.net.}
