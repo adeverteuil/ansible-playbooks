@@ -74,13 +74,7 @@ postgresql_pg_hba_lines:
 - host all all web.private.deverteuil.net md5
 
 nginx_proxy_servers:
-  - name: wp-yves.deverteuil.net
-    proxy_pass: "{{ hostvars['web']['ansible_eth0']['ipv4']['address'] }}"
-    ssl: yes
   - name: www.bouchairville.com
-    proxy_pass: "{{ hostvars['web']['ansible_eth0']['ipv4']['address'] }}"
-    ssl: yes
-  - name: benjamin-wp-test.deverteuil.net
     proxy_pass: "{{ hostvars['web']['ansible_eth0']['ipv4']['address'] }}"
     ssl: yes
   - name: tt-rss.deverteuil.net
