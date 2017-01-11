@@ -77,6 +77,9 @@ nginx_proxy_servers:
   - name: wp-yves.deverteuil.net
     proxy_pass: "{{ hostvars['web']['ansible_eth0']['ipv4']['address'] }}"
     ssl: yes
+  - name: www.bouchairville.com
+    proxy_pass: "{{ hostvars['web']['ansible_eth0']['ipv4']['address'] }}"
+    ssl: yes
   - name: benjamin-wp-test.deverteuil.net
     proxy_pass: "{{ hostvars['web']['ansible_eth0']['ipv4']['address'] }}"
     ssl: yes
@@ -164,6 +167,10 @@ named_static_zones:
 - origin: nextcloud.deverteuil.net
   records: *my_reverse_proxy
 - origin: grafana.deverteuil.net
+  records: *my_reverse_proxy
+- origin: www.bouchairville.com
+  records: *my_reverse_proxy
+- origin: wiki.deverteuil.net
   records: *my_reverse_proxy
 - origin: smtp.deverteuil.net
   records:
