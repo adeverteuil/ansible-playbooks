@@ -34,6 +34,7 @@
   with_items:
   - ssl
   - remoteip
+  - rewrite
   notify: restart apache2
   tags: [configure]
 
