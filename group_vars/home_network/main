@@ -58,6 +58,10 @@ openvpn_configs:
     client_to_client: yes
     push_rules:
     - route 192.168.13.0 255.255.255.0 192.168.66.1
+    - route 192.168.14.0 255.255.255.0 192.168.66.1
+    - route 192.168.15.0 255.255.255.0 192.168.66.1
+    - route 192.168.16.0 255.255.255.0 192.168.66.1
+    - route 192.168.17.0 255.255.255.0 192.168.66.1
     - dhcp-option DNS 192.168.13.8
     - dhcp-option DNS 192.168.13.88
     - dhcp-option DOMAIN private.deverteuil.net
@@ -170,7 +174,7 @@ named_static_zones:
   records:
   - {name: "",  type: NS,     rdata: ns1.private.deverteuil.net.}
   - {name: "",  type: NS,     rdata: ns2.private.deverteuil.net.}
-  - {name: "@", type: CNAME,  rdata: home.private.deverteuil.net.}
+  - {name: "@", type: A,      rdata: 192.168.13.9}
 named_dynamic_zones:
 - origin: private.deverteuil.net
   records:
@@ -179,13 +183,13 @@ named_dynamic_zones:
   - {name: dhcp,       type: A,  rdata: 192.168.15.3}
   - {name: fixion,     type: A,  rdata: 192.168.13.4}
   - {name: grafana,    type: A,  rdata: 192.168.14.12}
-  - {name: home,       type: A,  rdata: 192.168.14.9}
+  - {name: home,       type: A,  rdata: 192.168.13.9}
   - {name: mysql,      type: A,  rdata: 192.168.14.3}
   - {name: nextcloud,  type: A,  rdata: 192.168.14.4}
   - {name: nginx,      type: A,  rdata: 192.168.14.11}
   - {name: ns1,        type: A,  rdata: 192.168.13.8}
   - {name: ns2,        type: A,  rdata: 192.168.13.88}
-  - {name: openvpn,    type: A,  rdata: 192.168.14.6}
+  - {name: openvpn,    type: A,  rdata: 192.168.13.6}
   - {name: pfsense,    type: A,  rdata: 192.168.13.1}
   - {name: postgresql, type: A,  rdata: 192.168.14.7}
   - {name: proton,     type: A,  rdata: 192.168.42.20}
@@ -216,9 +220,11 @@ named_dynamic_zones:
   - {name: "",  type: NS,  rdata: ns1.private.deverteuil.net.}
   - {name: "",  type: NS,  rdata: ns2.private.deverteuil.net.}
   - {name: 1,   type: PTR, rdata: pfsense.private.deverteuil.net.}
-  - {name: 8,   type: PTR, rdata: ns1.private.deverteuil.net.}
-  - {name: 88,  type: PTR, rdata: ns2.private.deverteuil.net.}
   - {name: 4,   type: PTR, rdata: fixion.private.deverteuil.net.}
+  - {name: 6,   type: PTR, rdata: openvpn.private.deverteuil.net.}
+  - {name: 8,   type: PTR, rdata: ns1.private.deverteuil.net.}
+  - {name: 9,   type: PTR, rdata: home.private.deverteuil.net.}
+  - {name: 88,  type: PTR, rdata: ns2.private.deverteuil.net.}
 - origin: 14.168.192.in-addr.arpa
   records:
   - {name: "",  type: NS, rdata: ns1.private.deverteuil.net.}
@@ -227,9 +233,7 @@ named_dynamic_zones:
   - {name: 3,   type: PTR, rdata: mysql.private.deverteuil.net.}
   - {name: 4,   type: PTR, rdata: nextcloud.private.deverteuil.net.}
   - {name: 5,   type: PTR, rdata: zabbix.private.deverteuil.net.}
-  - {name: 6,   type: PTR, rdata: openvpn.private.deverteuil.net.}
   - {name: 7,   type: PTR, rdata: postgresql.private.deverteuil.net.}
-  - {name: 9,   type: PTR, rdata: home.private.deverteuil.net.}
   - {name: 10,  type: PTR, rdata: tor.private.deverteuil.net.}
   - {name: 11,  type: PTR, rdata: nginx.private.deverteuil.net.}
   - {name: 12,  type: PTR, rdata: grafana.private.deverteuil.net.}
