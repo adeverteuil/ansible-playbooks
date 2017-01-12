@@ -26,7 +26,7 @@
   vars:
     nginx_proxy_servers:
     - name: nextcloud.deverteuil.net
-      proxy_pass: "{{ hostvars['nextcloud.private.deverteuil.net']['ansible_eth1']['ipv4']['address'] }}"
+      proxy_pass: "{{ hostvars['nextcloud.private.deverteuil.net']['ansible_eth0']['ipv4']['address'] }}"
       ssl: yes
       additional_lines:
       - proxy_buffering off;
