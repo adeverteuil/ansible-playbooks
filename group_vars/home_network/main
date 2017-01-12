@@ -281,3 +281,13 @@ grafana_ldap_group_mappings:
   org_role: Admin
 - group_dn: cn=grafana_users,cn=groups,cn=accounts,dc=private,dc=deverteuil,dc=net
   org_role: Editor
+
+moinmoin_ldap_host: ldap://freeipa.private.deverteuil.net
+moinmoin_ldap_bind_dn: uid=moinmoin,cn=users,cn=accounts,dc=private,dc=deverteuil,dc=net
+moinmoin_ldap_bind_password: "{{ vault_moinmoin_ldap_bind_password }}"
+moinmoin_ldap_search_filter: (&(uid=%(username)s)(memberOf=cn=mywiki_users,cn=groups,cn=accounts,dc=private,dc=deverteuil,dc=net))
+moinmoin_ldap_base_dn: cn=users,cn=accounts,dc=private,dc=deverteuil,dc=net
+moinmoin_ldap_givenname_attribute: givenName
+moinmoin_ldap_surname_attribute: sn
+moinmoin_ldap_attribute_member_of: memberOf
+moinmoin_ldap_email_attribute: mail

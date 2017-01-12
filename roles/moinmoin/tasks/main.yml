@@ -1,0 +1,58 @@
+---
+- name: install python-moinmoin
+  apt: name={{ item }} state=present
+  with_items:
+  - python-moinmoin
+  - python-ldap
+
+- name: create /var/www/mywiki
+  file:
+    path: /var/www/mywiki
+    state: directory
+    owner: www-data
+    group: www-data
+
+- name: create /var/lib/mywiki
+  file:
+    path: /var/lib/mywiki
+    state: directory
+    owner: www-data
+    group: www-data
+
+- name: populate /var/lib/mywiki
+  command: cp -r /usr/share/moin/data /usr/share/moin/underlay /var/lib/mywiki
+  args:
+    creates: /var/lib/mywiki/data
+  become: yes
+  become_user: www-data
+
+- name: create the virtual host
+  template:
+    src: virtualhost.conf.j2
+    dest: /etc/apache2/sites-available/mywiki.conf
+  notify: reload apache2
+
+- name: configure my wiki
+  template:
+    src: mywiki.py.j2
+    dest: /etc/moin/mywiki.py
+  notify: reload apache2
+
+- name: populate the wikilist
+  lineinfile:
+    dest: /etc/moin/wikilist
+    line: www-data wiki.deverteuil.net/
+    create: yes
+  notify: reload apache2
+
+- name: enable the cgi module
+  apache2_module:
+    name: cgi
+    state: present
+  notify: restart apache2
+
+- name: enable the wiki site
+  command: a2ensite mywiki
+  args:
+    creates: /etc/apache2/sites-enabled/mywiki.conf
+  notify: reload apache2

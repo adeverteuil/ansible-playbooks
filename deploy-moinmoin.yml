@@ -1,0 +1,12 @@
+---
+- hosts: web
+  roles: [moinmoin]
+
+- hosts: nginx
+  roles:
+  - {role: reverse-proxy, tags: [reverse-proxy]}
+  vars:
+    nginx_proxy_servers:
+    - name: wiki.deverteuil.net
+      proxy_pass: "{{ hostvars['web']['ansible_eth0']['ipv4']['address'] }}"
+      ssl: yes

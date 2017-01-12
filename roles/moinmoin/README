@@ -1,0 +1,14 @@
+These variables must be defined:
+
+moinmoin_ldap_host
+moinmoin_ldap_bind_dn
+moinmoin_ldap_bind_password
+moinmoin_ldap_search_filter
+moinmoin_ldap_search_base_dn
+
+These variables are optional and default to None:
+
+moinmoin_ldap_givenname_attribute
+moinmoin_ldap_surname_attribute
+moinmoin_ldap_attribute_member_of
+moinmoin_ldap_email_attribute

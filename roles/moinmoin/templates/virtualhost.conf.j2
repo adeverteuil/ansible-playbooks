@@ -1,0 +1,9 @@
+<VirtualHost 192.168.14.2:80>
+    ServerName wiki.deverteuil.net
+    DocumentRoot /var/www/mywiki/
+    Alias /moin_static198/applets/FCKeditor/ "/usr/share/fckeditor/"
+    Alias /moin_static198/ "/usr/share/moin/htdocs/"
+    ScriptAlias /MyWiki "/usr/share/moin/server/moin.cgi"
+    ErrorLog ${APACHE_LOG_DIR}/mywiki.error.log
+    CustomLog ${APACHE_LOG_DIR}/mywiki.access.log combined
+</VirtualHost>

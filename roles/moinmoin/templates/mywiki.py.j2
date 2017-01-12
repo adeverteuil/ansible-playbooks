@@ -1,0 +1,79 @@
+# -*- coding: iso-8859-1 -*-
+
+"""
+This is a sample config for a wiki that is part of a wiki farm and uses
+farmconfig for common stuff. Here we define what has to be different from
+the farm's common settings.
+"""
+
+# we import the FarmConfig class for common defaults of our wikis:
+from farmconfig import FarmConfig
+
+from MoinMoin.auth.ldap_login import LDAPAuth
+from MoinMoin.auth import MoinAuth
+
+# now we subclass that config (inherit from it) and change what's different:
+class Config(FarmConfig):
+
+    # basic options (you normally need to change these)
+    sitename = u'MyWiki' # [Unicode]
+    interwikiname = u'MyWiki' # [Unicode]
+
+    # name of entry page / front page [Unicode], choose one of those:
+
+    # a) if most wiki content is in a single language
+    #page_front_page = u"MyStartingPage"
+
+    # b) if wiki content is maintained in many languages
+    page_front_page = u"FrontPage"
+
+    data_dir = '/var/lib/mywiki/data'
+    data_underlay_dir = '/var/lib/mywiki/underlay'
+    superuser = [u"alex"]
+    acl_hierarchic = True
+    acl_rights_default = "Trusted:admin,read,write,delete,revert All:"
+    acl_rights_before = "alex:admin,read,write,delete,revert"
+
+    ldap_authenticator1 = LDAPAuth(
+        server_uri='{{ moinmoin_ldap_host }}',
+        bind_dn='{{ moinmoin_ldap_bind_dn }}',
+        bind_pw='{{ moinmoin_ldap_bind_password }}',
+        base_dn='{{ moinmoin_ldap_base_dn }}',
+        scope=2, # scope of the search we do (2 == ldap.SCOPE_SUBTREE)
+        referrals=0, # LDAP REFERRALS (0 needed for AD)
+        search_filter='{{ moinmoin_ldap_search_filter }}',
+                                             # you can also do more complex filtering like:
+                                             # "(&(cn=%(username)s)(memberOf=CN=WikiUsers,OU=Groups,DC=example,DC=org))"
+        # some attribute names we use to extract information from LDAP (if not None,
+        # if None, the attribute won't be extracted from LDAP):
+        {% if moinmoin_ldap_givenname_attribute is defined %}
+        givenname_attribute="{{ moinmoin_ldap_givenname_attribute }}",
+        {% endif %}
+        {% if moinmoin_ldap_surname_attribute is defined %}
+        surname_attribute="{{ moinmoin_ldap_surname_attribute }}",
+        {% endif %}
+        {% if moinmoin_ldap_email_attribute is defined %}
+        email_attribute="{{ moinmoin_ldap_email_attribute }}",
+        {% endif %}
+        coding='utf-8', # coding used for ldap queries and result values
+        timeout=10, # how long we wait for the ldap server [s]
+        start_tls=0, # usage of Transport Layer Security 0 = No, 1 = Try, 2 = Required
+        tls_cacertdir=None,
+        tls_cacertfile=None,
+        tls_certfile=None,
+        tls_keyfile=None,
+        tls_require_cert=0, # 0 == ldap.OPT_X_TLS_NEVER (needed for self-signed certs)
+        bind_once=False, # set to True to only do one bind - useful if configured to bind as the user on the first attempt
+        autocreate=True, # set to True to automatically create/update user profiles
+        name='ldap', # use e.g. 'ldap_pdc' and 'ldap_bdc' (or 'ldap1' and 'ldap2') if you auth against 2 ldap servers
+        report_invalid_credentials=True, # whether to emit "invalid username or password" msg at login time or not
+    )
+
+    auth = [ldap_authenticator1, MoinAuth()] # this is a list, you may have multiple ldap authenticators
+                                   # as well as other authenticators
+
+    cookie_lifetime = (0, 1) # no anon user sessions, 1h session lifetime for logged-in users
+
+    # customize user preferences (optional, see MoinMoin/config/multiconfig for internal defaults)
+    # you maybe want to use user_checkbox_remove, user_checkbox_defaults, user_form_defaults,
+    # user_form_disable, user_form_remove.
