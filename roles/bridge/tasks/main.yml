@@ -5,10 +5,21 @@
   - bridge-utils
   tags: [install]
 
-- name: Don't filter bridged packets
-  sysctl: name={{ item }} value=0
+- name: load the bridge module at boot time
+  lineinfile:
+    dest: /etc/modules-load.d/ansible-role-bridge.conf
+    line: bridge
+    create: yes
+    state: present
+
+- name: don't run switched packets through netfilter
+  sysctl:
+    name: "{{ item }}"
+    value: 0
+    state: present
+    reload: yes
+    sysctl_file: /etc/sysctl.d/ansible-role-bridge.conf
   with_items:
   - net.bridge.bridge-nf-call-ip6tables
-  - net.bridge.bridge-nf-call-iptables
   - net.bridge.bridge-nf-call-arptables
-  tags: [configure]
+  - net.bridge.bridge-nf-call-iptables

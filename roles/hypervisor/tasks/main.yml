@@ -20,17 +20,6 @@
     dest: /var/lib/libvirt/.backup
   tags: [configure]
 
-- name: don't run switched packets through netfilter
-  sysctl:
-    name: "{{ item }}"
-    value: 0
-    state: present
-    reload: yes
-  with_items:
-  - net.bridge.bridge-nf-call-ip6tables
-  - net.bridge.bridge-nf-call-arptables
-  - net.bridge.bridge-nf-call-iptables
-
 - name: enable nested KVM
   lineinfile:
     line: options kvm_intel nested=1
