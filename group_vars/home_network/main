@@ -195,6 +195,7 @@ named_dynamic_zones:
   - {name: postgresql, type: A,  rdata: 192.168.14.7}
   - {name: proton,     type: A,  rdata: 192.168.42.20}
   - {name: smtp,       type: A,  rdata: 192.168.14.13}
+  - {name: syslog,     type: A,  rdata: 192.168.15.4}
   - {name: tor,        type: A,  rdata: 192.168.14.10}
   - {name: web,        type: A,  rdata: 192.168.14.2}
   - {name: zabbix,     type: A,  rdata: 192.168.14.5}
@@ -244,6 +245,7 @@ named_dynamic_zones:
   - {name: "", type: NS, rdata: ns1.private.deverteuil.net.}
   - {name: "", type: NS, rdata: ns2.private.deverteuil.net.}
   - {name: 3,   type: PTR, rdata: dhcp.private.deverteuil.net.}
+  - {name: 5,   type: PTR, rdata: syslog.private.deverteuil.net.}
 - origin: 16.168.192.in-addr.arpa
   records:
   - {name: "", type: NS, rdata: ns1.private.deverteuil.net.}

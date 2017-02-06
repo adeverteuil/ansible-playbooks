@@ -1,0 +1,22 @@
+---
+- name: enable listening on network sockets
+  copy:
+    src: network-inbound.conf
+    dest: /etc/rsyslog.d/network-inbound.conf
+  notify: restart rsyslogd
+
+- name: open the TCP port
+  firewalld:
+    port: 514/tcp
+    state: enabled
+    permanent: yes
+    immediate: yes
+  tags: [serve]
+
+- name: open the TCP port
+  firewalld:
+    port: 514/udp
+    state: enabled
+    permanent: yes
+    immediate: yes
+  tags: [serve]

@@ -21,6 +21,7 @@ zabbix
 attic
 nextcloud
 grafana
+syslog
 
 # Datacenter bootstrapping
 # Create and configure hosts in this order

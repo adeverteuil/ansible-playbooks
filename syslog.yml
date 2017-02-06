@@ -1,0 +1,19 @@
+---
+- hosts: syslog
+  roles:
+  - syslog
+
+- hosts: home_network,!syslog
+  tasks:
+
+  - name: enable remote logging
+    copy:
+      dest: /etc/rsyslog.d/remote-logging.conf
+      content: |
+        *.* @{{ hostvars['syslog']['ansible_eth0']['ipv4']['address'] }}
+    notify: restart rsyslog
+
+  handlers:
+
+  - name: restart rsyslog
+    service: name=rsyslog state=restarted
