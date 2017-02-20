@@ -4,3 +4,8 @@
 
 - name: restart apache2
   service: name=apache2 state=restarted
+
+- name: reload wsgi
+  file:
+    path: /usr/share/moin/server/moin.wsgi
+    state: touch

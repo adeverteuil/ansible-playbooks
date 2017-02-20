@@ -1,9 +1,23 @@
 <VirtualHost 192.168.14.2:80>
     ServerName wiki.deverteuil.net
     DocumentRoot /var/www/mywiki/
-    Alias /moin_static198/applets/FCKeditor/ "/usr/share/fckeditor/"
-    Alias /moin_static198/ "/usr/share/moin/htdocs/"
-    ScriptAlias /MyWiki "/usr/share/moin/server/moin.cgi"
+
+    #Alias /moin_static198/applets/FCKeditor/ "/usr/share/fckeditor/"
+    #Alias /moin_static198/ "/usr/share/moin/htdocs/"
+
     ErrorLog ${APACHE_LOG_DIR}/mywiki.error.log
     CustomLog ${APACHE_LOG_DIR}/mywiki.access.log combined
+
+    AliasMatch "^/moin_static[0-9]*/(.*)" "/usr/share/moin/htdocs/$1"
+    <Directory "/usr/share/moin/htdocs/">
+	Options -Indexes -FollowSymlinks
+	AllowOverride None
+    </Directory>
+
+    Alias /robots.txt /usr/share/moin/htdocs/robots.txt
+    Alias /favicon.ico /usr/share/moin/htdocs/favicon.ico
+
+    WSGIDaemonProcess mywiki user=www-data group=www-data processes=4 display-name=moin-wsgi-mywiki
+    WSGIProcessGroup mywiki
+    WSGIScriptAlias /MyWiki "/usr/share/moin/server/moin.wsgi"
 </VirtualHost>

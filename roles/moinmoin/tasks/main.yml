@@ -4,6 +4,7 @@
   with_items:
   - python-moinmoin
   - python-ldap
+  - libapache2-mod-wsgi
 
 - name: create /var/www/mywiki
   file:
@@ -36,7 +37,7 @@
   template:
     src: mywiki.py.j2
     dest: /etc/moin/mywiki.py
-  notify: reload apache2
+  notify: reload wsgi
 
 - name: populate the wikilist
   lineinfile:
@@ -45,9 +46,9 @@
     create: yes
   notify: reload apache2
 
-- name: enable the cgi module
+- name: enable the wsgi module
   apache2_module:
-    name: cgi
+    name: wsgi
     state: present
   notify: restart apache2
 
