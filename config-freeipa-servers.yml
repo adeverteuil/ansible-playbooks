@@ -1,0 +1,33 @@
+---
+# Must install manually:
+# - python2-dnf
+# - 
+- hosts: fedora
+  tasks:
+
+  - name: install packages
+    dnf: name={{ item }} state=present
+    with_items:
+    - vim
+    - zabbix-agent
+    - python-firewall
+
+  - name: enable PAM module mkhomedir
+    lineinfile:
+      dest: /etc/pam.d/system-auth
+      line: "session     required      pam_mkhomedir.so umask=0022 skel=/etc/skel/"
+      regexp: pam_mkhomedir
+      insertbefore: "pam_keyinit"
+
+  - name: start and enable zabbix-agent
+    service:
+      name: zabbix-agent
+      state: started
+      enabled: yes
+
+  - name: open port 10500 for zabbix-agent
+    firewalld:
+      port: 10050/tcp
+      state: enabled
+      permanent: yes
+      immediate: yes

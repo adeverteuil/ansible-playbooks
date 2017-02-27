@@ -1,4 +1,6 @@
+[fedora]
 freeipa  # Isolated because not Debian 8
+freeipa2
 
 [nyc3]
 smtp.deverteuil.net ansible_host=45.55.240.24
