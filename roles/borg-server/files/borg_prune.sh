@@ -12,6 +12,8 @@ if ! flock -n 9; then
   exit 1
 fi
 
+export BORG_UNKNOWN_UNENCRYPTED_REPO_ACCESS_IS_OK=yes
+
 if [ -f $REPOSITORY/prune-hosts ]; then
     cat $REPOSITORY/prune-hosts |\
     while read host; do
