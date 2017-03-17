@@ -74,6 +74,7 @@
       if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
         return;
       }
+  notify: restart zabbix-server
 
 - name: enable zabbix-server
   lineinfile:
