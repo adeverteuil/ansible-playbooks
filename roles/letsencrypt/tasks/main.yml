@@ -51,10 +51,10 @@
   with_items: [http, https]
   tags: [serve]
 
-- name: renew certificates monthly
+- name: renew certificates daily
   copy:
     src: letsencrypt_renew.sh
-    dest: /etc/cron.monthly/letsencrypt
+    dest: /etc/cron.daily/letsencrypt
     mode: 0744
   tags: [serve]
 

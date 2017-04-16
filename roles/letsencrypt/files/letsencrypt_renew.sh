@@ -1,2 +1,2 @@
 #!/bin/bash
-/usr/bin/letsencrypt renew | grep "The following certs have been renewed" && systemctl restart apache2
+/usr/bin/letsencrypt renew --post-hook "systemctl reload nginx"
