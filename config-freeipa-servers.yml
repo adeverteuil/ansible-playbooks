@@ -1,7 +1,6 @@
----
 # Must install manually:
 # - python2-dnf
-# - 
+---
 - hosts: fedora
   tasks:
 
@@ -19,6 +18,13 @@
       regexp: pam_mkhomedir
       insertbefore: "pam_keyinit"
 
+  - name: configure zabbix-agent
+    lineinfile:
+      line: Server=zabbix.private.deverteuil.net
+      regexp: ^Server=
+      dest: /etc/zabbix/zabbix_agentd.conf
+    notify: restart zabbix-agent
+
   - name: start and enable zabbix-agent
     service:
       name: zabbix-agent
@@ -31,3 +37,10 @@
       state: enabled
       permanent: yes
       immediate: yes
+
+  handlers:
+
+  - name: restart zabbix-agent
+    service:
+      name: zabbix-agent
+      state: restarted
