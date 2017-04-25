@@ -1,0 +1,3 @@
+---
+collectd_graphite_node_name: localhost
+collectd_graphite_node_host: localhost

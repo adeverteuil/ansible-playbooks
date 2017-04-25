@@ -294,3 +294,6 @@ moinmoin_ldap_givenname_attribute: givenName
 moinmoin_ldap_surname_attribute: sn
 moinmoin_ldap_attribute_member_of: memberOf
 moinmoin_ldap_email_attribute: mail
+
+collectd_graphite_node_name: graphite.private.deverteuil.net
+collectd_graphite_node_host: graphite.private.deverteuil.net

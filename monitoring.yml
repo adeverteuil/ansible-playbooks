@@ -1,5 +1,6 @@
 ---
-- hosts: postgresql
+- name: setup the database for Zabbix
+  hosts: postgresql
   tasks:
   - name: create the database
     become: yes
@@ -19,15 +20,28 @@
       priv: ALL
     tags: [postgresql, install]
 
-- hosts: zabbix
+- name: install and configure zabbix-server
+  hosts: zabbix
   roles:
   - {role: webserver, tags: [webserver]}
   - {role: zabbix-server, tags: [zabbix-server]}
 
-- hosts: home_network,nyc3
+- name: deploy Zabbix agents
+  hosts: home_network,nyc3
   roles:
   - {role: zabbix-agent, tags: [zabbix-agent]}
 
-- hosts: grafana
+- name: deploy Grafana
+  hosts: grafana
   roles:
   - {role: grafana, tags: [grafana]}
+
+- name: deploy Graphite
+  hosts: graphite
+  roles:
+  - {role: graphite, tags: [graphite]}
+
+- name: deploy collectd
+  hosts: home_network
+  roles:
+  - {role: collectd, tags: [collectd]}

@@ -1,0 +1,17 @@
+---
+- name: install graphite-web
+  apt:
+    name: graphite-web
+    state: present
+
+- name: configure the Graphite webapp
+  template:
+    src: local_settings.py.j2
+    dest: /etc/graphite/local_settings.py
+
+- name: initialize the database
+  command: graphite-manage syncdb --noinput
+  register: syncdb
+  become: yes
+  become_user: _graphite
+  changed_when: '"No migrations to apply." not in syncdb.stdout'

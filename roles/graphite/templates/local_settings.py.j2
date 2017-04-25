@@ -1,0 +1,14 @@
+TIME_ZONE = "US/Eastern"
+USE_REMOTE_USER_AUTHENTICATION = True
+DATABASES = {
+  'default': {
+    'NAME': "/var/lib/graphite/graphite.db",
+    'ENGINE': "django.db.backends.sqlite3",
+    'USER': "",
+    'PASSWORD': "",
+    'HOST': "",
+    'PORT': ""
+  }
+}
+STORAGE_DIR = "/var/lib/graphite"
+LOG_DIR = "/var/log/graphite"

@@ -1,0 +1,17 @@
+---
+- name: install collectd
+  apt:
+    name: collectd-core
+    state: present
+
+- name: configure collectd
+  template:
+    src: collectd.conf
+    dest: /etc/collectd/collectd.conf
+  notify: restart collectd
+
+- name: start and enable collectd
+  service:
+    name: collectd
+    state: started
+    enabled: yes
