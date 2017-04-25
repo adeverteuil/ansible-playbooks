@@ -1,7 +1,0 @@
-[Unit]
-Description=Survey monitored computers
-After=network.target
-
-[Service]
-User=munin
-ExecStart=/usr/bin/munin-cron
