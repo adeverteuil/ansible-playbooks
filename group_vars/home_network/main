@@ -266,6 +266,7 @@ borg_backup_disks:
 - label: backups3
   uuid: fd244f88-97cb-4252-8c01-733179d06b87
   current: yes
+borg_cron_create_hour: "*/6"
 
 grafana_admin_password: "{{ vault_grafana_admin_password }}"
 grafana_ldap_enabled: true
