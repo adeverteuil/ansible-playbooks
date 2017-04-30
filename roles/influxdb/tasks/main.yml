@@ -1,0 +1,51 @@
+---
+- name: install apt-transport-https
+  apt: name=apt-transport-https state=present
+
+- name: install the InfluxDB package repository key
+  apt_key:
+    url: https://repos.influxdata.com/influxdb.key
+    state: present
+
+- name: add the InfluxDB repository
+  apt_repository:
+    repo: deb https://repos.influxdata.com/debian {{ ansible_distribution_release }} stable
+
+- name: install influxdb
+  apt:
+    name: influxdb
+    state: present
+
+- name: configure influxdb
+  template:
+    src: influxdb.conf.j2
+    dest: /etc/influxdb/influxdb.conf
+  notify: restart influxdb
+
+- name: create the auth file
+  template:
+    src: collectd_auth_file.j2
+    dest: /etc/influxdb/collectd_auth_file
+    mode: 0640
+    group: influxdb
+  notify: restart influxdb
+
+- name: start and enable influxdb
+  service:
+    name: influxdb
+    state: started
+    enabled: yes
+
+- name: open UDP port 25826 for collectd plugin
+  firewalld:
+    port: 25826/udp
+    state: enabled
+    permanent: yes
+    immediate: yes
+
+- name: open TCP port 8086 for influxdb API
+  firewalld:
+    port: 8086/tcp
+    state: enabled
+    permanent: yes
+    immediate: yes

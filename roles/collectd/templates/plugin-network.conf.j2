@@ -1,0 +1,13 @@
+#trim_blocks:True,lstrip_blocks:True
+LoadPlugin network
+
+<Plugin network>
+  ReportStats true
+  <Server "{{ collectd_network_server }}">
+    {% if collectd_network_securitylevel != "none" %}
+    SecurityLevel "{{ collectd_network_securitylevel }}"
+    Username "{{ collectd_network_username }}"
+    Password "{{ collectd_network_password }}"
+    {% endif %}
+  </Server>
+</Plugin>

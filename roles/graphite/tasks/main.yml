@@ -1,4 +1,4 @@
 ---
-- include: carbon.yml
+#- include: carbon.yml
 - include: graphite.yml
 - include: wsgi.yml

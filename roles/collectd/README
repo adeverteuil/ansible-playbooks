@@ -1,0 +1,25 @@
+collectd
+========
+
+
+Role variables
+==============
+
+collectd_network_server
+-----------------------
+
+collectd host to which to send metrics data.
+
+
+collectd_network_username
+collectd_network_password
+-------------------------
+
+Username and password for the network plugin.
+
+
+collectd_network_securitylevel
+------------------------------
+
+Security level, one of none, sign or encrypt.
+Defaults to none
