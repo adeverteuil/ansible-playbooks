@@ -11,6 +11,6 @@
   template:
     src: interfaces.j2
     dest: /etc/network/interfaces
-  when: "{{ interfaces_overwrite_e_n_i }}"
+  when: interfaces_overwrite_e_n_i
   notify: restart networking
   tags: [configure]
