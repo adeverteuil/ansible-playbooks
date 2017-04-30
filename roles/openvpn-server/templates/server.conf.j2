@@ -28,7 +28,8 @@ push "{{ push }}"
 {% endfor %}
 keepalive 10 120
 comp-lzo
-status status-{{ item.name }}.log
+status /var/local/openvpn-status/{{ item.name }}
+status-version 2
 verb {{ item.verb|default(openvpn_verb) }}
 {% for option in item.additional_options|default(openvpn_additional_options) %}
 {{ option }}

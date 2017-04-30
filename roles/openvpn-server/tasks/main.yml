@@ -3,6 +3,11 @@
   apt: name=openvpn state=present
   tags: [install]
 
+- name: create a directory for status files
+  file:
+    dest: /var/local/openvpn-status
+    state: directory
+
 - name: copy make easy-rsa certificate authority
   command: make-cadir openvpn
   args:
@@ -47,3 +52,9 @@
 - name: enable service openvpn in firewalld
   firewalld: service=openvpn state=enabled permanent=yes immediate=yes
   tags: [serve]
+
+- name: configure the collectd plugin
+  template:
+    src: collectd-openvpn.conf.j2
+    dest: /etc/collectd/collectd.conf.d/openvpn.conf
+  notify: restart collectd
