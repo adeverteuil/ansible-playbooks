@@ -1,0 +1,4 @@
+---
+telegraf_inputs_statsd_enabled: no
+telegraf_inputs_statsd_port: 8125
+telegraf_global_tags: {}

@@ -22,19 +22,16 @@
     dest: /etc/influxdb/influxdb.conf
   notify: restart influxdb
 
-- name: create the auth file
-  template:
-    src: collectd_auth_file.j2
-    dest: /etc/influxdb/collectd_auth_file
-    mode: 0640
-    group: influxdb
-  notify: restart influxdb
-
 - name: start and enable influxdb
   service:
     name: influxdb
     state: started
     enabled: yes
+
+- name: create the telegraf database
+  command: influx -execute 'CREATE DATABASE collectd WITH DURATION 30d REPLICATION 1 NAME one_month'
+  args:
+    creates: /var/lib/influxdb/data/collectd/one_month
 
 - name: open UDP port 25826 for collectd plugin
   firewalld:

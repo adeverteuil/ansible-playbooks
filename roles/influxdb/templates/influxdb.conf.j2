@@ -28,7 +28,7 @@
   dir = "/var/lib/influxdb/meta"
 
   # Automatically create a default retention policy when creating a database.
-  # retention-autocreate = true
+  retention-autocreate = false
 
   # If log messages are printed for the meta service
   # logging-enabled = true
@@ -334,42 +334,42 @@
 ### Controls one or many listeners for collectd data.
 ###
 
-[[collectd]]
-
-enabled = true
-typesdb = "/usr/share/collectd"
-batch-size = 2000
-batch-pending = 10
-batch-timeout = "10s"
-security-level = "sign"
-auth-file = "/etc/influxdb/collectd_auth_file"
-  # enabled = false
-  # bind-address = ":25826"
-  # database = "collectd"
-  # retention-policy = ""
-  #
-  # The collectd service supports either scanning a directory for multiple types
-  # db files, or specifying a single db file.
-  # typesdb = "/usr/local/share/collectd"
-  #
-  # security-level = "none"
-  # auth-file = "/etc/collectd/auth_file"
-
-  # These next lines control how batching works. You should have this enabled
-  # otherwise you could get dropped metrics or poor performance. Batching
-  # will buffer points in memory if you have many coming in.
-
-  # Flush if this many points get buffered
-  # batch-size = 5000
-
-  # Number of batches that may be pending in memory
-  # batch-pending = 10
-
-  # Flush at least this often even if we haven't hit buffer limit
-  # batch-timeout = "10s"
-
-  # UDP Read buffer size, 0 means OS default. UDP listener will fail if set above OS max.
-  # read-buffer = 0
+#[[collectd]]
+#
+#enabled = true
+#typesdb = "/usr/share/collectd"
+#batch-size = 2000
+#batch-pending = 10
+#batch-timeout = "10s"
+#security-level = "sign"
+#auth-file = "/etc/influxdb/collectd_auth_file"
+#  # enabled = false
+#  # bind-address = ":25826"
+#  # database = "collectd"
+#  # retention-policy = ""
+#  #
+#  # The collectd service supports either scanning a directory for multiple types
+#  # db files, or specifying a single db file.
+#  # typesdb = "/usr/local/share/collectd"
+#  #
+#  # security-level = "none"
+#  # auth-file = "/etc/collectd/auth_file"
+#
+#  # These next lines control how batching works. You should have this enabled
+#  # otherwise you could get dropped metrics or poor performance. Batching
+#  # will buffer points in memory if you have many coming in.
+#
+#  # Flush if this many points get buffered
+#  # batch-size = 5000
+#
+#  # Number of batches that may be pending in memory
+#  # batch-pending = 10
+#
+#  # Flush at least this often even if we haven't hit buffer limit
+#  # batch-timeout = "10s"
+#
+#  # UDP Read buffer size, 0 means OS default. UDP listener will fail if set above OS max.
+#  # read-buffer = 0
 
 ###
 ### [opentsdb]

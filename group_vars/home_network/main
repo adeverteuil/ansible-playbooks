@@ -185,6 +185,7 @@ named_dynamic_zones:
   - {name: fixion,     type: A,  rdata: 192.168.13.4}
   - {name: grafana,    type: A,  rdata: 192.168.14.12}
   - {name: home,       type: A,  rdata: 192.168.13.9}
+  - {name: influxdb,   type: A,  rdata: 192.168.15.5}
   - {name: mysql,      type: A,  rdata: 192.168.14.3}
   - {name: nextcloud,  type: A,  rdata: 192.168.14.4}
   - {name: nginx,      type: A,  rdata: 192.168.14.11}
@@ -245,7 +246,8 @@ named_dynamic_zones:
   - {name: "", type: NS, rdata: ns1.private.deverteuil.net.}
   - {name: "", type: NS, rdata: ns2.private.deverteuil.net.}
   - {name: 3,   type: PTR, rdata: dhcp.private.deverteuil.net.}
-  - {name: 5,   type: PTR, rdata: syslog.private.deverteuil.net.}
+  - {name: 4,   type: PTR, rdata: syslog.private.deverteuil.net.}
+  - {name: 5,   type: PTR, rdata: influxdb.private.deverteuil.net.}
 - origin: 16.168.192.in-addr.arpa
   records:
   - {name: "", type: NS, rdata: ns1.private.deverteuil.net.}
@@ -296,9 +298,10 @@ moinmoin_ldap_surname_attribute: sn
 moinmoin_ldap_attribute_member_of: memberOf
 moinmoin_ldap_email_attribute: mail
 
-collectd_network_server: graphite.private.deverteuil.net
+collectd_network_server: influxdb.private.deverteuil.net
 collectd_network_username: home_network
 collectd_network_password: "{{ vault_collectd_network_password }}"
 collectd_network_securitylevel: sign
 
 influxdb_collectd_users: "{{ vault_influxdb_collectd_users }}"
+telegraf_outputs_influxdb_url: http://influxdb.private.deverteuil.net:8086/

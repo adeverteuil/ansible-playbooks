@@ -8,8 +8,8 @@
     dnf: name={{ item }} state=present
     with_items:
     - vim
-    - zabbix-agent
     - python-firewall
+    - collectd
 
   - name: enable PAM module mkhomedir
     lineinfile:
@@ -18,29 +18,40 @@
       regexp: pam_mkhomedir
       insertbefore: "pam_keyinit"
 
-  - name: configure zabbix-agent
-    lineinfile:
-      line: Server=zabbix.private.deverteuil.net
-      regexp: ^Server=
-      dest: /etc/zabbix/zabbix_agentd.conf
-    notify: restart zabbix-agent
+  - name: configure the network plugin for collectd
+    template:
+      dest: /etc/collectd.d/network.conf
+      content: |
+        LoadPlugin network
+        <Plugin "network">
+          ReportStats true
+          <Server "{{ collectd_network_server }}">
+            SecurityLevel "sign"
+            Username "{{ collectd_network_username }}"
+            Password "{{ collectd_network_password }}"
+          </Server>
+        </Plugin>
+    notify: restart collectd
 
-  - name: start and enable zabbix-agent
+  - name: enable collectd plugins
+    lineinfile:
+      line: LoadPlugin {{ item }}
+      regexp: LoadPlugin {{ item }}
+      state: present
+    with_items:
+      - df
+      - disk
+    notify: restart collectd
+
+  - name: start and enable collectd
     service:
-      name: zabbix-agent
+      name: collectd
       state: started
       enabled: yes
 
-  - name: open port 10500 for zabbix-agent
-    firewalld:
-      port: 10050/tcp
-      state: enabled
-      permanent: yes
-      immediate: yes
-
   handlers:
 
-  - name: restart zabbix-agent
+  - name: restart collectd
     service:
-      name: zabbix-agent
+      name: collectd
       state: restarted
