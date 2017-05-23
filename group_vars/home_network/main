@@ -298,10 +298,4 @@ moinmoin_ldap_surname_attribute: sn
 moinmoin_ldap_attribute_member_of: memberOf
 moinmoin_ldap_email_attribute: mail
 
-collectd_network_server: influxdb.private.deverteuil.net
-collectd_network_username: home_network
-collectd_network_password: "{{ vault_collectd_network_password }}"
-collectd_network_securitylevel: sign
-
-influxdb_collectd_users: "{{ vault_influxdb_collectd_users }}"
 telegraf_outputs_influxdb_url: http://influxdb.private.deverteuil.net:8086/

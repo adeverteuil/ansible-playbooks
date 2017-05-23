@@ -6,8 +6,3 @@ bind_domainadmin: postmaster.deverteuil.net
 exim_root_alias: notifications@deverteuil.net
 borg_repository: borg@attic.private.deverteuil.net:/var/lib/attic/repository
 borg_backup_paths: / /boot
-
-collectd_network_server: influxdb.private.deverteuil.net
-collectd_network_username: home_network
-collectd_network_password: "{{ vault_collectd_network_password }}"
-collectd_network_securitylevel: sign

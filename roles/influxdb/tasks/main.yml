@@ -29,16 +29,9 @@
     enabled: yes
 
 - name: create the telegraf database
-  command: influx -execute 'CREATE DATABASE collectd WITH DURATION 30d REPLICATION 1 NAME one_month'
+  command: influx -execute 'CREATE DATABASE telegraf WITH DURATION 30d REPLICATION 1 NAME one_month'
   args:
-    creates: /var/lib/influxdb/data/collectd/one_month
-
-- name: open UDP port 25826 for collectd plugin
-  firewalld:
-    port: 25826/udp
-    state: enabled
-    permanent: yes
-    immediate: yes
+    creates: /var/lib/influxdb/data/telegraf/one_month
 
 - name: open TCP port 8086 for influxdb API
   firewalld:

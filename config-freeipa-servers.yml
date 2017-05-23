@@ -9,7 +9,6 @@
     with_items:
     - vim
     - python-firewall
-    - collectd
 
   - name: enable PAM module mkhomedir
     lineinfile:
@@ -17,41 +16,3 @@
       line: "session     required      pam_mkhomedir.so umask=0022 skel=/etc/skel/"
       regexp: pam_mkhomedir
       insertbefore: "pam_keyinit"
-
-  - name: configure the network plugin for collectd
-    template:
-      dest: /etc/collectd.d/network.conf
-      content: |
-        LoadPlugin network
-        <Plugin "network">
-          ReportStats true
-          <Server "{{ collectd_network_server }}">
-            SecurityLevel "sign"
-            Username "{{ collectd_network_username }}"
-            Password "{{ collectd_network_password }}"
-          </Server>
-        </Plugin>
-    notify: restart collectd
-
-  - name: enable collectd plugins
-    lineinfile:
-      line: LoadPlugin {{ item }}
-      regexp: LoadPlugin {{ item }}
-      state: present
-    with_items:
-      - df
-      - disk
-    notify: restart collectd
-
-  - name: start and enable collectd
-    service:
-      name: collectd
-      state: started
-      enabled: yes
-
-  handlers:
-
-  - name: restart collectd
-    service:
-      name: collectd
-      state: restarted

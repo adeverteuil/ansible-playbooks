@@ -52,9 +52,3 @@
 - name: enable service openvpn in firewalld
   firewalld: service=openvpn state=enabled permanent=yes immediate=yes
   tags: [serve]
-
-- name: configure the collectd plugin
-  template:
-    src: collectd-openvpn.conf.j2
-    dest: /etc/collectd/collectd.conf.d/openvpn.conf
-  notify: restart collectd

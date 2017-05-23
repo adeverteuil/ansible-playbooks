@@ -1,8 +1,0 @@
-LoadPlugin openvpn
-{% for config in openvpn_configs %}
-
-<Plugin "openvpn">
-  StatusFile "/var/local/openvpn-status/{{ config.name }}"
-  ImprovedNamingSchema true
-</Plugin>
-{% endfor %}
