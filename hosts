@@ -19,7 +19,6 @@ postgresql
 tor
 smtp
 nginx
-zabbix
 attic
 nextcloud
 grafana

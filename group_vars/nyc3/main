@@ -5,4 +5,3 @@ exim_local_domains: [deverteuil.net]
 exim_delivery_directory: /var/spool/mail/$local_part@$domain
 exim_vuser_home: /var/vmail/$local_part@$domain
 exim_use_opendns: yes
-zabbix_server: 192.168.14.5

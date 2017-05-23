@@ -92,9 +92,6 @@ nginx_proxy_servers:
   - name: kanban.deverteuil.net
     proxy_pass: "{{ hostvars['web']['ansible_eth0']['ipv4']['address'] }}"
     ssl: yes
-  - name: monitoring.deverteuil.net
-    proxy_pass: "{{ hostvars['zabbix']['ansible_eth0']['ipv4']['address'] }}"
-    ssl: yes
   - name: piwik.deverteuil.net
     proxy_pass: "{{ hostvars['web']['ansible_eth0']['ipv4']['address'] }}"
     ssl: yes
@@ -111,11 +108,6 @@ nextcloud_admin_password: "{{ vault_nextcloud_admin_password }}"
 nextcloud_db_host: "{{ hostvars['mysql']['ansible_eth0']['ipv4']['address'] }}"
 nextcloud_db_user_host: "{{ hostvars['nextcloud']['ansible_eth0']['ipv4']['address'] }}"
 nextcloud_listen_address: "{{ hostvars['nextcloud']['ansible_eth0']['ipv4']['address'] }}"
-
-zabbix_database_password: "{{ vault_zabbix_database_password }}"
-zabbix_login_password: "{{ vault_zabbix_login_password }}"
-zabbix_database_server: "{{ hostvars['postgresql']['ansible_eth0']['ipv4']['address'] }}"
-zabbix_server: zabbix.private.deverteuil.net
 
 kanboard_vhost_name: kanban.deverteuil.net
 kanboard_database_password: "{{ vault_kanboard_database_password }}"
@@ -199,7 +191,6 @@ named_dynamic_zones:
   - {name: syslog,     type: A,  rdata: 192.168.15.4}
   - {name: tor,        type: A,  rdata: 192.168.14.10}
   - {name: web,        type: A,  rdata: 192.168.14.2}
-  - {name: zabbix,     type: A,  rdata: 192.168.14.5}
   - {name: _kerberos,             type: TXT, rdata: "PRIVATE.DEVERTEUIL.NET"}
   - {name: _kerberos._tcp,        type: SRV, rdata: 0 100 88 freeipa.private.deverteuil.net.}
   - {name: _kerberos-master._tcp, type: SRV, rdata: 0 100 88 freeipa.private.deverteuil.net.}
@@ -235,7 +226,6 @@ named_dynamic_zones:
   - {name: 2,   type: PTR, rdata: web.private.deverteuil.net.}
   - {name: 3,   type: PTR, rdata: mysql.private.deverteuil.net.}
   - {name: 4,   type: PTR, rdata: nextcloud.private.deverteuil.net.}
-  - {name: 5,   type: PTR, rdata: zabbix.private.deverteuil.net.}
   - {name: 7,   type: PTR, rdata: postgresql.private.deverteuil.net.}
   - {name: 10,  type: PTR, rdata: tor.private.deverteuil.net.}
   - {name: 11,  type: PTR, rdata: nginx.private.deverteuil.net.}

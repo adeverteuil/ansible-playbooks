@@ -45,11 +45,3 @@
     state: enabled
     permanent: yes
     immediate: yes
-
-- name: install plugin for Zabbix data source
-  command: grafana-cli plugins install alexanderzobnin-zabbix-app
-  args:
-    creates: /var/lib/grafana/plugins/alexanderzobnin-zabbix-app
-  become: yes
-  become_user: grafana
-  notify: restart grafana-server
