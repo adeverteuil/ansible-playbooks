@@ -24,6 +24,7 @@ attic
 nextcloud
 grafana
 syslog
+influxdb
 
 # Datacenter bootstrapping
 # Create and configure hosts in this order

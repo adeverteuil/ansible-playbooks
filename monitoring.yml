@@ -1,33 +1,15 @@
 ---
-- hosts: postgresql
-  tasks:
-  - name: create the database
-    become: yes
-    become_user: postgres
-    postgresql_db:
-      name: zabbix_server
-      state: present
-    tags: [postgresql, install]
-
-  - name: create the database user
-    become: yes
-    become_user: postgres
-    postgresql_user:
-      name: zabbix_server
-      password: "{{ zabbix_database_password }}"
-      db: zabbix_server
-      priv: ALL
-    tags: [postgresql, install]
-
-- hosts: zabbix
-  roles:
-  - {role: webserver, tags: [webserver]}
-  - {role: zabbix-server, tags: [zabbix-server]}
-
-- hosts: home_network,nyc3
-  roles:
-  - {role: zabbix-agent, tags: [zabbix-agent]}
-
-- hosts: grafana
+- name: deploy Grafana
+  hosts: grafana
   roles:
   - {role: grafana, tags: [grafana]}
+
+- name: deploy telegraf
+  hosts: home_network
+  roles:
+  - {role: telegraf, tags: [telegraf]}
+
+- name: deploy InfluxDB
+  hosts: influxdb
+  roles:
+  - {role: influxdb, tags: [influxdb]}

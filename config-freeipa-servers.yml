@@ -8,7 +8,6 @@
     dnf: name={{ item }} state=present
     with_items:
     - vim
-    - zabbix-agent
     - python-firewall
 
   - name: enable PAM module mkhomedir
@@ -17,30 +16,3 @@
       line: "session     required      pam_mkhomedir.so umask=0022 skel=/etc/skel/"
       regexp: pam_mkhomedir
       insertbefore: "pam_keyinit"
-
-  - name: configure zabbix-agent
-    lineinfile:
-      line: Server=zabbix.private.deverteuil.net
-      regexp: ^Server=
-      dest: /etc/zabbix/zabbix_agentd.conf
-    notify: restart zabbix-agent
-
-  - name: start and enable zabbix-agent
-    service:
-      name: zabbix-agent
-      state: started
-      enabled: yes
-
-  - name: open port 10500 for zabbix-agent
-    firewalld:
-      port: 10050/tcp
-      state: enabled
-      permanent: yes
-      immediate: yes
-
-  handlers:
-
-  - name: restart zabbix-agent
-    service:
-      name: zabbix-agent
-      state: restarted
