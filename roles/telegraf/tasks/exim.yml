@@ -1,0 +1,17 @@
+---
+- name: add telegraf to the adm group
+  user:
+    name: telegraf
+    groups: adm
+    append: yes
+
+- name: configure the logparse and exec plugins
+  template:
+    src: exim.conf.j2
+    dest: /etc/telegraf/telegraf.d/exim.conf
+  notify: restart telegraf
+
+- name: allow telegraf to get the Exim queue length
+  template:
+    src: sudoers.j2
+    dest: /etc/sudoers.d/telegraf-exim
