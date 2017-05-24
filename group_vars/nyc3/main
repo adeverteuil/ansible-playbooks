@@ -5,3 +5,7 @@ exim_local_domains: [deverteuil.net]
 exim_delivery_directory: /var/spool/mail/$local_part@$domain
 exim_vuser_home: /var/vmail/$local_part@$domain
 exim_use_opendns: yes
+
+telegraf_inputs_dovecot_enabled: yes
+telegraf_inputs_exim_enabled: yes
+telegraf_outputs_influxdb_url: http://192.168.15.5:8086/

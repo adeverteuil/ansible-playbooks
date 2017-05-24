@@ -10,3 +10,5 @@ exim_dnslist: ""
 
 dovecot_postmaster: alexandre@deverteuil.net
 dovecot_common_name: smtp.private.deverteuil.net
+
+telegraf_inputs_exim_enabled: yes

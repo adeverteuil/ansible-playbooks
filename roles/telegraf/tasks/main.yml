@@ -16,6 +16,12 @@
     name: telegraf
     state: present
 
+- name: add telegraf to the adm group
+  user:
+    name: telegraf
+    groups: adm
+    append: yes
+
 - name: configure telegraf
   template:
     src: telegraf.conf.j2
@@ -27,6 +33,20 @@
     src: statsd.conf.j2
     dest: /etc/telegraf/telegraf.d/statsd.conf
   when: telegraf_inputs_statsd_enabled
+  notify: restart telegraf
+
+- name: monitor dovecot
+  template:
+    src: dovecot.conf.j2
+    dest: /etc/telegraf/telegraf.d/dovecot.conf
+  when: telegraf_inputs_dovecot_enabled
+  notify: restart telegraf
+
+- name: monitor exim
+  template:
+    src: exim.conf.j2
+    dest: /etc/telegraf/telegraf.d/exim.conf
+  when: telegraf_inputs_exim_enabled
   notify: restart telegraf
 
 - name: start and enable telegraf

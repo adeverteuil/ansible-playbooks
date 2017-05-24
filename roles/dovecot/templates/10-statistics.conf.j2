@@ -1,0 +1,34 @@
+mail_plugins = $mail_plugins stats
+
+protocol imap {
+  mail_plugins = $mail_plugins imap_stats
+}
+
+plugin {
+  # how often to session statistics
+  stats_refresh = 30 secs
+  # track per-IMAP command statistics
+  stats_track_cmds = yes
+}
+
+service stats {
+  fifo_listener stats-mail {
+    user = vmail
+    mode = 0600
+  }
+}
+
+stats_memory_limit = 16 M
+
+stats_command_min_time = 1 mins
+stats_domain_min_time = 12 hours
+stats_ip_min_time = 12 hours
+stats_session_min_time = 15 mins
+stats_user_min_time = 1 hours
+
+service stats {
+  inet_listener {
+    address = 127.0.0.1
+    port = 24242
+  }
+}

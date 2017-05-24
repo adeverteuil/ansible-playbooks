@@ -1,4 +1,6 @@
 ---
 telegraf_inputs_statsd_enabled: no
+telegraf_inputs_dovecot_enabled: no
+telegraf_inputs_exim_enabled: no
 telegraf_inputs_statsd_port: 8125
 telegraf_global_tags: {}

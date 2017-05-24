@@ -5,7 +5,7 @@
   - {role: grafana, tags: [grafana]}
 
 - name: deploy telegraf
-  hosts: home_network
+  hosts: home_network,nyc3
   roles:
   - {role: telegraf, tags: [telegraf]}
 

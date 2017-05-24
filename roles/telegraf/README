@@ -1,0 +1,17 @@
+telegraf
+========
+
+Role variables
+==============
+
+telegraf_outputs_influxdb_url
+-----------------------------
+
+Required
+
+
+References
+==========
+
+The Dovecot plugin
+  https://github.com/influxdata/telegraf/tree/master/plugins/inputs/dovecot

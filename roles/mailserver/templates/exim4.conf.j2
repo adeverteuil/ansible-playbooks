@@ -266,9 +266,12 @@ prdr_enable = true
 # detail than the default.  Adjust to suit.
 
 log_selector = +smtp_protocol_error +smtp_syntax_error \
-        +tls_certificate_verified +address_rewrite +all_parents \
+        +address_rewrite +all_parents \
         +received_recipients +received_sender +sender_on_delivery \
-        +smtp_connection +smtp_mailauth +subject +smtp_no_mail
+        +smtp_connection +smtp_mailauth +subject +deliver_time \
+        +delivery_size
+
+log_timezone = true
 
 
 # If you want Exim to support the "percent hack" for certain domains,
