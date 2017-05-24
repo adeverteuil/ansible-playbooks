@@ -10,6 +10,17 @@ telegraf_outputs_influxdb_url
 Required
 
 
+Testing
+=======
+
+There are test files in the tests directory. exim.conf is a Telegraf
+configuration for testing Exim mainlog patterns. Simply use it like this:
+
+  telegraf --config exim.conf
+
+You should see as many <= as => lines.
+
+
 References
 ==========
 

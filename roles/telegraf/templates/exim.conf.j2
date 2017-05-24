@@ -32,7 +32,7 @@
     EXIM_FLAGS (<=|[-=>*]>|[*]{2}|==)
     EXIM_FLAG %{EXIM_FLAGS:flag:tag}
     EXIM_QT ((\d+y)?(\d+w)?(\d+d)?(\d+h)?(\d+m)?(\d+s)?)
-    EXIM_REMOTE_HOST (H=(%{NOTSPACE} )?(\(%{NOTSPACE}\) )?\[%{IP}\])
+    EXIM_REMOTE_HOST (H=(%{NOTSPACE} )?(\(%{NOTSPACE}\) )?\[[^]]+\])
     EXIM_USER (U=%{WORD})
     EXIM_INTERFACE (I=\[%{IP}\](:%{NUMBER}))
     EXIM_PROTOCOL (P=%{NOTSPACE:protocol:tag})
@@ -45,7 +45,7 @@
     EXIM_AUTHENTICATOR (A=%{WORD:authenticator:tag}(:%{NOTSPACE:auth_id:tag})?)
     EXIM_ROUTER (R=%{NOTSPACE:router:tag})
     EXIM_TRANSPORT (T=%{NOTSPACE:transport:tag})
-    EXIM_CONFIRMATION (C=%{QS})
+    EXIM_CONFIRMATION (C=%{QUOTEDSTRING})
     EXIM_DELIVERY_TIME (DT=%{EXIM_QT})
 
     EXIM_RECEIVED %{EXIM_TS} %{EXIM_MSGID} %{EXIM_FLAG} %{EMAILADDRESS} (%{EXIM_REMOTE_HOST}|%{EXIM_USER}) %{EXIM_PROTOCOL} (%{EXIM_TLS_CIPHER} )?(%{EXIM_AUTHENTICATOR} )?%{EXIM_MSG_SIZE}
@@ -89,10 +89,6 @@
 
   # Known issue:
   #
-  # The EXIM_SENT pattern used to be (split for legibility):
-  #     EXIM_SENT %{EXIM_TS} %{EXIM_MSGID} %{EXIM_FLAG} %{EXIM_RECIPIENT} %{EXIM_SENDER} %{EXIM_ROUTER} %{EXIM_TRANSPORT} %{EXIM_MSG_SIZE} \
-  #               %{EXIM_REMOTE_HOST} (%{EXIM_TLS_CIPHER} )?%{EXIM_CONFIRMATION} %{EXIM_DELIVERY_TIME}
-  # For some reason, the parser couldn't deal with this specific remote host in the log:
-  #     H=smtp.deverteuil.net [192.168.66.6]
-  # Even though it works fine using the online Grok debugger.
-  # Since I don't need anything past the EXIM_MSG_SIZE, I stopped the pattern matching there.
+  # The %{IP} pattern in EXIM_REMOTE_HOST doesn't work. It works if I use IPV4.
+  # Since I don't know what the problem is and I don't want to rule out IPV6,
+  # I replaced it with the pattern \[[^]]\].
