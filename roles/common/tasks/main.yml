@@ -1,16 +1,11 @@
 ---
 - name: configure package repository mirrors
   apt_repository:
-    repo: "{{ item.repo }}"
-    state: "{{ item.state }}"
+    repo: "{{ item.type }} {{ item.uri }} {{ item.suite }} {{ item.components }}"
+    state: "{{ item.state|default('present') }}"
     update_cache: yes
     mode: 644
-  with_items:
-  - {repo: "deb-src http://debian.mirror.iweb.ca/debian/ jessie main",         state: "{{ common_deb_src_repos }}"}
-  - {repo: "deb-src http://security.debian.org/ jessie/updates main",          state: "{{ common_deb_src_repos }}"}
-  - {repo: "deb-src http://debian.mirror.iweb.ca/debian/ jessie-updates main", state: "{{ common_deb_src_repos }}"}
-  - {repo: "deb http://debian.mirror.iweb.ca/debian/ jessie main",             state: present}
-  - {repo: "deb http://debian.mirror.iweb.ca/debian/ jessie-updates main",     state: present}
+  with_items: "{{ common_deb_sources_list }}"
   tags: [configure]
 
 - name: install packages

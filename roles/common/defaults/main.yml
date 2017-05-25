@@ -1,3 +1,29 @@
 ---
-common_deb_src_repos: absent
 common_serial_console_speed: 19200
+common_deb_sources_uri: http://debian.mirror.iweb.ca/debian/
+common_deb_sources_components: main
+common_deb_src_repo_state: absent
+common_deb_sources_list:
+  - type: deb
+    uri: "{{ common_deb_sources_uri }}"
+    suite: jessie
+    components: "{{ common_deb_sources_components }}"
+  - type: deb
+    uri: "{{ common_deb_sources_uri }}"
+    suite: jessie-updates
+    components: "{{ common_deb_sources_components }}"
+  - type: deb-src
+    uri: "{{ common_deb_sources_uri }}"
+    suite: jessie
+    components: "{{ common_deb_sources_components }}"
+    state: "{{ common_deb_src_repo_state }}"
+  - type: deb-src
+    uri: http://security.debian.org/
+    suite: jessie/updates
+    components: "{{ common_deb_sources_components }}"
+    state: "{{ common_deb_src_repo_state }}"
+  - type: deb-src
+    uri: "{{ common_deb_sources_uri }}"
+    suite: jessie-updates
+    components: "{{ common_deb_sources_components }}"
+    state: "{{ common_deb_src_repo_state }}"

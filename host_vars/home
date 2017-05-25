@@ -1,2 +1,2 @@
 ---
-common_deb_src_repos: present
+common_deb_src_repos_state: present
