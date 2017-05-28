@@ -1,0 +1,28 @@
+[[inputs.snmp]]
+  agents = [ "{{ telegraf_inputs_snmp_agents|join("\", \"") }}" ]
+  version = 2
+  community = "{{ telegraf_inputs_snmp_community }}"
+  name = "network_switch"
+
+  [[inputs.snmp.field]]
+    name = "agent_hostname"
+    oid = "RFC1213-MIB::sysName.0"
+    is_tag = true
+
+  [[inputs.snmp.field]]
+    name = "uptime"
+    oid = "DISMAN-EVENT-MIB::sysUpTimeInstance"
+  
+  [[inputs.snmp.field]]
+    name = "description"
+    oid = "SNMPv2-MIB::sysDescr.0"
+
+  [[inputs.snmp.table]]
+    name = "switch_interface"
+    inherit_tags = [ "agent_hostname" ]
+    oid = "IF-MIB::ifXTable"
+
+  [[inputs.snmp.table.field]]
+    name = "ifName"
+    oid = "IF-MIB::ifName"
+    is_tag = true

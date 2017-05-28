@@ -1,0 +1,21 @@
+---
+- name: install snmp related packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - snmp
+    - snmp-mibs-downloader
+
+- name: enable MIBs loading
+  lineinfile:
+    dest: /etc/snmp/snmp.conf
+    line: "#mibs :"
+    regexp: "^#?mibs :"
+    state: present
+
+- name: configure the snmp plugin
+  template:
+    src: snmp.conf.j2
+    dest: /etc/telegraf/telegraf.d/snmp.conf
+  notify: restart telegraf

@@ -32,6 +32,9 @@
 - include: exim.yml
   when: telegraf_inputs_exim_enabled
 
+- include: snmp.yml
+  when: telegraf_inputs_snmp_enabled
+
 - name: monitor dovecot
   template:
     src: dovecot.conf.j2
