@@ -1,0 +1,47 @@
+hadoop
+======
+
+Install the Apache Hadoop package from tarball, configure and start HDFS.
+
+
+Filesystem layout
+=================
+
+/opt/hadoop        -- symlink to the versioned installation directory /opt/hadoop-2.x.x
+/var/log/hadoop    -- log directory for Hadoop and HDFS
+/run/hadoop        -- where Hadoop will hold PID files
+/var/hdfs/namenode -- NameNode persistent namespace and transaction logs
+/var/hdfs/datanode -- DataNode blocks
+
+
+Jobs you need to do manually after running the playbook
+=======================================================
+
+# su hdfs
+$ hdfs namenode -format
+$ start-dfs.sh
+
+
+Role variables
+==============
+
+hadoop_version
+--------------
+
+Version of Hadoop to download and install.
+
+
+hadoop_dfs_replication
+----------------------
+
+Value for the dfs.replication property. Defaults to 1.
+
+
+hadoop_ssh_private_key
+hadoop_ssh_public_key
+----------------------
+
+Required. Generate a keypair locally and put the content into these
+inventory variables. Example:
+
+  ssh-keygen -t rsa -P "" -f hadoop
