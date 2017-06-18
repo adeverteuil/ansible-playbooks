@@ -183,6 +183,7 @@ named_dynamic_zones:
   - {name: nginx,      type: A,  rdata: 192.168.14.11}
   - {name: ns1,        type: A,  rdata: 192.168.13.8}
   - {name: ns2,        type: A,  rdata: 192.168.13.88}
+  - {name: opentsdb,   type: A,  rdata: 192.168.15.6}
   - {name: openvpn,    type: A,  rdata: 192.168.13.6}
   - {name: pfsense,    type: A,  rdata: 192.168.13.1}
   - {name: postgresql, type: A,  rdata: 192.168.14.7}
@@ -238,6 +239,7 @@ named_dynamic_zones:
   - {name: 3,   type: PTR, rdata: dhcp.private.deverteuil.net.}
   - {name: 4,   type: PTR, rdata: syslog.private.deverteuil.net.}
   - {name: 5,   type: PTR, rdata: influxdb.private.deverteuil.net.}
+  - {name: 6,   type: PTR, rdata: opentsdb.private.deverteuil.net.}
 - origin: 16.168.192.in-addr.arpa
   records:
   - {name: "", type: NS, rdata: ns1.private.deverteuil.net.}
@@ -289,3 +291,7 @@ moinmoin_ldap_attribute_member_of: memberOf
 moinmoin_ldap_email_attribute: mail
 
 telegraf_outputs_influxdb_url: http://influxdb.private.deverteuil.net:8086/
+telegraf_outputs_opentsdb_enabled: yes
+telegraf_outputs_opentsdb_host: http://opentsdb.private.deverteuil.net
+
+opentsdb_auto_create_metrics: yes

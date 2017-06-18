@@ -28,6 +28,13 @@ telegraf_snmp_community
 Defaults to "public".
 
 
+telegraf_outputs_opentsdb_enabled
+telegraf_outputs_opentsdb_host
+---------------------------------
+
+Enabled defaults to no. If enabled, then host is required.
+
+
 Exim
 ====
 

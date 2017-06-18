@@ -1,4 +1,0 @@
----
-- hosts: tsd-test
-  roles:
-    - hadoop

@@ -24,6 +24,7 @@ nextcloud
 grafana
 syslog
 influxdb
+opentsdb
 
 # Datacenter bootstrapping
 # Create and configure hosts in this order

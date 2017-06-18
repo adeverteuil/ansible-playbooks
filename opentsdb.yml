@@ -1,0 +1,23 @@
+---
+- hosts: opentsdb
+  roles:
+    - hadoop
+    - hbase
+    - opentsdb
+
+# Reminder of commands to run manually after this playbook:
+#
+#   # su hdfs
+#   $ hdfs namenode -format
+#   $ start-dfs.sh
+#   $ hdfs dfs -mkdir /hbase
+#   $ hdfs dfs -chown hbase:hbase /hbase
+#   $ exit
+#   # su hbase
+#   $ start-hbase.sh
+#   $ tail -f /var/log/hbase/*.log
+# Wait for the message "master.HMaster: Master has completed initialization"
+#   $ env COMPRESSION=LZ4 HBASE_HOME=$HBASE_PREFIX /usr/share/opentsdb/tools/create_table.sh
+# Ignore the warning: "compression codec 'LZ4' might not be supported"
+#   $ exit
+#   # systemctl restart opentsdb

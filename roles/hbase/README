@@ -1,0 +1,33 @@
+hbase
+=====
+
+Install and configure the Apache HBase package from taball.
+
+
+Filesystem layout
+=================
+
+/opt/hbase       -- symlink to the versioned installation directory /opt/hbase-1.x.x
+/var/log/hbase   -- log directory for HBase and Zookeeper
+/run/hbase       -- pid files
+/var/zookeeper   -- ZooKeeper data directory
+
+
+Jobs you need to do manually after running the playbook
+=======================================================
+
+# su hdfs
+$ hdfs dfs -mkdir /hbase
+$ hdfs dfs -chown hbase:hbase /hbase
+$ exit
+# su hbase
+# start-hbase.sh
+
+
+Role variables
+==============
+
+hbase_version
+-------------
+
+Version of HBase to download and install.

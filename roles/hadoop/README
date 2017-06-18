@@ -1,7 +1,7 @@
 hadoop
 ======
 
-Install the Apache Hadoop package from tarball, configure and start HDFS.
+Install and configure the Apache Hadoop package from tarball.
 
 
 Filesystem layout
