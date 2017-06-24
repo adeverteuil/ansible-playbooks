@@ -291,7 +291,7 @@ moinmoin_ldap_attribute_member_of: memberOf
 moinmoin_ldap_email_attribute: mail
 
 telegraf_outputs_influxdb_url: http://influxdb.private.deverteuil.net:8086/
-telegraf_outputs_opentsdb_enabled: yes
-telegraf_outputs_opentsdb_host: http://opentsdb.private.deverteuil.net
 
 opentsdb_auto_create_metrics: yes
+
+tcollector_tsd_hosts: "opentsdb:4242"

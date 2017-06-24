@@ -1,0 +1,5 @@
+---
+- name: restart tcollector
+  service:
+    name: tcollector
+    state: restarted

@@ -1,0 +1,22 @@
+---
+- name: copy the .deb package
+  copy:
+    src: tcollector_{{ tcollector_version }}_all.deb
+    dest: /root/tcollector_{{ tcollector_version }}_all.deb
+
+- name: install tcollector
+  apt:
+    deb: /root/tcollector_{{ tcollector_version }}_all.deb
+    state: present
+
+- name: configure tcollector
+  template:
+    src: tcollector.j2
+    dest: /etc/default/tcollector
+  notify: restart tcollector
+
+- name: start and enable tcollector
+  service:
+    name: tcollector
+    state: started
+    enabled: yes

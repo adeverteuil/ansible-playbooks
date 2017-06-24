@@ -5,6 +5,10 @@
     - hbase
     - opentsdb
 
+- hosts: home_network
+  roles:
+    - tcollector
+
 # Reminder of commands to run manually after this playbook:
 #
 #   # su hdfs

@@ -1,0 +1,11 @@
+tcollector
+==========
+
+
+Role variables
+==============
+
+tcollector_tsd_hosts
+--------------------
+
+Required. List of comma-seperated TSD hosts (host:port).
