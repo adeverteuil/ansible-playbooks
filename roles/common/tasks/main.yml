@@ -160,3 +160,8 @@
     dest: /etc/default/sysstat
     regexp: ^ENABLED=
     line: ENABLED="true"
+
+- name: set swappiness
+  sysctl:
+    name: vm.swappiness
+    value: 5

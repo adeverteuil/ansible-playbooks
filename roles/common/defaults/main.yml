@@ -1,5 +1,6 @@
 ---
 common_serial_console_speed: 19200
+common_swappiness: 5
 common_deb_sources_uri: http://debian.mirror.iweb.ca/debian/
 common_deb_sources_components: main
 common_deb_src_repo_state: absent
