@@ -1,0 +1,41 @@
+---
+- name: install scollector
+  get_url:
+    url: https://github.com/bosun-monitor/bosun/releases/download/0.6.0-beta1/scollector-linux-amd64
+    dest: /usr/local/bin/scollector
+    mode: 0755
+
+- name: create the stats user
+  user:
+    name: stats
+    createhome: no
+    comment: Metrics collector
+    state: present
+
+- name: configure scollector
+  template:
+    src: scollector.toml.j2
+    dest: /etc/scollector.toml
+
+- name: create the external collectors directory
+  file:
+    dest: /opt/scollector/collectors/0
+    state: directory
+
+- name: supervise scollector
+  copy:
+    src: supervisor-scollector.conf
+    dest: /etc/supervisor/conf.d/scollector.conf
+  register: supervisor_config
+
+  # Reload done before starting in case the file didn't exist before.
+- name: reload supervisor
+  service:
+    name: supervisor
+    state: restarted
+  when: supervisor_config|changed
+
+- name: start scollector
+  supervisorctl:
+    name: scollector
+    state: started

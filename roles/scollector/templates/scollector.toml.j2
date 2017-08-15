@@ -1,0 +1,12 @@
+# {{ ansible_managed }}
+
+Host = "{{ scollector_tsd_host }}"
+Hostname = "{{ ansible_fqdn }}"
+ColDir = "/opt/scollector/collectors"
+{% if scollector_tags %}
+
+[Tags]
+{% for k, v in scollector_tags.items() %}
+{{ k }} = "{{ v }}"
+{% endfor %}
+{% endif %}

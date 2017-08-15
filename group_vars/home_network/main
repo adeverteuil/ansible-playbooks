@@ -295,3 +295,4 @@ telegraf_outputs_influxdb_url: http://influxdb.private.deverteuil.net:8086/
 opentsdb_auto_create_metrics: yes
 
 tcollector_tsd_hosts: "opentsdb:4242"
+scollector_tsd_host: "http://opentsdb:4242"
