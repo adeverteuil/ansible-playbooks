@@ -1,5 +1,0 @@
----
-common_deb_sources_components: main non-free
-telegraf_inputs_snmp_enabled: yes
-telegraf_inputs_snmp_agents: [ 192.168.15.2 ]
-telegraf_inputs_snmp_community: "{{ vault_telegraf_inputs_snmp_community }}"
