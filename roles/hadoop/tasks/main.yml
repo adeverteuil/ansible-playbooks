@@ -65,7 +65,6 @@
     group: hdfs
     mode: 0755
   with_items:
-    - /run/hadoop
     - /var/hdfs/namenode
     - /var/hdfs/datanode
 
@@ -97,3 +96,21 @@
   lineinfile:
     dest: /home/hdfs/.bashrc
     line: . ~/.bashrc.hadoop
+
+- name: install hadoop.service
+  copy:
+    src: hadoop.service
+    dest: /etc/systemd/system/hadoop.service
+  register: hadoop_service
+
+- name: format hdfs
+  shell: /opt/hadoop/bin/hdfs namenode -format
+  args:
+    creates: /var/hdfs/namenode/current
+
+- name: start and enable hadoop
+  systemd:
+    daemon_reload: yes
+    name: hadoop
+    state: started
+    enabled: yes
