@@ -17,8 +17,19 @@
     dest: /etc/opentsdb/opentsdb.conf
   notify: restart opentsdb
 
+- name: create the opentsdb.service.d directory
+  file:
+    dest: /etc/systemd/system/opentsdb.service.d
+    state: directory
+
+- name: override some opentsdb.service directives
+  copy:
+    src: opentsdb.pidfile.conf
+    dest: /etc/systemd/system/opentsdb.service.d/opentsdb.pidfile.conf
+
 - name: start and enable opentsdb
-  service:
+  systemd:
+    daemon_reload: yes
     name: opentsdb
     state: started
     enabled: yes
