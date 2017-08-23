@@ -1,0 +1,17 @@
+[Unit]
+Description=HBase
+Requires=hadoop.service
+After=hadoop.service
+
+[Service]
+Type=forking
+ExecStart=/opt/hbase/bin/start-hbase.sh
+ExecStop=/opt/hbase/bin/stop-hbase.sh
+User=hbase
+Group=hbase
+TimeoutSec=120
+PIDFile=/run/hbase/hbase-hbase-master.pid
+RuntimeDirectory=hbase
+
+[Install]
+WantedBy=multi-user.target
