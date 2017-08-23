@@ -3,14 +3,14 @@ Description=Hadoop
 After=network.target
 
 [Service]
-RuntimeDirectory=hadoop
 ExecStart=/opt/hadoop/sbin/start-dfs.sh
 ExecStop=/opt/hadoop/sbin/stop-dfs.sh
-Type=forking
 User=hdfs
 Group=hdfs
-TimeoutStartSec=120
+Type=forking
+TimeoutSec=120
 PIDFile=/run/hadoop/hadoop-hdfs-namenode.pid
+RuntimeDirectory=hadoop
 
 [Install]
 WantedBy=multi-user.target
