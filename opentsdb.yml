@@ -7,7 +7,7 @@
 
 - hosts: home_network
   roles:
-    - tcollector
+    - scollector
 
 # Reminder of commands to run manually after this playbook:
 #
