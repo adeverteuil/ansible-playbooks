@@ -23,7 +23,7 @@
 - name: download and install Nextcloud
   unarchive:
     copy: no
-    src: 'https://download.nextcloud.com/server/releases/nextcloud-9.0.51.tar.bz2'
+    src: 'https://download.nextcloud.com/server/releases/nextcloud-12.0.4.tar.bz2'
     dest: /var/www
     creates: /var/www/nextcloud
     owner: root
