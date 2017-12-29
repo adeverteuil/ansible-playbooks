@@ -10,3 +10,6 @@
     - name: wiki.deverteuil.net
       proxy_pass: "{{ hostvars['web']['ansible_eth0']['ipv4']['address'] }}"
       ssl: yes
+      additional_lines:
+        - proxy_buffering off;
+        - client_max_body_size 0;
