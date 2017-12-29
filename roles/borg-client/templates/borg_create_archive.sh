@@ -18,9 +18,9 @@ if ! flock -n 9; then
   exit 1
 fi
 if [ ".$*" != "." ]; then
-  $BORG $OPTIONS $* $PATHS
+  $BORG $PATHS $OPTIONS $*
 else
   export BORG_UNKNOWN_UNENCRYPTED_REPO_ACCESS_IS_OK=yes
-  stdout=$($NICE $BORG $OPTIONS $PATHS 2>&1) || echo $stdout
+  stdout=$($NICE $BORG $PATHS $OPTIONS 2>&1) || echo $stdout
 fi
 ) 9>/run/borg.lock
