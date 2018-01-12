@@ -9,6 +9,7 @@
     with_items:
     - vim
     - python-firewall
+    - tmux
 
   - name: enable PAM module mkhomedir
     lineinfile:
