@@ -1,3 +1,4 @@
+#jinja2: lstrip_blocks: True
 ---
 global:
   scrape_interval:     15s
@@ -24,7 +25,9 @@ scrape_configs:
   - job_name: "node"
     static_configs:
       - targets:
-          - "localhost:9100"
+      {% for host in groups['all'] %}
+          - "{{ host }}:9100"
+      {% endfor %}
 
   #- job_name: "haproxy"
   #  static_configs:
