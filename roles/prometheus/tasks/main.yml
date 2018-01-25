@@ -1,0 +1,36 @@
+---
+- name: create the data directory
+  file:
+    dest: /var/lib/prometheus
+    state: directory
+
+- name: install Prometheus
+  unarchive:
+    remote_src: yes
+    src: https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz
+    dest: /opt
+    creates: /opt/prometheus-{{ prometheus_version }}.linux-amd64/prometheus
+
+- name: create a symbolic link to the install directory
+  file:
+    src: /opt/prometheus-{{ prometheus_version }}.linux-amd64
+    dest: /opt/prometheus
+    state: link
+
+- name: configure Prometheus
+  template:
+    src: prometheus.yml.j2
+    dest: /opt/prometheus/prometheus.yml
+  notify: restart prometheus
+
+- name: install prometheus.service
+  copy:
+    src: prometheus.service
+    dest: /etc/systemd/system/prometheus.service
+
+- name: start prometheus
+  systemd:
+    name: prometheus
+    state: started
+    enabled: yes
+    daemon_reload: yes

@@ -1,0 +1,5 @@
+---
+- name: restart prometheus
+  supervisorctl:
+    name: prometheus
+    state: restarted
