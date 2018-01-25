@@ -1,8 +1,18 @@
 ---
+- name: create the prometheus user
+  user:
+    name: prometheus
+    createhome: no
+    system: yes
+    comment: Metrics collector
+    state: present
+
 - name: create the data directory
   file:
     dest: /var/lib/prometheus
     state: directory
+    owner: prometheus
+    group: prometheus
 
 - name: install Prometheus
   unarchive:
