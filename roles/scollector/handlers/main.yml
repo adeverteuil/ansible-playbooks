@@ -1,5 +1,0 @@
----
-- name: restart scollector
-  service:
-    name: scollector
-    state: restarted

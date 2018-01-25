@@ -1,6 +1,6 @@
 ---
 - name: deploy node_exporter
-  hosts: home_network:nyc3
+  hosts: all
   roles:
     - {role: prometheus-node-exporter, tags: [prometheus-node-exporter]}
 
@@ -13,13 +13,3 @@
   hosts: grafana
   roles:
     - {role: grafana, tags: [grafana]}
-
-- name: deploy telegraf
-  hosts: home_network,nyc3
-  roles:
-  - {role: telegraf, tags: [telegraf]}
-
-- name: deploy InfluxDB
-  hosts: influxdb
-  roles:
-  - {role: influxdb, tags: [influxdb]}
