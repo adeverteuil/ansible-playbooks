@@ -23,3 +23,10 @@
     state: started
     enabled: yes
     daemon_reload: yes
+
+- name: enable port 9100
+  firewalld:
+    port: 9100/tcp
+    state: enabled
+    immediate: yes
+    permanent: yes

@@ -44,3 +44,10 @@
     state: started
     enabled: yes
     daemon_reload: yes
+
+- name: enable port 9090
+  firewalld:
+    port: 9090/tcp
+    state: enabled
+    immediate: yes
+    permanent: yes
