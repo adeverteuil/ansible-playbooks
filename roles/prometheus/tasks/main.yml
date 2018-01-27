@@ -31,6 +31,7 @@
   template:
     src: prometheus.yml.j2
     dest: /opt/prometheus/prometheus.yml
+    validate: /opt/prometheus/promtool check config %s
   notify: reload prometheus configuration
 
 - name: configure rules and alerts
