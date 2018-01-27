@@ -6,9 +6,6 @@
     url: https://github.com/borgbackup/borg/releases/download/1.0.7/borg-linux64
     mode: 0755
 
-- name: create the borg group
-  group: name=borg state=present
-
 - name: create the borg user
   user:
     name: borg
@@ -39,14 +36,12 @@
     dest: /etc/updatedb.conf
     regexp: ^PRUNEPATHS
     line: PRUNEPATHS="/tmp /var/spool /media /var/lib/attic"
-  tags: [configure]
 
 - name: create a directory for the LUKS keys
   file:
     path: /root/keys
     mode: 0700
     state: directory
-  tags: [install]
 
 - name: check presence of the LUKS keys (must be manually transferred)
   stat:
@@ -54,7 +49,6 @@
   with_items: "{{ borg_backup_disks }}"
   register: key
   failed_when: not key.stat.exists
-  tags: [install]
 
 - name: create crypttab entries
   lineinfile:
@@ -63,7 +57,6 @@
     create: yes
   with_items: "{{ borg_backup_disks }}"
   notify: reload systemd
-  tags: [install]
 
 - name: create fstab entries
   lineinfile:
@@ -72,34 +65,9 @@
     regexp: "^(#?)LABEL={{ item.label }}\\b"
   with_items: "{{ borg_backup_disks }}"
   notify: reload systemd
-  tags: [install]
 
 - name: mount the backup disk
   service: name=var-lib-attic.mount state=started
-
-- name: create the repository directory
-  file:
-    path: /var/lib/attic/repository
-    state: directory
-    owner: borg
-    group: borg
-    mode: 0700
-
-  # Unencrypted because backup partition is block-level encrypted
-- name: initialize the repository
-  command: borg init -e none /var/lib/attic/repository
-  become: yes
-  become_user: borg
-  args:
-    creates: /var/lib/attic/repository/data
-
-- name: create the lock file
-  copy:
-    dest: /var/lib/attic/repository/lock
-    content: Presence of this file is checked before backups can occur.
-    owner: borg
-    group: borg
-    mode: 0644
 
 - name: copy the borg_*.sh scripts
   copy:

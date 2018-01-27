@@ -1,0 +1,8 @@
+[Unit]
+Description=Backup
+
+[Timer]
+# Every 6 hours
+OnCalendar=*-*-* 0/6:00:00
+# Spread hosts randomly
+AccuracySec=6h

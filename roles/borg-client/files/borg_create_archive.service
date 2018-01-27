@@ -1,0 +1,6 @@
+[Unit]
+Description=System backup
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/borg_create_archive.sh
