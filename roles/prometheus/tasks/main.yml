@@ -4,17 +4,17 @@
     name: prometheus
     createhome: no
     system: yes
-    comment: Metrics collector
+    comment: Prometheus
     state: present
 
 - name: create the data directory
   file:
-    dest: /var/lib/prometheus
+    dest: /var/lib/Prometheus
     state: directory
     owner: prometheus
     group: prometheus
 
-- name: install Prometheus
+- name: install prometheus
   unarchive:
     remote_src: yes
     src: https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz
@@ -27,11 +27,18 @@
     dest: /opt/prometheus
     state: link
 
-- name: configure Prometheus
+- name: configure prometheus
   template:
     src: prometheus.yml.j2
     dest: /opt/prometheus/prometheus.yml
-  notify: restart prometheus
+  notify: reload prometheus configuration
+
+- name: configure rules and alerts
+  template:
+    src: rules.yml.j2
+    dest: /opt/prometheus/{{ item.name }}.yml
+  with_items: "{{ prometheus_rule_files }}"
+  notify: reload prometheus configuration
 
 - name: install prometheus.service
   copy:
