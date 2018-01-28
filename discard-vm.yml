@@ -63,13 +63,11 @@
     become: no
     command: sed -i "/^[# ]*{{ name }}\>/d" {{ inventory_file }}
 
-  - name: delete backup
+  - name: delete backup repository
     delegate_to: attic
-    lineinfile:
-      path: /var/lib/attic/repository/prune-hosts
-      line: "{{ hostvars[name]['ansible_fqdn'] }}"
-      group: borg
-      owner: borg
+    file:
+      path: /var/lib/attic/{{ ansible_hostname }}
+      state: absent
     when: delete_backup|bool
 
   - name: remove known_hosts entry
