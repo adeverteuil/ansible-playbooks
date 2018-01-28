@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-"""Report archives for each host in the borg repository.
+"""Report archives for each host in the borg repositories#.
 
 Assumes archive names have the following format:
 
@@ -30,20 +30,34 @@ Example output:
 from collections import defaultdict
 from datetime import datetime
 from subprocess import check_output, CalledProcessError
+import os
+import os.path
 import sys
 
-try:
-    list_output = check_output(["borg", "list", "--short", "/var/lib/attic/repository"])
-except CalledProcessError:
-    print("Failed to query the list of archives in the borg repository.")
-    sys.exit(1)
 times = defaultdict(set)
 hosts = set()
-for line in list_output.splitlines():
-    host, timestamp = line.decode().split("_", maxsplit=1)
-    t = datetime.strptime(timestamp[:13], "%Y-%m-%dT%H")
-    times[t].add(host)
-    hosts.add(host)
+for directory in os.listdir("/var/lib/attic"):
+    try:
+        with open(os.path.join("/var/lib/attic", directory, "README")) as f:
+            content = f.read(50)
+        if content != "This is a Borg repository\n":
+            continue
+        list_output = check_output(
+            [
+                "borg", "list", "--short",
+                os.path.join("/var/lib/attic/", directory),
+                ]
+            )
+    except CalledProcessError:
+        print("Failed to query the list of archives in the \"{}\" repository.".format(directory))
+        continue
+    except FileNotFoundError:
+        continue
+    for line in list_output.splitlines():
+        host, timestamp = line.decode().split("_", maxsplit=1)
+        t = datetime.strptime(timestamp[:13], "%Y-%m-%dT%H")
+        times[t].add(host)
+        hosts.add(host)
 
 width1 = max(len(host) for host in hosts)
 for host in sorted(hosts, key=lambda h: ".".join(reversed(h.split(".")))):
