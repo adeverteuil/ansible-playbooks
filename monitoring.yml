@@ -4,10 +4,11 @@
   roles:
     - {role: prometheus-node-exporter, tags: [prometheus-node-exporter]}
 
-- name: deploy prometheus
+- name: deploy Prometheus and Alertmanager
   hosts: prometheus
   roles:
     - {role: prometheus, tags: [prometheus]}
+    - {role: prometheus-alertmanager, tags: [alertmanager]}
 
 - name: deploy Grafana
   hosts: grafana

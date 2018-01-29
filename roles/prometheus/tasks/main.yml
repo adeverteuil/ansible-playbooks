@@ -9,7 +9,7 @@
 
 - name: create the data directory
   file:
-    dest: /var/lib/Prometheus
+    dest: /var/lib/prometheus
     state: directory
     owner: prometheus
     group: prometheus

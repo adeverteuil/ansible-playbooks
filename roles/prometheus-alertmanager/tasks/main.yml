@@ -1,0 +1,54 @@
+---
+- name: create the alertmanager user
+  user:
+    name: alertmanager
+    createhome: no
+    system: yes
+    comment: Alertmanager
+    state: present
+
+- name: create the data directory
+  file:
+    dest: /var/lib/alertmanager
+    state: directory
+    owner: alertmanager
+    group: alertmanager
+
+- name: install alertmanager
+  unarchive:
+    remote_src: yes
+    src: https://github.com/prometheus/alertmanager/releases/download/v{{ alertmanager_version }}/alertmanager-{{ alertmanager_version }}.linux-amd64.tar.gz
+    dest: /opt
+    creates: /opt/alertmanager-{{ alertmanager_version }}.linux-amd64/alertmanager
+
+- name: create a symbolic link to the install directory
+  file:
+    src: /opt/alertmanager-{{ alertmanager_version }}.linux-amd64
+    dest: /opt/alertmanager
+    state: link
+
+- name: configure alertmanager
+  template:
+    src: alertmanager.yml.j2
+    dest: /opt/alertmanager/alertmanager.yml
+    validate: /opt/alertmanager/amtool --alertmanager.url=localhost:9093 check-config %s
+  notify: reload alertmanager configuration
+
+- name: install alertmanager.service
+  copy:
+    src: alertmanager.service
+    dest: /etc/systemd/system/alertmanager.service
+
+- name: start alertmanager
+  systemd:
+    name: alertmanager
+    state: started
+    enabled: yes
+    daemon_reload: yes
+
+- name: enable port 9093
+  firewalld:
+    port: 9093/tcp
+    state: enabled
+    immediate: yes
+    permanent: yes
