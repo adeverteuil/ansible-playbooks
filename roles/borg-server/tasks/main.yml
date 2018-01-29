@@ -77,7 +77,6 @@
     owner: borg
     group: borg
   with_items:
-  - borg_serve.sh
   - borg_prune.sh
   - borg_history.py
   - borg_status.sh
