@@ -1,0 +1,11 @@
+[Unit]
+Description=Metrics collector for OpenTSDB
+Documentation=http://bosun.org/scollector/
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+ExecStart=/opt/scollector/scollector
+Restart=on-failure
+User=stats

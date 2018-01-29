@@ -1,0 +1,40 @@
+---
+- name: stop and disable telegraf
+  service:
+    name: telegraf
+    state: stopped
+    enabled: no
+  ignore_errors: yes
+
+- name: uninstall telegraf
+  apt:
+    name: telegraf
+    state: absent
+
+- name: remove the InfluxDB repository
+  apt_repository:
+    repo: deb https://repos.influxdata.com/debian {{ ansible_distribution_release }} stable
+    state: absent
+
+- name: remove the InfluxDB package repository key
+  apt_key:
+    url: https://repos.influxdata.com/influxdb.key
+    state: present
+
+- name: remove the exim sudoers entry
+  file:
+    dest: /etc/sudoers.d/telegraf-exim
+    state: absent
+
+- name: uninstall snmp related packages
+  apt:
+    name: "{{ item }}"
+    state: absent
+  with_items:
+    - snmp
+    - snmp-mibs-downloader
+
+- name: remove /etc/telegraf
+  file:
+    path: /etc/telegraf
+    state: absent

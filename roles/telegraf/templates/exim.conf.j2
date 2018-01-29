@@ -1,0 +1,94 @@
+# Read metrics from one or more commands that can output to stdout
+[[inputs.exec]]
+  ## Commands array
+  commands = [
+    "sudo -u Debian-exim exim -bpc",
+  ]
+
+  ## Timeout for each command to complete.
+  timeout = "5s"
+
+  ## measurement name suffix (for separating different commands)
+  name_suffix = "_exim_queue_length"
+
+  ## Data format to consume.
+  ## Each data format has it's own unique set of configuration options, read
+  ## more about them here:
+  ## https://github.com/influxdata/telegraf/blob/master/docs/DATA_FORMATS_INPUT.md
+  data_format = "value"
+
+# Stream and parse log file(s).
+[[inputs.logparser]]
+  files = ["/var/log/exim4/mainlog"]
+  from_beginning = false
+
+  [inputs.logparser.grok]
+    patterns = ["%{EXIM_RECEIVED}", "%{EXIM_SENT}"]
+    measurement = "exim_mainlog"
+    custom_patterns = '''
+    EXIM_TS_PATTERN %{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME} %{ISO8601_TIMEZONE}
+    EXIM_TS %{EXIM_TS_PATTERN:ts:ts-"2006-01-02 15:04:05 -0700"}
+    EXIM_MSGID [0-9A-Za-z]{6}-[0-9A-Za-z]{6}-[0-9A-Za-z]{2}
+    EXIM_FLAGS (<=|[-=>*]>|[*]{2}|==)
+    EXIM_FLAG %{EXIM_FLAGS:flag:tag}
+    EXIM_QT ((\d+y)?(\d+w)?(\d+d)?(\d+h)?(\d+m)?(\d+s)?)
+    EXIM_REMOTE_HOST (H=(%{NOTSPACE} )?(\(%{NOTSPACE}\) )?\[[^]]+\])
+    EXIM_USER (U=%{WORD})
+    EXIM_INTERFACE (I=\[%{IP}\](:%{NUMBER}))
+    EXIM_PROTOCOL (P=%{NOTSPACE:protocol:tag})
+    EXIM_MSG_SIZE (S=%{NUMBER:size:int})
+    EXIM_HEADER_ID (id=%{NOTSPACE})
+    EXIM_SUBJECT (T=%{QS})
+    EXIM_SENDER (F=<%{EMAILADDRESS}>)
+    EXIM_RECIPIENT (%{NOTSPACE} <%{EMAILADDRESS}>|%{EMAILADDRESS})
+    EXIM_TLS_CIPHER (X=%{NOTSPACE})
+    EXIM_AUTHENTICATOR (A=%{WORD:authenticator:tag}(:%{NOTSPACE:auth_id:tag})?)
+    EXIM_ROUTER (R=%{NOTSPACE:router:tag})
+    EXIM_TRANSPORT (T=%{NOTSPACE:transport:tag})
+    EXIM_CONFIRMATION (C=%{QUOTEDSTRING})
+    EXIM_DELIVERY_TIME (DT=%{EXIM_QT})
+
+    EXIM_RECEIVED %{EXIM_TS} %{EXIM_MSGID} %{EXIM_FLAG} %{EMAILADDRESS} (%{EXIM_REMOTE_HOST}|%{EXIM_USER}) %{EXIM_PROTOCOL} (%{EXIM_TLS_CIPHER} )?(%{EXIM_AUTHENTICATOR} )?%{EXIM_MSG_SIZE}
+    EXIM_SENT %{EXIM_TS} %{EXIM_MSGID} %{EXIM_FLAG} %{EXIM_RECIPIENT} %{EXIM_SENDER} %{EXIM_ROUTER} %{EXIM_TRANSPORT} %{EXIM_MSG_SIZE}
+    '''
+
+  # References:
+  #
+  #   Telegraf Logparser plugin documentation:
+  #       https://github.com/influxdata/telegraf/tree/master/plugins/inputs/logparser
+  #
+  #   Reference time for timestamp parse string:
+  #       Mon Jan 2 15:04:05 -0700 MST 2006
+  #
+  #   Grok reference:
+  #       https://www.elastic.co/guide/en/logstash/current/plugins-filters-grok.html
+  #
+  #   Grok debugger:
+  #       http://grokdebug.herokuapp.com/
+  #
+  #   Logstash Grok patterns:
+  #       https://github.com/logstash-plugins/logstash-patterns-core/blob/master/patterns/grok-patterns
+  #
+  #   Logstash Grok patterns for Exim:
+  #       https://github.com/logstash-plugins/logstash-patterns-core/blob/master/patterns/exim
+  #
+  #   Telgraf Grok Influx patterns:
+  #       https://github.com/influxdata/telegraf/blob/master/plugins/inputs/logparser/grok/patterns/influx-patterns
+  #
+  #   Exim 4.84 log_selector:
+  #       http://exim.org/exim-html-4.84/doc/html/spec_html/ch-log_files.html#SECTlogselector
+  #
+  #   Oniguruma regular expressions
+  #       https://github.com/kkos/oniguruma/blob/master/doc/RE
+  #
+  #   Parsing Logs into InfluxDB using Telegraf’s logparser Plugin
+  #       https://www.influxdata.com/telegraf-correlate-log-metrics-data-performance-bottlenecks/
+  #
+  #   Exim + Logstash, series of blog posts about parsing Exim logs with Grok
+  #       https://graemef.wordpress.com/tech-stuff/exim-logstash/
+
+  # Known issue:
+  #
+  # The %{IP} pattern in EXIM_REMOTE_HOST doesn't work. It works if I use IPV4.
+  # Since I don't know what the problem is and I don't want to rule out IPV6,
+  # I replaced it with the pattern \[[^]]\].
