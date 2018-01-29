@@ -7,8 +7,9 @@
 - name: deploy Prometheus and Alertmanager
   hosts: prometheus
   roles:
-    - {role: prometheus, tags: [prometheus]}
     - {role: prometheus-alertmanager, tags: [alertmanager]}
+    - {role: prometheus-blackbox-exporter, tags: [blackbox]}
+    - {role: prometheus, tags: [prometheus]}
 
 - name: deploy Grafana
   hosts: grafana

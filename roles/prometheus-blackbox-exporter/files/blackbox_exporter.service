@@ -1,0 +1,10 @@
+[Unit]
+Description=Blackbox metrics exporter
+Documentation=https://github.com/prometheus/blackbox_exporter
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+ExecStart=/opt/blackbox_exporter/blackbox_exporter --config.file=/opt/blackbox_exporter/blackbox.yml
+Restart=on-failure

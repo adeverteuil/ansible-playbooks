@@ -1,0 +1,38 @@
+---
+- name: install blackbox_exporter
+  unarchive:
+    remote_src: yes
+    src: https://github.com/prometheus/blackbox_exporter/releases/download/v{{ blackbox_exporter_version }}/blackbox_exporter-{{ blackbox_exporter_version }}.linux-amd64.tar.gz
+    dest: /opt
+    creates: /opt/blackbox_exporter-{{ blackbox_exporter_version }}.linux-amd64/blackbox_exporter
+
+- name: create a symbolic link to the install directory
+  file:
+    src: /opt/blackbox_exporter-{{ blackbox_exporter_version }}.linux-amd64
+    dest: /opt/blackbox_exporter
+    state: link
+
+- name: install blackbox_exporter.service
+  copy:
+    src: blackbox_exporter.service
+    dest: /etc/systemd/system/blackbox_exporter.service
+
+- name: configure blackbox_exporter
+  template:
+    src: blackbox.yml.j2
+    dest: /opt/blackbox_exporter/blackbox.yml
+  notify: restart blackbox_exporter
+
+- name: start blackbox_exporter
+  systemd:
+    name: blackbox_exporter
+    state: started
+    enabled: yes
+    daemon_reload: yes
+
+- name: enable port 9115
+  firewalld:
+    port: 9115/tcp
+    state: enabled
+    immediate: yes
+    permanent: yes
