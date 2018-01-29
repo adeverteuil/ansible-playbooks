@@ -13,9 +13,3 @@
   hosts: grafana
   roles:
     - {role: grafana, tags: [grafana]}
-
-- name: remove scollector and telegraf
-  hosts: all
-  roles:
-    - scollector
-    - telegraf
