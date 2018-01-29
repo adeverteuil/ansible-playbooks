@@ -27,18 +27,19 @@
     dest: /opt/prometheus
     state: link
 
+- name: configure rules and alerts
+  template:
+    src: rules.yml.j2
+    dest: /opt/prometheus/{{ item.name }}.yml
+    validate: /opt/prometheus/promtool check rules %s
+  with_items: "{{ prometheus_rule_files }}"
+  notify: reload prometheus configuration
+
 - name: configure prometheus
   template:
     src: prometheus.yml.j2
     dest: /opt/prometheus/prometheus.yml
     validate: /opt/prometheus/promtool check config %s
-  notify: reload prometheus configuration
-
-- name: configure rules and alerts
-  template:
-    src: rules.yml.j2
-    dest: /opt/prometheus/{{ item.name }}.yml
-  with_items: "{{ prometheus_rule_files }}"
   notify: reload prometheus configuration
 
 - name: install prometheus.service
