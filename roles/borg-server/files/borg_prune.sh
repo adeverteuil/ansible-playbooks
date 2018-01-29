@@ -7,8 +7,6 @@ for directory in /var/lib/attic/*; do
     if [ ! -r "${directory}/README" ] ||\
        [ "$(cat "${directory}/README")" != "This is a Borg repository" ]
     then
-        echo -n "$(cat "${directory}/README")" || /bin/true  #XXX
-        echo ${directory} is not a repository   #XXX
         continue
     fi
     repository="${directory}"
@@ -21,6 +19,7 @@ for directory in /var/lib/attic/*; do
         --keep-daily 7 \
         --keep-weekly 4 \
         --keep-monthly 3 \
-        --prefix ${prefix}_
+        --prefix ${prefix}_ \
+        --wait-lock 1800
     done
 done
