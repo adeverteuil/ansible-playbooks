@@ -1,5 +1,0 @@
----
-- name: restart opentsdb
-  service:
-    name: opentsdb
-    state: restarted

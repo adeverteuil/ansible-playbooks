@@ -1,0 +1,12 @@
+[Unit]
+Description=Prometheus monitoring system
+Documentation=https://prometheus.io/docs/introduction/overview/
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+ExecStart=/opt/prometheus/prometheus --config.file=/opt/prometheus/prometheus.yml --storage.tsdb.path=/var/lib/prometheus
+TimeoutStartSec=5
+Restart=on-failure
+User=prometheus

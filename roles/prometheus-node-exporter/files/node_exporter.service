@@ -1,0 +1,10 @@
+[Unit]
+Description=Node metrics exporter
+Documentation=https://github.com/prometheus/node_exporter
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+ExecStart=/opt/node_exporter/node_exporter
+Restart=on-failure
