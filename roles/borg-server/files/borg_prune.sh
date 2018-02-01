@@ -20,6 +20,6 @@ for directory in /var/lib/attic/*; do
         --keep-weekly 4 \
         --keep-monthly 3 \
         --prefix ${prefix}_ \
-        --wait-lock 1800
+        --lock-wait 1800
     done
 done
