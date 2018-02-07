@@ -1,0 +1,4 @@
+---
+haproxy_check_updated_certs_weekday: "*"
+haproxy_check_updated_certs_hour: 23
+haproxy_check_updated_certs_minute: 0

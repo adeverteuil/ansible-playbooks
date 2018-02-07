@@ -1,0 +1,58 @@
+---
+  # https://backports.debian.org/Instructions/
+- name: add the backports repository
+  apt_repository:
+    repo: deb http://ftp.debian.org/debian jessie-backports main
+    state: present
+
+  # https://haproxy.debian.net/#?distribution=Debian&release=jessie&version=1.7
+- name: install haproxy 1.7
+  apt:
+    name: haproxy=1.7.*
+    default_release: jessie-backports
+
+- name: add a certs directory
+  file:
+    dest: /etc/haproxy/certs
+    state: directory
+
+- name: configure haproxy
+  template:
+    src: haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+  notify: reload haproxy
+
+- name: enable firewalld services
+  firewalld:
+    service: "{{ item }}"
+    state: enabled
+    permanent: yes
+    immediate: yes
+  with_items:
+    - http
+    - https
+
+- name: turn on IP forwarding
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: 1
+    state: present
+    reload: yes
+
+- name: install hatop
+  apt:
+    name: hatop
+    state: present
+
+- name: set the hatop bash alias
+  copy:
+    src: hatop.sh
+    dest: /etc/profile.d/hatop.sh
+
+- name: refresh Let's Encrypt certificates daily
+  include: update-certs.yml
+
+- name: start and enable haproxy
+  service:
+    name: haproxy
+    state: started

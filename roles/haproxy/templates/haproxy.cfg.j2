@@ -1,0 +1,9 @@
+#jinja2: lstrip_blocks: True
+# {{ ansible_managed }}
+
+{% include 'haproxy-global.cfg.j2' %}
+{% for section in haproxy_sections|default([]) %}
+
+
+{% include 'haproxy-section.cfg.j2' %}
+{% endfor %}

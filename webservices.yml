@@ -28,3 +28,7 @@
   # certbot acquires SSL certificates using webroot
   # Eventually should also proxy SMTP and IMAP.
   # Needs ports 80, 443 and eventually SMTPS and IMAPS ports open.
+
+- hosts: haproxy
+  roles:
+    - {role: haproxy, tags: [haproxy]}
