@@ -62,3 +62,14 @@
   service:
     name: haproxy
     state: started
+
+- name: make rsyslogd listen on UDP 514
+  copy:
+    src: rsyslog.conf
+    dest: /etc/rsyslog.d/49-haproxy.conf
+  notify: restart rsyslog
+
+- name: rotate haproxy logs
+  copy:
+    src: logrotate.conf
+    dest: /etc/logrotate.d/haproxy

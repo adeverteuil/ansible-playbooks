@@ -3,3 +3,8 @@
   service:
     name: haproxy
     state: reloaded
+
+- name: restart rsyslog
+  systemd:
+    name: rsyslog
+    state: restarted
