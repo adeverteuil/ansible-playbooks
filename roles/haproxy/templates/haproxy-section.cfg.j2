@@ -48,7 +48,7 @@
   {% endfor %}
 {% endif %}
 {% if section.type in ["frontend", "listen", "backend"] %}
-  {% for http_response in section.http_requests|default([]) %}
+  {% for http_response in section.http_responses|default([]) %}
     http-response         {{ http_response }}
   {% endfor %}
 {% endif %}

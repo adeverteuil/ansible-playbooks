@@ -22,6 +22,9 @@
     dest: /etc/haproxy/haproxy.cfg
   notify: reload haproxy
 
+- name: flush handlers
+  meta: flush_handlers
+
 - name: enable firewalld services
   firewalld:
     service: "{{ item }}"
@@ -49,8 +52,11 @@
     src: hatop.sh
     dest: /etc/profile.d/hatop.sh
 
+- name: install letsencrypt and get certificates
+  import_tasks: letsencrypt.yml
+
 - name: refresh Let's Encrypt certificates daily
-  include: update-certs.yml
+  import_tasks: update-certs.yml
 
 - name: start and enable haproxy
   service:

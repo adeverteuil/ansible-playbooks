@@ -1,0 +1,21 @@
+Your frontend should have the following ACL and backend in your
+haproxy_sections:
+
+  - type: frontend
+    name: fe_main_http
+    description: Example for Let's Encrypt
+    acls:
+      - acl-acme-challenge path_beg /.well-known/acme-challenge/
+    binds:
+      - :80
+      - :443 ssl crt /etc/haproxy/certs
+    backends:
+      - be-acme-challenge if acl-acme-challenge
+    default_backend: be_main_http
+
+Then add this backend:
+
+  - type: backend
+    name: be-acme-challenge
+    servers:
+      - certbot 127.0.0.1:54321
