@@ -1,0 +1,33 @@
+---
+- name: install haproxy_exporter
+  unarchive:
+    remote_src: yes
+    src: https://github.com/prometheus/haproxy_exporter/releases/download/v{{ haproxy_exporter_version }}/haproxy_exporter-{{ haproxy_exporter_version }}.linux-amd64.tar.gz
+    dest: /opt
+    creates: /opt/haproxy_exporter-{{ haproxy_exporter_version }}.linux-amd64/haproxy_exporter
+
+- name: create a symbolic link to the install directory
+  file:
+    src: /opt/haproxy_exporter-{{ haproxy_exporter_version }}.linux-amd64
+    dest: /opt/haproxy_exporter
+    state: link
+
+- name: install haproxy_exporter.service
+  template:
+    src: haproxy_exporter.service.j2
+    dest: /etc/systemd/system/haproxy_exporter.service
+  notify: restart haproxy_exporter
+
+- name: start haproxy_exporter
+  systemd:
+    name: haproxy_exporter
+    state: started
+    enabled: yes
+    daemon_reload: yes
+
+- name: enable port 9101
+  firewalld:
+    port: 9101/tcp
+    state: enabled
+    immediate: yes
+    permanent: yes

@@ -32,3 +32,4 @@
 - hosts: haproxy
   roles:
     - {role: haproxy, tags: [haproxy]}
+    - {role: prometheus-haproxy-exporter, tags: [haproxy-exporter]}
