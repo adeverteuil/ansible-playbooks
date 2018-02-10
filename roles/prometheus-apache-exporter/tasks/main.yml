@@ -1,0 +1,34 @@
+---
+  # https://github.com/Lusitaniae/apache_exporter/releases
+- name: install apache_exporter
+  unarchive:
+    remote_src: yes
+    src: https://github.com/Lusitaniae/apache_exporter/releases/download/v{{ apache_exporter_version }}/apache_exporter-{{ apache_exporter_version }}.linux-amd64.tar.gz
+    dest: /opt
+    creates: /opt/apache_exporter-{{ apache_exporter_version }}.linux-amd64/apache_exporter
+
+- name: create a symbolic link to the install directory
+  file:
+    src: /opt/apache_exporter-{{ apache_exporter_version }}.linux-amd64
+    dest: /opt/apache_exporter
+    state: link
+
+- name: install apache_exporter.service
+  copy:
+    src: apache_exporter.service
+    dest: /etc/systemd/system/apache_exporter.service
+  notify: restart apache_exporter
+
+- name: start apache_exporter
+  systemd:
+    name: apache_exporter
+    state: started
+    enabled: yes
+    daemon_reload: yes
+
+- name: enable port 9117
+  firewalld:
+    port: 9117/tcp
+    state: enabled
+    immediate: yes
+    permanent: yes
