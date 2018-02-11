@@ -35,9 +35,10 @@
   notify: reload alertmanager configuration
 
 - name: install alertmanager.service
-  copy:
-    src: alertmanager.service
+  template:
+    src: alertmanager.service.j2
     dest: /etc/systemd/system/alertmanager.service
+  notify: restart alertmanager
 
 - name: start alertmanager
   systemd:
@@ -46,9 +47,16 @@
     enabled: yes
     daemon_reload: yes
 
-- name: enable port 9093
+- name: enable port 9093 for alertmanager
   firewalld:
     port: 9093/tcp
+    state: enabled
+    immediate: yes
+    permanent: yes
+
+- name: enable port 6783 for alertmanager mesh
+  firewalld:
+    port: 6783/tcp
     state: enabled
     immediate: yes
     permanent: yes
