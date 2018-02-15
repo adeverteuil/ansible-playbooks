@@ -66,7 +66,7 @@
   - name: delete backup repository
     delegate_to: attic
     file:
-      path: /var/lib/attic/{{ ansible_hostname }}
+      path: /var/lib/attic/{{ name }}
       state: absent
     when: delete_backup|bool
 
