@@ -6,7 +6,8 @@ Documentation=https://prometheus.io/docs/alerting/alertmanager/
 WantedBy=multi-user.target
 
 [Service]
-ExecStart=/opt/alertmanager/alertmanager --config.file=/opt/alertmanager/alertmanager.yml --storage.path=/var/lib/alertmanager{% if alertmanager_mesh_password is defined %} --mesh.password={{ alertmanager_mesh_password }}{% endif %}{% for peer in alertmanager_mesh_peers %}{% if peer != inventory_hostname %} --mesh.peer={{ peer }}{% endif %}{% endfor %}
+ExecStart=/opt/alertmanager/alertmanager --config.file=/opt/alertmanager/alertmanager.yml --storage.path=/var/lib/alertmanager{% if alertmanager_mesh_password is defined %} --mesh.password={{ alertmanager_mesh_password }}{% endif %}{% for peer in alertmanager_mesh_peers %}{% if peer != inventory_hostname %} --mesh.peer={{ peer }}:6783{% endif %}{% endfor %}
+
 TimeoutStartSec=5
 Restart=on-failure
 User=alertmanager
