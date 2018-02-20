@@ -1,0 +1,27 @@
+webserver
+=========
+
+Install and configure Apache 2.4 and set up some VirtualHosts.
+
+
+Role variables
+==============
+
+webserver_sites
+---------------
+
+List of sites to configure on Apache.
+
+  sitename: <string>
+  servername: <fqdn>
+  serveraliases:
+    - <fqdn>
+    - ...
+  serveradmin: <default: webserver_serveradmin>
+
+
+webserver_serveradmin
+---------------------
+
+Default: webmaster@localhost
+(Change it!)

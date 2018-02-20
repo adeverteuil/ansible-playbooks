@@ -1,0 +1,7 @@
+---
+- name: create virtual hosts
+  template:
+    src: virtualhost.conf.j2
+    dest: /etc/apache2/sites-available/{{ item.sitename }}.conf
+  with_items: "{{ webserver_sites }}"
+  notify: reload apache2
