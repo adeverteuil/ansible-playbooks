@@ -1,0 +1,15 @@
+<VirtualHost {{ ansible_eth0.ipv4.address }}:80>
+    ServerName {{ item.servername }}
+
+    ServerAdmin {{ item.serveradmin|default(webserver_serveradmin) }}
+    {% for alias in item.serveraliases|default([]) %}
+    ServerAlias {{ alias }}
+    {% endfor %}
+
+    DocumentRoot /var/www/{{ item.sitename }}
+
+    ErrorLog ${APACHE_LOG_DIR}/{{ item.sitename }}.error.log
+    CustomLog ${APACHE_LOG_DIR}/{{ item.sitename }}.access.log combined
+</VirtualHost>
+
+# vim: syntax=apache ts=4 sw=4 sts=4 sr et
