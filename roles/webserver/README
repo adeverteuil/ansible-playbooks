@@ -18,6 +18,7 @@ List of sites to configure on Apache.
     - <fqdn>
     - ...
   serveradmin: <default: webserver_serveradmin>
+  install_wordpress: <bool, default: no>
 
 
 webserver_serveradmin

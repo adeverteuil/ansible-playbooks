@@ -1,0 +1,15 @@
+---
+- name: install WordPress
+  unarchive:
+    remote_src: yes
+    src: https://wordpress.org/latest.tar.gz
+    dest: /var/www/{{ item.sitename }}
+    creates: /var/www/wp-config.php
+    owner: www-data
+    group: www-data
+  with_items: "{{ webserver_sites }}"
+
+- name: move the content of the wordpress directory to the document root
+  shell: mv wordpress/* .
+  args:
+    creates: /var/www/{{ item.sitename }}/wp-config.php

@@ -1,7 +1,10 @@
-<VirtualHost *:80>
+<VirtualHost {{ ansible_eth0.ipv4.address }}:80>
     ServerName {{ item.servername }}
 
     ServerAdmin {{ item.serveradmin|default(webserver_serveradmin) }}
+    {% for alias in item.serveraliases|default([]) %}
+    ServerAlias {{ alias }}
+    {% endfor %}
 
     DocumentRoot /var/www/{{ item.sitename }}
 

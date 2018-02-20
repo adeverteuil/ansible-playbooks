@@ -5,3 +5,15 @@
     dest: /etc/apache2/sites-available/{{ item.sitename }}.conf
   with_items: "{{ webserver_sites }}"
   notify: reload apache2
+
+- name: create the document root
+  file:
+    dest: /var/www/{{ item.sitename }}
+    state: directory
+    owner: www-data
+    group: www-data
+  with_items: "{{ webserver_sites }}"
+
+- name: install wordpress
+  include_tasks: wordpress.yml
+  when: item.install_wordpress|default(False)|bool
