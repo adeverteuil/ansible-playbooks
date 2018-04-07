@@ -14,14 +14,39 @@
   authorized_key:
     user: borg
     key: "{{ pubkey.stdout }}"
-    key_options: 'command="/usr/local/bin/borg_serve.sh",no-port-forwarding,no-X11-forwarding,no-pty,no-agent-forwarding,no-user-rc'
+    key_options: 'command="/usr/local/bin/borg serve",no-port-forwarding,no-X11-forwarding,no-pty,no-agent-forwarding,no-user-rc'
 
-- name: install borg
+  # Unencrypted because backup partition is block-level encrypted
+- name: initialize the repository
+  delegate_to: attic
+  command: borg init -e none /var/lib/attic/{{ ansible_hostname }}
+  become: yes
+  become_user: borg
+  args:
+    creates: /var/lib/attic/{{ ansible_hostname }}/data
+
+- name: set the repository directory permissions
+  delegate_to: attic
+  file:
+    path: /var/lib/attic/{{ ansible_hostname }}
+    state: directory
+    owner: borg
+    group: borg
+    mode: 0700
+
+- name: install borg on Debian
   get_url:
     dest: /usr/local/bin/borg
     checksum: sha256:e1b5370bc55ce00eecbac459bc9751b540d48b7ba42168ad4e4505db175aa471
     url: https://github.com/borgbackup/borg/releases/download/1.0.7/borg-linux64
     mode: 0755
+  when: ansible_distribution == "Debian"
+
+- name: install borg on Fedora
+  dnf:
+    name: borgbackup
+    state: present
+  when: ansible_distribution == "Fedora"
 
 - name: copy borg.exclude
   template:
@@ -34,10 +59,25 @@
     src: borg_create_archive.sh
     mode: 0744
 
-- name: create a cron job
+- name: install the service and timer systemd units
+  copy:
+    src: "{{ item }}"
+    dest: /etc/systemd/system/{{ item }}
+  with_items:
+    - borg_create_archive.service
+    - borg_create_archive.timer
+
+- name: start and enable borg_create_archive.timer
+  systemd:
+    daemon_reload: yes
+    name: borg_create_archive.timer
+    state: started
+    enabled: yes
+
+- name: remove the obsolete cron job
   cron:
     name: borg create
-    state: present
+    state: absent
     cron_file: /etc/crontab
     user: root
     minute: "{{ borg_cron_create_minute }}"

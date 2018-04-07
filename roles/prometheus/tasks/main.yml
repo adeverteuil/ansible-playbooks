@@ -1,0 +1,62 @@
+---
+- name: create the prometheus user
+  user:
+    name: prometheus
+    createhome: no
+    system: yes
+    comment: Prometheus
+    state: present
+
+- name: create the data directory
+  file:
+    dest: /var/lib/prometheus
+    state: directory
+    owner: prometheus
+    group: prometheus
+
+- name: install prometheus
+  unarchive:
+    remote_src: yes
+    src: https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz
+    dest: /opt
+    creates: /opt/prometheus-{{ prometheus_version }}.linux-amd64/prometheus
+
+- name: create a symbolic link to the install directory
+  file:
+    src: /opt/prometheus-{{ prometheus_version }}.linux-amd64
+    dest: /opt/prometheus
+    state: link
+
+- name: configure rules and alerts
+  template:
+    src: rules.yml.j2
+    dest: /opt/prometheus/{{ item.name }}.yml
+    validate: /opt/prometheus/promtool check rules %s
+  with_items: "{{ prometheus_rule_files }}"
+  notify: reload prometheus configuration
+
+- name: configure prometheus
+  template:
+    src: prometheus.yml.j2
+    dest: /opt/prometheus/prometheus.yml
+    validate: /opt/prometheus/promtool check config %s
+  notify: reload prometheus configuration
+
+- name: install prometheus.service
+  copy:
+    src: prometheus.service
+    dest: /etc/systemd/system/prometheus.service
+
+- name: start prometheus
+  systemd:
+    name: prometheus
+    state: started
+    enabled: yes
+    daemon_reload: yes
+
+- name: enable port 9090
+  firewalld:
+    port: 9090/tcp
+    state: enabled
+    immediate: yes
+    permanent: yes

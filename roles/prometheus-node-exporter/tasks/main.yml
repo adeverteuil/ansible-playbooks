@@ -1,0 +1,32 @@
+---
+- name: install node_exporter
+  unarchive:
+    remote_src: yes
+    src: https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz
+    dest: /opt
+    creates: /opt/node_exporter-{{ node_exporter_version }}.linux-amd64/node_exporter
+
+- name: create a symbolic link to the install directory
+  file:
+    src: /opt/node_exporter-{{ node_exporter_version }}.linux-amd64
+    dest: /opt/node_exporter
+    state: link
+
+- name: install node_exporter.service
+  copy:
+    src: node_exporter.service
+    dest: /etc/systemd/system/node_exporter.service
+
+- name: start node_exporter
+  systemd:
+    name: node_exporter
+    state: started
+    enabled: yes
+    daemon_reload: yes
+
+- name: enable port 9100
+  firewalld:
+    port: 9100/tcp
+    state: enabled
+    immediate: yes
+    permanent: yes

@@ -1,0 +1,8 @@
+---
+- name: restart alertmanager
+  service:
+    name: alertmanager
+    state: restarted
+
+- name: reload alertmanager configuration
+  command: killall -SIGHUP alertmanager

@@ -1,0 +1,19 @@
+---
+- name: install the update-certs.sh script
+  copy:
+    src: update-certs.sh
+    dest: /usr/local/bin/haproxy-update-certs.sh
+    mode: 0755
+
+- name: check daily if new Let's Encrypt certs were obtained or renewed
+  cron:
+    name: check updated certs for HAProxy
+    job: /usr/local/bin/haproxy-update-certs.sh >/dev/null
+    weekday: "{{ haproxy_check_updated_certs_weekday }}"
+    hour: "{{ haproxy_check_updated_certs_hour }}"
+    minute: "{{ haproxy_check_updated_certs_minute }}"
+
+- name: check now if new Let's Encrypt certs were obtained or renewed
+  command: /usr/local/bin/haproxy-update-certs.sh
+  register: update_certs
+  changed_when: update_certs.stdout == "CHANGED"

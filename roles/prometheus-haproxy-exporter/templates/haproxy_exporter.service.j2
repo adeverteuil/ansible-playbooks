@@ -1,0 +1,10 @@
+[Unit]
+Description=Node metrics exporter
+Documentation=https://github.com/prometheus/haproxy_exporter
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+ExecStart=/opt/haproxy_exporter/haproxy_exporter --haproxy.scrape-uri={{ haproxy_exporter_scrape_uri }}
+Restart=on-failure

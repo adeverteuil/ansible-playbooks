@@ -1,0 +1,10 @@
+[Unit]
+Description=Node metrics exporter
+Documentation=https://github.com/prometheus/apache_exporter
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+ExecStart=/opt/apache_exporter/apache_exporter
+Restart=on-failure

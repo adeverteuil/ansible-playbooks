@@ -9,6 +9,7 @@
     with_items:
     - vim
     - python-firewall
+    - tmux
 
   - name: enable PAM module mkhomedir
     lineinfile:
@@ -16,3 +17,6 @@
       line: "session     required      pam_mkhomedir.so umask=0022 skel=/etc/skel/"
       regexp: pam_mkhomedir
       insertbefore: "pam_keyinit"
+
+- hosts: fedora
+  roles: [borg-client]

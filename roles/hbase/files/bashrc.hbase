@@ -1,2 +1,0 @@
-export HBASE_PREFIX=/opt/hbase
-export PATH=$HBASE_PREFIX/bin:$PATH

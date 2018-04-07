@@ -1,0 +1,3 @@
+---
+alertmanager_version: 0.13.0
+alertmanager_mesh_peers: []

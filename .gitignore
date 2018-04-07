@@ -1,2 +1,4 @@
 /*.retry
 test_hosts
+.ansible-vault-password.txt
+.facts-cache

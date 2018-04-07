@@ -19,6 +19,7 @@
   roles:
   - {role: webserver, tags: [webserver]}
   - {role: nextcloud, tags: [nextcloud]}
+  - {role: prometheus-apache-exporter, tags: [apache_exporter]}
 
 - hosts: nginx.private.deverteuil.net
   roles:

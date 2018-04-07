@@ -12,3 +12,33 @@ moinmoin_ldap_givenname_attribute
 moinmoin_ldap_surname_attribute
 moinmoin_ldap_attribute_member_of
 moinmoin_ldap_email_attribute
+
+
+Emergency access to wiki content offline
+========================================
+
+If the wiki is inaccessible, access to the content from backups is
+possible. The wiki is backed up along with the full system backup of
+the web server. Data files are stored in /var/lib/mywiki/data/. This
+directory can then be copied to a workstation where MoinMoin can be run
+from a Python virtualenv.
+
+If the backup server is also down but the backup drive is
+accessible, attach it via a USB craddle, decrypt it (the keys are in
+Documents/Projets/Homelab).
+
+  sudo borg list borg@attic.private.deverteuil.net:/var/lib/attic/web
+  sudo borg mount borg@attic:/var/lib/attic/web::web.private.deverteuil.net_2018-02-10T12:00:45 /mnt/archive
+  pyenv virtualenv moin
+  pyenv activate moin
+  pip install moin
+  cd .pyenv/versions/moin/share/moin
+  cp config/wikiconfig.py server/
+  cd server
+  sudo cp -r /mnt/archive/var/lib/mywiki/* .
+  sudo chown -R "$(id -u):$(id -g)" .
+  ./moin server standalone
+
+Now go to http://localhost:8080/FrontPage
+
+https://moinmo.in/HowTo/ModWsgiExpress

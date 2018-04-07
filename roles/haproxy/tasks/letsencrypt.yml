@@ -1,0 +1,37 @@
+---
+- name: install certbot
+  apt:
+    name: certbot
+    state: present
+
+- name: create /etc/letsencrypt
+  file:
+    path: /etc/letsencrypt
+    state: directory
+
+- name: enable services http and https in firewalld
+  firewalld: service={{ item }} state=enabled permanent=yes immediate=yes
+  with_items: [http, https]
+
+- name: renew certificates daily
+  cron:
+    name: "Renew Let's Encrypt SSL certificates"
+    job: /usr/bin/certbot renew --quiet --non-interactive
+    special_time: daily
+
+- name: request certificates by standalone server
+  command: >
+    certbot certonly
+    --cert-name {{ item.cert_name }}
+    {% for domain in item.domains %} -d {{ domain }} {% endfor %}
+    --non-interactive
+    {% if letsencrypt_staging %} --staging {% endif %}
+    --standalone
+    --preferred-challenges http
+    --http-01-port {{ letsencrypt_http_01_port }}
+    --agree-tos
+    -m {{ letsencrypt_email }}
+    --non-interactive
+  register: get_cert
+  changed_when: '"Certificate not yet due for renewal; no action taken." not in get_cert.stdout'
+  with_items: "{{ letsencrypt_certificates }}"

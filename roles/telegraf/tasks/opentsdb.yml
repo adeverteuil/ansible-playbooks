@@ -1,6 +1,0 @@
----
-- name: configure the OpenTSDB output plugin
-  template:
-    src: opentsdb.conf.j2
-    dest: /etc/telegraf/telegraf.d/opentsdb.conf
-  notify: restart telegraf

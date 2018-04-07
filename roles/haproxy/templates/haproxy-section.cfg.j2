@@ -1,0 +1,137 @@
+{% if section.type in ["defaults", "listen", "frontend", "backend"] %}
+{{ section.type }}{% if section.name is defined or section.type != "defaults" %} {{ section.name }}{%  endif %}
+
+{% if section.description is defined %}
+    description           {{ section.description }}
+{% endif %}
+{% if section.type in ["frontend", "listen"] %}
+  {% for bind in section.binds|default([]) %}
+    bind                  {{ bind }}
+  {% endfor %}
+{% endif %}
+{% if section.log is defined %}
+  {% if section.log == "no" %}
+    no log
+  {% else %}
+    log                   {{ section.log }}
+  {% endif %}
+{% endif %}
+{% for stats in section.stats|default([]) %}
+    stats                 {{ stats }}
+{% endfor %}
+{% if section.mode is defined %}
+    mode                  {{ section.mode }}
+{% endif %}
+{% if section.type in ["defaults", "listen", "backend"] %}
+  {% if section.balance is defined %}
+    balance               {{ section.balance }}
+  {% endif %}
+{% endif %}
+{% if section.log_format is defined %}
+    log-format            {{ section.log_format }}
+{% endif %}
+{% for option in section.options|default([]) %}
+  {% if option[:3] == "no " %}
+    no option             {{ option[3:] }}
+  {% else %}
+    option                {{ option }}
+  {% endif %}
+{% endfor %}
+{% if section.type in ["frontend", "listen", "backend"] %}
+  {% for acl in section.acls|default([]) %}
+    acl                   {{ acl }}
+  {% endfor %}
+{% endif %}
+{% if section.type in ["frontend", "listen", "backend"] %}
+  {% for http_request in section.http_requests|default([]) %}
+    http-request          {{ http_request }}
+  {% endfor %}
+{% endif %}
+{% if section.type in ["frontend", "listen", "backend"] %}
+  {% for http_response in section.http_responses|default([]) %}
+    http-response         {{ http_response }}
+  {% endfor %}
+{% endif %}
+{% if section.timeout_connect is defined %}
+    timeout connect       {{ section.timeout_connect }}
+{% endif %}
+{% if section.timeout_client is defined %}
+    timeout client        {{ section.timeout_client }}
+{% endif %}
+{% if section.timeout_server is defined %}
+    timeout server        {{ section.timeout_server }}
+{% endif %}
+{% if section.timeout_http_request is defined %}
+    timeout http-request  {{ section.timeout_http_request }}
+{% endif %}
+{% if section.type in ["defaults", "listen", "backend"] %}
+  {% if section.http_reuse is defined %}
+    http-reuse            {{ section.http_reuse }}
+  {% endif %}
+{% endif %}
+{% if section.type in ["defaults", "frontend", "listen"] %}
+  {% if section.session_rate_limit|default(0) > 0 %}
+    rate-limit sessions   {{ section.session_rate_limit }}
+  {% endif %}
+{% endif %}
+{% if section.type in ["defaults", "listen", "backend"] %}
+  {% if section.http_check_expect is defined %}
+    http-check            expect {{ section.http_check_expect }}
+  {% endif %}
+{% endif %}
+{% if section.type in ["listen", "backend"] %}
+  {% for step in section.tcp_check|default([]) %}
+    tcp-check             {{ step }}
+  {% endfor %}
+{% endif %}
+{% if section.type in ["frontend", "listen"] %}
+  {% for backend in section.backends|default([]) %}
+    use_backend           {{ backend }}
+  {% endfor %}
+{% endif %}
+{% if section.type in ["defaults", "frontend", "listen"] %}
+  {% if section.default_backend is defined %}
+    default_backend       {{ section.default_backend }}
+  {% endif %}
+{% endif %}
+{% if section.errorfiles is defined %}
+  {% if section.errorfiles == "default" %}
+    errorfile             400 /etc/haproxy/errors/400.http
+    errorfile             403 /etc/haproxy/errors/403.http
+    errorfile             408 /etc/haproxy/errors/408.http
+    errorfile             500 /etc/haproxy/errors/500.http
+    errorfile             502 /etc/haproxy/errors/502.http
+    errorfile             503 /etc/haproxy/errors/503.http
+    errorfile             504 /etc/haproxy/errors/504.http
+  {% else %}
+  {% for errorfile in section.errorfiles %}
+    errorfile {{ errorfile }}
+  {% endfor %}
+  {% endif %}
+{% endif %}
+{% if section.type in ["defaults", "listen", "frontend"] %}
+  {% if section.monitor_net is defined %}
+    monitor-net           {{ section.monitor_net }}
+  {% endif %}
+  {% if section.monitor_uri is defined %}
+    monitor-uri           {{ section.monitor_uri }}
+  {% endif %}
+{% endif %}
+{% if section.type in ["frontend", "listen"] %}
+  {% for condition in section.monitor_fail_conditions|default([]) %}
+    monitor fail          {{ condition }}
+  {% endfor %}
+{% endif %}
+{% if section.type in ["defaults", "backend", "listen"] %}
+  {% if section.default_server is defined %}
+    default-server        {{ section.default_server }}
+  {% endif %}
+{% endif %}
+{% if section.type in ["listen", "backend"] %}
+  {% for server in section.servers|default([]) %}
+    server                {{ server }}
+  {% endfor %}
+{% endif %}
+{% else %}
+# Oops: Invalid section type: "{{ section.type }}"
+{% endif %}
