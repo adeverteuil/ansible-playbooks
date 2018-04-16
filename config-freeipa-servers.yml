@@ -11,12 +11,13 @@
     - python-firewall
     - tmux
 
-  - name: enable PAM module mkhomedir
-    lineinfile:
-      dest: /etc/pam.d/system-auth
-      line: "session     required      pam_mkhomedir.so umask=0022 skel=/etc/skel/"
-      regexp: pam_mkhomedir
-      insertbefore: "pam_keyinit"
+  - name: execute ipa-backup daily
+    cron:
+      name: daily IPA backup
+      hour: 4
+      minute: 30
+      job: ipa-backup
+      #job: ipa-backup --quiet
 
 - hosts: fedora
   roles: [borg-client]
