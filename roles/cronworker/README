@@ -1,0 +1,40 @@
+cronworker
+==========
+
+Assign miscellaneous cronjobs to run on a particular server.
+
+Example of such jobs:
+
+  * Dynamic DNS updater
+  * Poll commodities prices
+  * Update some MOTD file
+  * Sync some files and whatnot
+  * Ansible controller (pulls from git repo and runs playbooks periodically, with ARA for reporting and monitoring if possible)
+  * Update parts of a static HTML site
+  * …I can use some brainstorming ideas here :)
+
+
+Role variables
+==============
+
+miscellaneous_cronjobs
+----------------------
+
+The name is straightforward. Basically free-form use of the Ansible
+'cron' module as a list of job items.
+
+  - name: <string>
+    job: <string>
+    month: <optional, default: *>
+    day: <optional, default: *>
+    weekday: <optional, default: *>
+    hour: <optional, default: *>
+    minute: <optional, default: *>
+    special_time: <optional, reboot|yearly|annually|monthly|weekly|daily|hourly>
+    disabled: <boolean, default: no>
+    state: <default: present>
+    user: <default: root>
+  - …
+
+documentation:
+  http://docs.ansible.com/ansible/latest/modules/cron_module.html
