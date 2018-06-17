@@ -16,8 +16,8 @@
       name: daily IPA backup
       hour: 4
       minute: 30
-      job: ipa-backup
-      #job: ipa-backup --quiet
+      job: /usr/sbin/ipa-backup
+      #job: /usr/sbin/ipa-backup ipa-backup --quiet
 
 - hosts: fedora
   roles: [borg-client]
