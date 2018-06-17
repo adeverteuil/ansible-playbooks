@@ -53,10 +53,10 @@
     src: borg.exclude.j2
     dest: /etc/borg.exclude
 
-- name: copy borg_create_archive.sh
+- name: install borg_create_archive.sh
   template:
     dest: /usr/local/bin/borg_create_archive.sh
-    src: borg_create_archive.sh
+    src: borg_create_archive.sh.j2
     mode: 0744
 
 - name: install the service and timer systemd units
