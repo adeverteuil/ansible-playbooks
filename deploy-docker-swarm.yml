@@ -148,3 +148,73 @@
         --advertise-addr={{ swarm_iface | default('eth0') }}:2377
         --token={{ token }}
         {{ groups['swarm_manager_ips'][0] }}:2377
+
+# Set up GlusterFS
+- hosts: docker
+  tasks:
+  - name: install glusterfs-server
+    apt:
+      name: glusterfs-server
+      state: present
+  - name: create a GlusterFS brick for docker volumes
+    file:
+      dest: /data/glusterfs/docker-volumes/brick1
+      state: directory
+  - name: create a mount point for docker-volumes
+    file:
+      dest: /data/shared
+      state: directory
+  - name: create the gluster volume
+    gluster_volume:
+      cluster: "{{ groups['docker'] }}"
+      brick: /data/glusterfs/docker-volumes/brick1
+      name: docker-volumes
+      replicas: 3
+      state: present
+      force: yes
+    run_once: yes
+  - name: mount docker-volumes on /data/shared
+    mount:
+      fstype: glusterfs
+      src: "{{ ansible_fqdn }}:/docker-volumes"
+      path: /data/shared
+      state: mounted
+  - name: create directories for systemd overrides
+    file:
+      dest: /etc/systemd/system/{{ item }}.d
+      state: directory
+    with_items:
+      - data-shared.mount
+      - docker.service
+      - glusterfs-server.service
+  - name: wait for glusterfs-server.service to be started before mounting /data/shared
+    copy:
+      dest: /etc/systemd/system/data-shared.mount.d/gluster.conf
+      content: |
+        [Unit]
+        After=glusterfs-server.service
+  - name: wait for data-shared.mount before starting docker
+    copy:
+      dest: /etc/systemd/system/docker.service.d/wait-for-mounts.conf
+      content: |
+        [Unit]
+        After=data-shared.mount
+  - name: remove the dependency of glusterfs-server.service on remote-fs.target
+    copy:
+      dest: /etc/systemd/system/glusterfs-server.service.d/remote-fs.conf
+      content: |
+        [Unit]
+        After=
+        After=sysinit.target systemd-journald.socket system.slice local-fs.target basic.target network-online.target
+  - name: create bind mount source paths
+    file:
+      dest: /data/shared/{{ item }}
+      state: directory
+    with_items:
+      - nextcloud_data
+      - nextcloud_mysql_data
+
+
+# Documentation pour le remplacement de nodes, si nécessaire:
+# https://access.redhat.com/documentation/en-us/red_hat_gluster_storage/3/html/administration_guide/sect-replacing_hosts
+# https://docs.gluster.org/en/v3/Administrator%20Guide/Storage%20Pools/
