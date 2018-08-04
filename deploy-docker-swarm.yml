@@ -2,6 +2,14 @@
 # Documentation for Docker CE installation on Ubuntu:
 # https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-docker-ce
 - hosts: docker
+  handlers:
+    - name: restart docker
+      service:
+        name: docker
+        state: restarted
+    - name: reload systemd
+      systemd:
+        daemon-reload: yes
   tasks:
     - name: add Docker's GPG key
       apt_key:
@@ -15,11 +23,43 @@
       apt:
         name: docker-ce
         state: present
-    - name: verify Docker installation
-      command: docker run hello-world
-      register: hello
-      failed_when: '"Hello from Docker!" not in hello.stdout_lines'
-      changed_when: no
+    - name: install PKI files
+      copy:
+        content: "{{ item.content }}"
+        dest: /etc/docker/{{ item.dest }}
+        mode: "{{ item.mode|default(omit) }}"
+      with_items:
+        - content: "{{ docker_pki_ca_cert }}"
+          dest: ca.crt
+        - content: "{{ docker_pki_server_certs[ansible_fqdn] }}"
+          dest: server.crt
+        - content: "{{ docker_pki_server_keys[ansible_fqdn] }}"
+          dest: server.key
+          mode: "0600"
+    - name: create a directory for docker.service overrides
+      file:
+        dest: /etc/systemd/system/docker.service.d
+        state: directory
+    - name: override the systemd ExecStart directive for dockerd
+      copy:
+        dest: /etc/systemd/system/docker.service.d/execstart.conf
+        content: |
+          [Service]
+          ExecStart=
+          ExecStart=/usr/bin/dockerd
+      notify: reload systemd
+    - name: configure Docker
+      copy:
+        dest: /etc/docker/daemon.json
+        content: |
+          {
+          "hosts": ["unix:///var/run/docker.sock", "tcp://0.0.0.0:2376"],
+          "tlsverify": true,
+          "tlscacert": "/etc/docker/ca.crt",
+          "tlscert": "/etc/docker/server.crt",
+          "tlskey": "/etc/docker/server.key"
+          }
+      notify: restart docker
 
 # The rest of this playbook is sourced from:
 # https://github.com/nextrevision/ansible-swarm-playbook
@@ -91,7 +131,7 @@
     - name: initialize swarm cluster
       shell: >
         docker swarm init
-        --advertise-addr={{ swarm_iface | default('eth0') }}:2377
+        --advertise-addr={{ ansible_eth0.ipv4.address }}:2377
       when: "'swarm_manager_operational' not in groups"
       register: bootstrap_first_node
 
@@ -132,7 +172,7 @@
     - name: join manager nodes to cluster
       shell: >
         docker swarm join
-        --advertise-addr={{ swarm_iface | default('eth0') }}:2377
+        --advertise-addr={{ ansible_eth0.ipv4.address }}:2377
         --token={{ token }}
         {{ groups['swarm_manager_ips'][0] }}:2377
 
@@ -145,11 +185,13 @@
     - name: join worker nodes to cluster
       shell: >
         docker swarm join
-        --advertise-addr={{ swarm_iface | default('eth0') }}:2377
+        --advertise-addr={{ ansible_eth0.ipv4.address }}:2377
         --token={{ token }}
         {{ groups['swarm_manager_ips'][0] }}:2377
 
 # Set up GlusterFS
+# Documentation de exactement ce que j'ai fait:
+# http://embaby.com/blog/using-glusterfs-docker-swarm-cluster/
 - hosts: docker
   tasks:
   - name: install glusterfs-server
