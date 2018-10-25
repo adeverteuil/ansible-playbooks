@@ -1,4 +1,10 @@
 ---
+
+- name: install kerberoes user utility
+  package:
+    name: krb5-user
+    state: present
+
 - name: check if we have a cached kerberos ticket
   delegate_to: "{{ ipa_server }}"
   vars: {ansible_user: ""}
