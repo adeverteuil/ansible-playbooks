@@ -1,6 +1,8 @@
 Name: Create home directory during login
 Default: yes
-Priority: 900
+Priority: 127
+
 Session-Type: Additional
+Session-Interactive-Only: yes
 Session:
-        required        pam_mkhomedir.so
+        required pam_mkhomedir.so skel=/etc/skel/ umask=0022
